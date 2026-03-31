@@ -355,6 +355,8 @@ def run_extraction(downloaded: list[Path], text_listings: list[dict]) -> None:
             counts[outcome] += 1
             label = {"new": "NEW", "merged": "UPDATED", "duplicate": "SKIPPED"}[outcome]
             print(f"  [{label}] {event.get('title', '?')} — {event.get('track', {}).get('name', '?')}")
+            if "test-flyers" not in path.parts:
+                path.unlink()
         except Exception as e:
             print(f"  [ERROR] {e}")
             counts["error"] += 1

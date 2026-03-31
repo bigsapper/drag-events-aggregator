@@ -115,12 +115,16 @@ drag-events-aggregator/
 └── .env.example      # Environment variable template
 ```
 
+## Test Flyers
+
+`test-flyers/` contains sample flyers for local validation and unit testing. Files in this directory are never deleted after processing.
+
 ## Runtime Files (not checked in)
 
 | File/Dir | Purpose |
 |---|---|
 | `.env` | Your API key |
 | `.venv/` | Python virtual environment |
-| `flyers/` | Downloaded flyer images |
+| `flyers/` | Downloaded flyer images (auto-deleted after successful processing) |
 | `events.json` | Extracted event database |
 | `.crawl_state.json` | Crawl state (seen URLs, known listings) |

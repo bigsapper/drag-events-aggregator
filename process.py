@@ -127,6 +127,8 @@ def main():
             date_start = event.get("dates", {}).get("start", "?")
             track = event.get("track", {}).get("name", "?")
             print(f"  [{label}] {title} — {track} — {date_start}")
+            if "test-flyers" not in image_path.parts:
+                image_path.unlink()
         except Exception as e:
             print(f"  [ERROR] {e}")
             counts["error"] += 1
