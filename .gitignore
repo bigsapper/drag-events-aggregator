@@ -9,6 +9,10 @@
 flyers/
 events.json
 
+# Claude Code
+CLAUDE.md
+memory/
+
 # Python
 __pycache__/
 *.pyc
