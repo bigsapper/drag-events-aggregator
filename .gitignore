@@ -1,0 +1,15 @@
+# Environment
+.env
+.venv/
+
+# Runtime state
+.crawl_state.json
+
+# Downloaded data
+flyers/
+events.json
+
+# Python
+__pycache__/
+*.pyc
+*.pyo

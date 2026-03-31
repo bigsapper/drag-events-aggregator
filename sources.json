@@ -1,0 +1,36 @@
+[
+  {
+    "name": "Bracketraces.com",
+    "url": "https://www.bracketraces.com",
+    "strategy": "bracketraces",
+    "notes": "Individual event pages contain actual flyer images (.webp). No central listing — known event page paths listed below.",
+    "event_pages": [
+      "/event-spring-fling-vegas.php",
+      "/event-spring-fling-galot.php",
+      "/event-fling-at-norwalk.php",
+      "/event-fall-fling-bristol.php",
+      "/event-doorcar-fling.php"
+    ]
+  },
+  {
+    "name": "RacingJunk Events",
+    "url": "https://www.racingjunk.com/events/all-types",
+    "strategy": "racingjunk",
+    "notes": "Text-only event listings, numbered pagination (~20/page). Filter by drag racing type. No flyer images — yields structured text data directly.",
+    "drag_racing_url": "https://www.racingjunk.com/events/Races-Drag-Racing"
+  },
+  {
+    "name": "MyRacePass",
+    "url": "https://www.myracepass.com/events/today",
+    "strategy": "myracepass",
+    "notes": "REST API available at api.myracepass.com/v2/ but requires API key. HTML pages are publicly crawlable. Text data only, no flyers.",
+    "api_url": "https://api.myracepass.com/v2/",
+    "api_key_required": true
+  },
+  {
+    "name": "Dragzine RSS",
+    "url": "https://www.dragzine.com/feed/",
+    "strategy": "rss",
+    "notes": "WordPress RSS feed. Covers event news and race coverage, not upcoming event calendars. Useful for discovering events after the fact."
+  }
+]
