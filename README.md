@@ -115,6 +115,20 @@ drag-events-aggregator/
 └── .env.example      # Environment variable template
 ```
 
+## Development Setup
+
+```bash
+pip install -r requirements-dev.txt
+```
+
+Run the full test suite:
+
+```bash
+pytest
+```
+
+Tests use mocked Claude API calls and temporary file system paths — no API key is needed to run them. Coverage is reported automatically; the suite targets >90% across all source files.
+
 ## Test Flyers
 
 `test-flyers/` contains sample flyers for local validation and unit testing. Files in this directory are never deleted after processing.

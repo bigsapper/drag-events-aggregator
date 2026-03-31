@@ -17,12 +17,18 @@ import json
 import re
 import sys
 import time
+import uuid
+from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import urljoin, urlparse
 
 import feedparser
 import requests
 from bs4 import BeautifulSoup
+
+import process
+from dedup import find_same_event, merge_events
+from extract_text import extract_from_text
 
 TRACKS_FILE  = Path(__file__).parent / "tracks.json"
 SOURCES_FILE = Path(__file__).parent / "sources.json"
@@ -335,10 +341,6 @@ def crawl_source(source: dict, state: dict) -> tuple[list[Path], list[dict]]:
 # ── Main ──────────────────────────────────────────────────────────────────────
 
 def run_extraction(downloaded: list[Path], text_listings: list[dict]) -> None:
-    import process
-    from dedup import find_same_event
-    from extract_text import extract_from_text
-
     if not downloaded and not text_listings:
         return
 
@@ -373,18 +375,15 @@ def run_extraction(downloaded: list[Path], text_listings: list[dict]) -> None:
             # Check for same event already in DB
             same = find_same_event(extracted, events)
             if same:
-                from dedup import merge_events
                 flyer_entry = {"file": listing.get("source_url", ""), "phash": None,
-                               "processed_at": __import__("datetime").datetime.now(__import__("datetime").timezone.utc).isoformat()}
+                               "processed_at": datetime.now(timezone.utc).isoformat()}
                 merged = merge_events(same, extracted, flyer_entry)
-                merged["updated_at"] = __import__("datetime").datetime.now(__import__("datetime").timezone.utc).isoformat()
+                merged["updated_at"] = datetime.now(timezone.utc).isoformat()
                 idx = next(i for i, e in enumerate(events) if e["id"] == same["id"])
                 events[idx] = merged
                 counts["merged"] += 1
                 print(f"  [UPDATED] {merged.get('title', '?')}")
             else:
-                import uuid
-                from datetime import datetime, timezone
                 new_event = {
                     "id": str(uuid.uuid4()),
                     **extracted,

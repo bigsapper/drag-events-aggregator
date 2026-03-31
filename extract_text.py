@@ -1,69 +1,20 @@
 """Convert text-based event listings (RacingJunk, MyRacePass) into structured event records."""
 
 import os
-from dotenv import load_dotenv
-load_dotenv()
 
 import anthropic
+from dotenv import load_dotenv
+
+from schema import EVENT_INPUT_SCHEMA
+
+load_dotenv()
 
 CLIENT = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
 
 TOOL = {
     "name": "store_event",
     "description": "Store structured drag racing event data parsed from a text listing.",
-    "input_schema": {
-        "type": "object",
-        "properties": {
-            "title":      {"type": "string"},
-            "event_type": {"type": "string", "enum": ["bracket", "points_race", "test_n_tune", "no_prep", "grudge", "specialty", "test_day", "unknown"]},
-            "series":     {"type": ["string", "null"]},
-            "track": {
-                "type": "object",
-                "properties": {
-                    "name":  {"type": "string"},
-                    "city":  {"type": ["string", "null"]},
-                    "state": {"type": ["string", "null"]}
-                },
-                "required": ["name"]
-            },
-            "dates": {
-                "type": "object",
-                "properties": {
-                    "start": {"type": "string", "description": "YYYY-MM-DD"},
-                    "end":   {"type": ["string", "null"], "description": "YYYY-MM-DD"}
-                },
-                "required": ["start"]
-            },
-            "times": {
-                "type": "object",
-                "properties": {
-                    "gates_open":          {"type": ["string", "null"]},
-                    "registration_opens":  {"type": ["string", "null"]},
-                    "race_start":          {"type": ["string", "null"]}
-                }
-            },
-            "classes":  {"type": "array", "items": {"type": "string"}},
-            "fees": {
-                "type": "object",
-                "properties": {
-                    "entry":     {"type": ["string", "null"]},
-                    "spectator": {"type": ["string", "null"]}
-                }
-            },
-            "contact": {
-                "type": "object",
-                "properties": {
-                    "phone":   {"type": ["string", "null"]},
-                    "email":   {"type": ["string", "null"]},
-                    "website": {"type": ["string", "null"]}
-                }
-            },
-            "confidence":     {"type": "number", "minimum": 0, "maximum": 1},
-            "unclear_fields": {"type": "array", "items": {"type": "string"}},
-            "notes":          {"type": ["string", "null"]}
-        },
-        "required": ["title", "event_type", "track", "dates", "confidence"]
-    }
+    "input_schema": EVENT_INPUT_SCHEMA,
 }
 
 
