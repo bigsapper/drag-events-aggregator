@@ -56,23 +56,30 @@ def test_ensure_runtime_layout_moves_legacy_files(tmp_path, monkeypatch):
     dist_dir = tmp_path / "dist"
     runtime_dir.mkdir()
     dist_dir.mkdir()
+    state_dir = runtime_dir / "state"
+    tracing_dir = runtime_dir / "tracing"
 
-    crawl_state = runtime_dir / "crawl_state.json"
-    metrics_log = runtime_dir / "crawl_metrics.jsonl"
-    metrics_summary = runtime_dir / "crawl_metrics_summary.json"
-    error_log = runtime_dir / "crawl_errors.log"
+    crawl_state = state_dir / "crawl_state.json"
+    metrics_log = tracing_dir / "crawl_metrics.jsonl"
+    metrics_summary = tracing_dir / "crawl_metrics_summary.json"
+    error_log = tracing_dir / "crawl_errors.log"
 
     legacy_state = tmp_path / ".crawl_state.json"
     legacy_metrics = dist_dir / "crawl_metrics.jsonl"
     legacy_summary = dist_dir / "crawl_metrics_summary.json"
     legacy_error = dist_dir / "crawl_errors.log"
+    runtime_legacy_metrics = runtime_dir / "crawl_metrics.jsonl"
+    runtime_legacy_summary = runtime_dir / "crawl_metrics_summary.json"
+    runtime_legacy_error = runtime_dir / "crawl_errors.log"
 
     legacy_state.write_text('{"seen_urls": []}')
-    legacy_metrics.write_text('{"run_id":"old"}\n')
-    legacy_summary.write_text('{"recorded_runs": 1}\n')
-    legacy_error.write_text("old error\n")
+    runtime_legacy_metrics.write_text('{"run_id":"old"}\n')
+    runtime_legacy_summary.write_text('{"recorded_runs": 1}\n')
+    runtime_legacy_error.write_text("old error\n")
 
     monkeypatch.setattr(crawl, "RUNTIME_DIR", runtime_dir)
+    monkeypatch.setattr(crawl, "STATE_DIR", state_dir)
+    monkeypatch.setattr(crawl, "TRACING_DIR", tracing_dir)
     monkeypatch.setattr(crawl, "CRAWL_STATE", crawl_state)
     monkeypatch.setattr(crawl, "METRICS_LOG", metrics_log)
     monkeypatch.setattr(crawl, "METRICS_SUMMARY", metrics_summary)
@@ -81,9 +88,14 @@ def test_ensure_runtime_layout_moves_legacy_files(tmp_path, monkeypatch):
     monkeypatch.setattr(crawl, "LEGACY_METRICS_LOG", legacy_metrics)
     monkeypatch.setattr(crawl, "LEGACY_METRICS_SUMMARY", legacy_summary)
     monkeypatch.setattr(crawl, "LEGACY_ERROR_LOG", legacy_error)
+    monkeypatch.setattr(crawl, "RUNTIME_LEGACY_METRICS_LOG", runtime_legacy_metrics)
+    monkeypatch.setattr(crawl, "RUNTIME_LEGACY_METRICS_SUMMARY", runtime_legacy_summary)
+    monkeypatch.setattr(crawl, "RUNTIME_LEGACY_ERROR_LOG", runtime_legacy_error)
 
     crawl.ensure_runtime_layout()
 
+    assert state_dir.exists()
+    assert tracing_dir.exists()
     assert crawl_state.exists()
     assert metrics_log.exists()
     assert metrics_summary.exists()
@@ -92,6 +104,9 @@ def test_ensure_runtime_layout_moves_legacy_files(tmp_path, monkeypatch):
     assert not legacy_metrics.exists()
     assert not legacy_summary.exists()
     assert not legacy_error.exists()
+    assert not runtime_legacy_metrics.exists()
+    assert not runtime_legacy_summary.exists()
+    assert not runtime_legacy_error.exists()
 
 
 def test_record_run_metrics_appends_jsonl_and_updates_summary(tmp_path):

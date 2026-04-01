@@ -39,19 +39,26 @@ SOURCES_FILE = Path(__file__).parent / "sources.json"
 FLYERS_DIR   = Path(__file__).parent / "flyers"
 DIST_DIR     = Path(__file__).parent / "dist"
 RUNTIME_DIR  = Path(__file__).parent / "runtime"
-CRAWL_STATE  = RUNTIME_DIR / "crawl_state.json"
-METRICS_LOG  = RUNTIME_DIR / "crawl_metrics.jsonl"
-METRICS_SUMMARY = RUNTIME_DIR / "crawl_metrics_summary.json"
-ERROR_LOG    = RUNTIME_DIR / "crawl_errors.log"
+STATE_DIR    = RUNTIME_DIR / "state"
+TRACING_DIR  = RUNTIME_DIR / "tracing"
+CRAWL_STATE  = STATE_DIR / "crawl_state.json"
+METRICS_LOG  = TRACING_DIR / "crawl_metrics.jsonl"
+METRICS_SUMMARY = TRACING_DIR / "crawl_metrics_summary.json"
+ERROR_LOG    = TRACING_DIR / "crawl_errors.log"
 
 LEGACY_CRAWL_STATE = Path(__file__).parent / ".crawl_state.json"
 LEGACY_METRICS_LOG = DIST_DIR / "crawl_metrics.jsonl"
 LEGACY_METRICS_SUMMARY = DIST_DIR / "crawl_metrics_summary.json"
 LEGACY_ERROR_LOG = DIST_DIR / "crawl_errors.log"
+RUNTIME_LEGACY_METRICS_LOG = RUNTIME_DIR / "crawl_metrics.jsonl"
+RUNTIME_LEGACY_METRICS_SUMMARY = RUNTIME_DIR / "crawl_metrics_summary.json"
+RUNTIME_LEGACY_ERROR_LOG = RUNTIME_DIR / "crawl_errors.log"
 
 FLYERS_DIR.mkdir(exist_ok=True)
 DIST_DIR.mkdir(exist_ok=True)
 RUNTIME_DIR.mkdir(exist_ok=True)
+STATE_DIR.mkdir(exist_ok=True)
+TRACING_DIR.mkdir(exist_ok=True)
 
 # Pages on a track site most likely to contain event flyers
 EVENT_PAGE_KEYWORDS = [
@@ -74,11 +81,16 @@ HEADERS = {
 
 def ensure_runtime_layout() -> None:
     RUNTIME_DIR.mkdir(exist_ok=True)
+    STATE_DIR.mkdir(exist_ok=True)
+    TRACING_DIR.mkdir(exist_ok=True)
     legacy_files = [
         (LEGACY_CRAWL_STATE, CRAWL_STATE),
         (LEGACY_METRICS_LOG, METRICS_LOG),
         (LEGACY_METRICS_SUMMARY, METRICS_SUMMARY),
         (LEGACY_ERROR_LOG, ERROR_LOG),
+        (RUNTIME_LEGACY_METRICS_LOG, METRICS_LOG),
+        (RUNTIME_LEGACY_METRICS_SUMMARY, METRICS_SUMMARY),
+        (RUNTIME_LEGACY_ERROR_LOG, ERROR_LOG),
     ]
     for legacy, current in legacy_files:
         if legacy.exists() and not current.exists():

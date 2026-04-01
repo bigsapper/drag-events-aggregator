@@ -2,8 +2,8 @@
 .env
 .venv/
 
-# Runtime state
-runtime/
+# Runtime tracing
+runtime/tracing/
 
 # Downloaded data
 flyers/

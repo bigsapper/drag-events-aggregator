@@ -19,7 +19,7 @@
 ## Resilience
 - [ ] Add retry logic for transient HTTP failures during crawling
 - [ ] Add retry logic for transient Claude API failures during extraction
-- [ ] Persist `runtime/crawl_state.json` in a location that survives across CI runner environments (e.g. commit it, or store in a remote cache)
+- [ ] Persist `runtime/state/crawl_state.json` in a location that survives across CI runner environments (e.g. commit it, or store in a remote cache)
 
 ## Architecture — Crawl Strategy Scalability
 Adding aggregator sources with unique page structures currently requires modifying `crawl.py` directly
