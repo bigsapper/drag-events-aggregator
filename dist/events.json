@@ -5,6 +5,7 @@
     "event_type": "points_race",
     "series": null,
     "track": {
+      "id": "texas-motorplex-tx",
       "name": "Texas Motorplex",
       "city": "Ennis",
       "state": "TX"
@@ -44,6 +45,7 @@
     "event_type": "test_n_tune",
     "series": null,
     "track": {
+      "id": "xtreme-tx",
       "name": "Xtreme Raceway Park",
       "city": "Ferris",
       "state": "TX"
@@ -82,6 +84,7 @@
     "event_type": "unknown",
     "series": null,
     "track": {
+      "id": "texas-motorplex-tx",
       "name": "Texas Motorplex",
       "city": "Ennis",
       "state": "TX"
@@ -118,6 +121,7 @@
     "event_type": "bracket",
     "series": null,
     "track": {
+      "id": "xtreme-tx",
       "name": "Xtreme Raceway Park",
       "city": "Ferris",
       "state": "TX"
@@ -161,6 +165,7 @@
     "event_type": "unknown",
     "series": null,
     "track": {
+      "id": "texas-motorplex-tx",
       "name": "Texas Motorplex",
       "city": "Ennis",
       "state": "TX"
@@ -212,6 +217,7 @@
     "event_type": "no_prep",
     "series": null,
     "track": {
+      "id": "westx-abilene-tx",
       "name": "WesTX Abilene Raceway",
       "city": "Abilene",
       "state": "TX"
@@ -252,6 +258,7 @@
     "event_type": "bracket",
     "series": null,
     "track": {
+      "id": "xtreme-tx",
       "name": "Xtreme Raceway Park",
       "city": "Ferris",
       "state": "TX"
@@ -298,6 +305,7 @@
     "event_type": "bracket",
     "series": null,
     "track": {
+      "id": "texas-motorplex-tx",
       "name": "Texas Motorplex",
       "city": "Ennis",
       "state": "TX"
@@ -343,6 +351,7 @@
     "event_type": "bracket",
     "series": null,
     "track": {
+      "id": "xtreme-tx",
       "name": "Xtreme Raceway Park",
       "city": "Ferris",
       "state": "TX"
@@ -389,6 +398,7 @@
     "event_type": "unknown",
     "series": null,
     "track": {
+      "id": "texas-motorplex-tx",
       "name": "Texas Motorplex",
       "city": "Ennis",
       "state": "TX"
@@ -425,6 +435,7 @@
     "event_type": "unknown",
     "series": null,
     "track": {
+      "id": "xtreme-tx",
       "name": "Xtreme Raceway Park",
       "city": "Ferris",
       "state": "TX"
@@ -472,6 +483,7 @@
     "event_type": "unknown",
     "series": null,
     "track": {
+      "id": "xtreme-tx",
       "name": "Xtreme Raceway Park",
       "city": "Ferris",
       "state": "TX"
@@ -512,6 +524,7 @@
     "event_type": "bracket",
     "series": null,
     "track": {
+      "id": "xtreme-tx",
       "name": "Xtreme Raceway Park",
       "city": "Ferris",
       "state": "TX"
@@ -558,6 +571,7 @@
     "event_type": "unknown",
     "series": null,
     "track": {
+      "id": "texas-motorplex-tx",
       "name": "Texas Motorplex",
       "city": "Ennis",
       "state": "TX"
@@ -594,6 +608,7 @@
     "event_type": "unknown",
     "series": null,
     "track": {
+      "id": "texas-motorplex-tx",
       "name": "Texas Motorplex",
       "city": "Ennis",
       "state": "TX"
@@ -630,6 +645,7 @@
     "event_type": "bracket",
     "series": null,
     "track": {
+      "id": "texas-motorplex-tx",
       "name": "Texas Motorplex",
       "city": "Ennis",
       "state": "TX"
@@ -675,6 +691,7 @@
     "event_type": "points_race",
     "series": null,
     "track": {
+      "id": "texas-motorplex-tx",
       "name": "Texas Motorplex",
       "city": "Ennis",
       "state": "TX"
@@ -711,6 +728,7 @@
     "event_type": "bracket",
     "series": null,
     "track": {
+      "id": "xtreme-tx",
       "name": "Xtreme Raceway Park",
       "city": "Ferris",
       "state": "TX"
@@ -757,6 +775,7 @@
     "event_type": "bracket",
     "series": null,
     "track": {
+      "id": "texas-motorplex-tx",
       "name": "Texas Motorplex",
       "city": "Ennis",
       "state": "TX"
@@ -798,6 +817,7 @@
     "event_type": "unknown",
     "series": null,
     "track": {
+      "id": "texas-motorplex-tx",
       "name": "Texas Motorplex",
       "city": "Ennis",
       "state": "TX"
@@ -834,6 +854,7 @@
     "event_type": "unknown",
     "series": null,
     "track": {
+      "id": "xtreme-tx",
       "name": "Xtreme Raceway Park",
       "city": "Ferris",
       "state": "TX"
@@ -878,6 +899,7 @@
     "event_type": "bracket",
     "series": null,
     "track": {
+      "id": "texas-motorplex-tx",
       "name": "Texas Motorplex",
       "city": "Ennis",
       "state": "TX"
@@ -920,6 +942,7 @@
     "event_type": "unknown",
     "series": null,
     "track": {
+      "id": "xtreme-tx",
       "name": "Xtreme Raceway Park",
       "city": "Ferris",
       "state": "TX"
@@ -967,6 +990,7 @@
     "event_type": "bracket",
     "series": null,
     "track": {
+      "id": "xtreme-tx",
       "name": "Xtreme Raceway Park",
       "city": "Ferris",
       "state": "TX"
@@ -1013,6 +1037,7 @@
     "event_type": "unknown",
     "series": null,
     "track": {
+      "id": "texas-motorplex-tx",
       "name": "Texas Motorplex",
       "city": "Ennis",
       "state": "TX"
@@ -1049,6 +1074,7 @@
     "event_type": "bracket",
     "series": null,
     "track": {
+      "id": "texas-motorplex-tx",
       "name": "Texas Motorplex",
       "city": "Ennis",
       "state": "TX"
@@ -1091,6 +1117,7 @@
     "event_type": "bracket",
     "series": null,
     "track": {
+      "id": "xtreme-tx",
       "name": "Xtreme Raceway Park",
       "city": "Ferris",
       "state": "TX"
@@ -1137,6 +1164,7 @@
     "event_type": "unknown",
     "series": null,
     "track": {
+      "id": "xtreme-tx",
       "name": "Xtreme Raceway Park",
       "city": "Ferris",
       "state": "TX"
@@ -1184,6 +1212,7 @@
     "event_type": "bracket",
     "series": null,
     "track": {
+      "id": "texas-motorplex-tx",
       "name": "Texas Motorplex",
       "city": "Ennis",
       "state": "TX"
@@ -1225,6 +1254,7 @@
     "event_type": "bracket",
     "series": null,
     "track": {
+      "id": "texas-motorplex-tx",
       "name": "Texas Motorplex",
       "city": "Ennis",
       "state": "TX"
@@ -1267,6 +1297,7 @@
     "event_type": "unknown",
     "series": null,
     "track": {
+      "id": "xtreme-tx",
       "name": "Xtreme Raceway Park",
       "city": "Ferris",
       "state": "TX"
@@ -1314,6 +1345,7 @@
     "event_type": "bracket",
     "series": null,
     "track": {
+      "id": "xtreme-tx",
       "name": "Xtreme Raceway Park",
       "city": "Ferris",
       "state": "TX"
@@ -1360,6 +1392,7 @@
     "event_type": "bracket",
     "series": null,
     "track": {
+      "id": "xtreme-tx",
       "name": "Xtreme Raceway Park",
       "city": "Ferris",
       "state": "TX"
@@ -1402,6 +1435,7 @@
     "event_type": "points_race",
     "series": null,
     "track": {
+      "id": "texas-motorplex-tx",
       "name": "Texas Motorplex",
       "city": "Ennis",
       "state": "TX"
@@ -1438,6 +1472,7 @@
     "event_type": "points_race",
     "series": null,
     "track": {
+      "id": "texas-motorplex-tx",
       "name": "Texas Motorplex",
       "city": "Ennis",
       "state": "TX"
@@ -1474,6 +1509,7 @@
     "event_type": "unknown",
     "series": null,
     "track": {
+      "id": "texas-motorplex-tx",
       "name": "Texas Motorplex",
       "city": "Ennis",
       "state": "TX"
@@ -1519,6 +1555,7 @@
     "event_type": "unknown",
     "series": null,
     "track": {
+      "id": "xtreme-tx",
       "name": "Xtreme Raceway Park",
       "city": "Ferris",
       "state": "TX"
@@ -1563,6 +1600,7 @@
     "event_type": "unknown",
     "series": null,
     "track": {
+      "id": "xtreme-tx",
       "name": "Xtreme Raceway Park",
       "city": "Ferris",
       "state": "TX"
