@@ -331,6 +331,12 @@ def test_merge_null_new_does_not_overwrite(existing, new_flyer):
     assert merged["title"] == "Old Title"
 
 
+def test_merge_preserves_existing_dates_when_new_start_missing(existing, new_flyer):
+    new_data = {"track": {"name": "Texas Motorplex"}, "dates": {"end": "2026-05-11"}, "confidence": 0.7}
+    merged = merge_events(existing, new_data, new_flyer)
+    assert merged["dates"] == existing["dates"]
+
+
 def test_merge_classes_union(existing, new_flyer):
     new_data = {"classes": ["Super Pro", "Pro"], "track": {"name": "Texas Motorplex"}, "dates": {"start": "2026-05-10"}, "confidence": 0.7}
     merged = merge_events(existing, new_data, new_flyer)

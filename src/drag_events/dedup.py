@@ -140,6 +140,74 @@ def find_same_event(new_event: dict, events: list[dict]) -> dict | None:
     return None
 
 
+def _merge_scalar_fields(existing: dict, new_data: dict, merged: dict) -> None:
+    for field in ("title", "event_type", "series", "notes"):
+        if new_data.get(field):
+            merged[field] = new_data[field]
+
+
+def _merge_track(existing: dict, new_data: dict) -> dict:
+    existing_track = existing.get("track", {})
+    new_track = new_data.get("track", {})
+    merged_name = new_track.get("name") or existing_track.get("name")
+    merged_state = new_track.get("state") or existing_track.get("state")
+    return {
+        "id": track_slug(merged_name, merged_state),
+        "name": merged_name,
+        "city": new_track.get("city") or existing_track.get("city"),
+        "state": merged_state,
+    }
+
+
+def _merge_dates(existing: dict, new_data: dict) -> dict:
+    if new_data.get("dates", {}).get("start"):
+        return new_data["dates"]
+    return existing.get("dates", {})
+
+
+def _merge_times(existing: dict, new_data: dict) -> dict:
+    existing_times = existing.get("times", {})
+    new_times = new_data.get("times", {})
+    return {
+        "gates_open": new_times.get("gates_open") or existing_times.get("gates_open"),
+        "registration_opens": new_times.get("registration_opens") or existing_times.get("registration_opens"),
+        "race_start": new_times.get("race_start") or existing_times.get("race_start"),
+    }
+
+
+def _merge_fees(existing: dict, new_data: dict) -> dict:
+    existing_fees = existing.get("fees", {})
+    new_fees = new_data.get("fees", {})
+    return {
+        "entry": new_fees.get("entry") or existing_fees.get("entry"),
+        "spectator": new_fees.get("spectator") or existing_fees.get("spectator"),
+    }
+
+
+def _merge_contact(existing: dict, new_data: dict) -> dict:
+    existing_contact = existing.get("contact", {})
+    new_contact = new_data.get("contact", {})
+    return {
+        "phone": new_contact.get("phone") or existing_contact.get("phone"),
+        "email": new_contact.get("email") or existing_contact.get("email"),
+        "website": new_contact.get("website") or existing_contact.get("website"),
+    }
+
+
+def _merge_classes(existing: dict, new_data: dict) -> list[str]:
+    existing_classes = set(existing.get("classes", []))
+    new_classes = set(new_data.get("classes", []))
+    return sorted(existing_classes | new_classes)
+
+
+def _merge_confidence(existing: dict, new_data: dict) -> float | int:
+    return max(existing.get("confidence", 0), new_data.get("confidence", 0))
+
+
+def _append_flyer(existing: dict, new_flyer_entry: dict) -> list[dict]:
+    return existing.get("flyers", []) + [new_flyer_entry]
+
+
 def merge_events(existing: dict, new_data: dict, new_flyer_entry: dict) -> dict:
     """Merge new flyer data into an existing event record.
 
@@ -148,62 +216,14 @@ def merge_events(existing: dict, new_data: dict, new_flyer_entry: dict) -> dict:
     """
     merged = dict(existing)
 
-    # Scalar fields — new value wins if present
-    for field in ("title", "event_type", "series", "notes"):
-        if new_data.get(field):
-            merged[field] = new_data[field]
-
-    # Track — new values fill in missing fields
-    existing_track = existing.get("track", {})
-    new_track = new_data.get("track", {})
-    merged_name  = new_track.get("name")  or existing_track.get("name")
-    merged_state = new_track.get("state") or existing_track.get("state")
-    merged["track"] = {
-        "id":    track_slug(merged_name, merged_state),
-        "name":  merged_name,
-        "city":  new_track.get("city") or existing_track.get("city"),
-        "state": merged_state,
-    }
-
-    # Dates — new flyer wins (may have corrected or extended dates)
-    if new_data.get("dates", {}).get("start"):
-        merged["dates"] = new_data["dates"]
-
-    # Times — new flyer wins for any non-null time
-    existing_times = existing.get("times", {})
-    new_times = new_data.get("times", {})
-    merged["times"] = {
-        "gates_open": new_times.get("gates_open") or existing_times.get("gates_open"),
-        "registration_opens": new_times.get("registration_opens") or existing_times.get("registration_opens"),
-        "race_start": new_times.get("race_start") or existing_times.get("race_start"),
-    }
-
-    # Fees — new flyer wins if present
-    existing_fees = existing.get("fees", {})
-    new_fees = new_data.get("fees", {})
-    merged["fees"] = {
-        "entry": new_fees.get("entry") or existing_fees.get("entry"),
-        "spectator": new_fees.get("spectator") or existing_fees.get("spectator"),
-    }
-
-    # Contact — union, new wins on conflict
-    existing_contact = existing.get("contact", {})
-    new_contact = new_data.get("contact", {})
-    merged["contact"] = {
-        "phone": new_contact.get("phone") or existing_contact.get("phone"),
-        "email": new_contact.get("email") or existing_contact.get("email"),
-        "website": new_contact.get("website") or existing_contact.get("website"),
-    }
-
-    # Classes — union of both sets
-    existing_classes = set(existing.get("classes", []))
-    new_classes = set(new_data.get("classes", []))
-    merged["classes"] = sorted(existing_classes | new_classes)
-
-    # Confidence — take the higher value
-    merged["confidence"] = max(existing.get("confidence", 0), new_data.get("confidence", 0))
-
-    # Append new flyer to history
-    merged["flyers"] = existing.get("flyers", []) + [new_flyer_entry]
+    _merge_scalar_fields(existing, new_data, merged)
+    merged["track"] = _merge_track(existing, new_data)
+    merged["dates"] = _merge_dates(existing, new_data)
+    merged["times"] = _merge_times(existing, new_data)
+    merged["fees"] = _merge_fees(existing, new_data)
+    merged["contact"] = _merge_contact(existing, new_data)
+    merged["classes"] = _merge_classes(existing, new_data)
+    merged["confidence"] = _merge_confidence(existing, new_data)
+    merged["flyers"] = _append_flyer(existing, new_flyer_entry)
 
     return merged
