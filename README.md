@@ -7,7 +7,7 @@ Crawls drag racing track websites and aggregator sources for event flyers, extra
 1. **Crawl** — scrapes track websites and aggregator sources for event flyer images and text listings
 2. **Extract** — sends flyer images to Claude vision (Sonnet) or text listings to Claude (Haiku) to extract structured event data
 3. **Dedup** — uses perceptual hashing to detect duplicate images and track+date matching to merge repeat flyers for the same event
-4. **Store** — writes results to `events.json`
+4. **Store** — writes results to `dist/events.json`
 
 ## Prerequisites
 
@@ -91,6 +91,6 @@ drag-events-aggregator/
 │       └── schema.py           # Shared Claude tool JSON schema
 ├── requirements.txt        # Python dependencies
 ├── requirements-dev.txt    # Dev/test dependencies
-├── setup.sh                # One-time setup script (Linux/macOS)
+├── setup.sh                # One-time setup script for Debian/Ubuntu-style environments
 └── .env.example            # Environment variable template
 ```

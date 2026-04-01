@@ -54,6 +54,199 @@ def test_save_state_roundtrip(tmp_crawl_state):
     assert crawl.load_state() == state
 
 
+def test_validate_tracks_config_rejects_missing_required_fields():
+    with pytest.raises(crawl.ConfigValidationError, match=r"tracks\[0\]\.url"):
+        crawl.validate_tracks_config([{"name": "Track", "state": "TX"}])
+
+
+def test_validate_tracks_config_rejects_non_list():
+    with pytest.raises(crawl.ConfigValidationError, match="tracks config must be a list of objects"):
+        crawl.validate_tracks_config({"name": "Track"})
+
+
+def test_validate_tracks_config_rejects_non_object_entry():
+    with pytest.raises(crawl.ConfigValidationError, match=r"tracks\[0\] must be an object"):
+        crawl.validate_tracks_config(["not-a-track"])
+
+
+def test_validate_tracks_config_rejects_blank_name():
+    with pytest.raises(crawl.ConfigValidationError, match=r"tracks\[0\]\.name"):
+        crawl.validate_tracks_config([{"name": " ", "state": "TX", "url": "https://example.com"}])
+
+
+def test_validate_tracks_config_rejects_lowercase_state():
+    with pytest.raises(crawl.ConfigValidationError, match=r"tracks\[0\]\.state"):
+        crawl.validate_tracks_config([{"name": "Track", "state": "tx", "url": "https://example.com"}])
+
+
+def test_validate_tracks_config_accepts_valid_entries():
+    data = [{"name": "Track", "state": "TX", "url": "https://example.com"}]
+    assert crawl.validate_tracks_config(data) == data
+
+
+def test_validate_tracks_config_rejects_non_boolean_enabled():
+    with pytest.raises(crawl.ConfigValidationError, match=r"tracks\[0\]\.enabled"):
+        crawl.validate_tracks_config(
+            [{"name": "Track", "state": "TX", "url": "https://example.com", "enabled": "yes"}]
+        )
+
+
+def test_validate_sources_config_rejects_non_list():
+    with pytest.raises(crawl.ConfigValidationError, match="sources config must be a list of objects"):
+        crawl.validate_sources_config({"name": "Source"})
+
+
+def test_validate_sources_config_rejects_non_object_entry():
+    with pytest.raises(crawl.ConfigValidationError, match=r"sources\[0\] must be an object"):
+        crawl.validate_sources_config(["not-a-source"])
+
+
+def test_validate_sources_config_rejects_blank_name():
+    with pytest.raises(crawl.ConfigValidationError, match=r"sources\[0\]\.name"):
+        crawl.validate_sources_config([{"name": "", "url": "https://example.com", "strategy": "rss"}])
+
+
+def test_validate_sources_config_rejects_invalid_url():
+    with pytest.raises(crawl.ConfigValidationError, match=r"sources\[0\]\.url"):
+        crawl.validate_sources_config([{"name": "Source", "url": "ftp://example.com", "strategy": "rss"}])
+
+
+def test_validate_sources_config_rejects_unknown_strategy():
+    with pytest.raises(crawl.ConfigValidationError, match=r"sources\[0\]\.strategy"):
+        crawl.validate_sources_config([{"name": "Source", "url": "https://example.com", "strategy": "unknown"}])
+
+
+def test_validate_sources_config_rejects_missing_bracketraces_event_pages():
+    with pytest.raises(crawl.ConfigValidationError, match=r"event_pages"):
+        crawl.validate_sources_config([{"name": "Bracketraces", "url": "https://example.com", "strategy": "bracketraces"}])
+
+
+def test_validate_sources_config_rejects_invalid_bracketraces_event_page_entries():
+    with pytest.raises(crawl.ConfigValidationError, match=r"event_pages entries"):
+        crawl.validate_sources_config(
+            [{"name": "Bracketraces", "url": "https://example.com", "strategy": "bracketraces", "event_pages": ["events"]}]
+        )
+
+
+def test_validate_sources_config_rejects_invalid_racingjunk_drag_racing_url():
+    with pytest.raises(crawl.ConfigValidationError, match=r"drag_racing_url"):
+        crawl.validate_sources_config(
+            [{"name": "RacingJunk", "url": "https://example.com", "strategy": "racingjunk", "drag_racing_url": "ftp://example.com"}]
+        )
+
+
+def test_validate_sources_config_accepts_valid_entries():
+    data = [{"name": "Source", "url": "https://example.com", "strategy": "rss"}]
+    assert crawl.validate_sources_config(data) == data
+
+
+def test_validate_sources_config_rejects_non_boolean_enabled():
+    with pytest.raises(crawl.ConfigValidationError, match=r"sources\[0\]\.enabled"):
+        crawl.validate_sources_config(
+            [{"name": "Source", "url": "https://example.com", "strategy": "rss", "enabled": 1}]
+        )
+
+
+def test_validate_sources_config_rejects_non_object_request_headers():
+    with pytest.raises(crawl.ConfigValidationError, match=r"sources\[0\]\.request_headers"):
+        crawl.validate_sources_config(
+            [{"name": "Source", "url": "https://example.com", "strategy": "rss", "request_headers": "not-a-dict"}]
+        )
+
+
+def test_validate_sources_config_rejects_non_string_request_header_value():
+    with pytest.raises(crawl.ConfigValidationError, match=r"request_headers values must be strings"):
+        crawl.validate_sources_config(
+            [{"name": "Source", "url": "https://example.com", "strategy": "rss", "request_headers": {"X-Test": 1}}]
+        )
+
+
+def test_validate_sources_config_rejects_blank_request_header_key():
+    with pytest.raises(crawl.ConfigValidationError, match=r"request_headers keys must be non-empty strings"):
+        crawl.validate_sources_config(
+            [{"name": "Source", "url": "https://example.com", "strategy": "rss", "request_headers": {"": "value"}}]
+        )
+
+
+def test_validate_sources_config_rejects_negative_page_delay_seconds():
+    with pytest.raises(crawl.ConfigValidationError, match=r"page_delay_seconds"):
+        crawl.validate_sources_config(
+            [{"name": "Source", "url": "https://example.com", "strategy": "rss", "page_delay_seconds": -0.5}]
+        )
+
+
+def test_validate_sources_config_rejects_invalid_max_pages():
+    with pytest.raises(crawl.ConfigValidationError, match=r"max_pages"):
+        crawl.validate_sources_config(
+            [{"name": "Source", "url": "https://example.com", "strategy": "rss", "max_pages": 0}]
+        )
+
+
+def test_load_tracks_config_rejects_invalid_json(tmp_path):
+    path = tmp_path / "tracks.json"
+    path.write_text("{not-json")
+    with pytest.raises(crawl.ConfigValidationError, match="Invalid JSON"):
+        crawl.load_tracks_config(path)
+
+
+def test_load_tracks_config_filters_disabled_entries(tmp_path):
+    path = tmp_path / "tracks.json"
+    path.write_text(
+        json.dumps(
+            [
+                {"name": "Track A", "state": "TX", "url": "https://a.example.com"},
+                {"name": "Track B", "state": "OK", "url": "https://b.example.com", "enabled": False},
+            ]
+        )
+    )
+    assert crawl.load_tracks_config(path) == [
+        {"name": "Track A", "state": "TX", "url": "https://a.example.com"}
+    ]
+
+
+def test_load_sources_config_filters_disabled_entries(tmp_path):
+    path = tmp_path / "sources.json"
+    path.write_text(
+        json.dumps(
+            [
+                {"name": "Source A", "url": "https://a.example.com", "strategy": "rss"},
+                {"name": "Source B", "url": "https://b.example.com", "strategy": "rss", "enabled": False},
+            ]
+        )
+    )
+    assert crawl.load_sources_config(path) == [
+        {"name": "Source A", "url": "https://a.example.com", "strategy": "rss"}
+    ]
+
+
+def test_load_sources_config_accepts_per_site_settings(tmp_path):
+    path = tmp_path / "sources.json"
+    path.write_text(
+        json.dumps(
+            [
+                {
+                    "name": "Source A",
+                    "url": "https://a.example.com",
+                    "strategy": "racingjunk",
+                    "request_headers": {"X-Test": "true"},
+                    "page_delay_seconds": 1.25,
+                    "max_pages": 3,
+                }
+            ]
+        )
+    )
+    assert crawl.load_sources_config(path) == [
+        {
+            "name": "Source A",
+            "url": "https://a.example.com",
+            "strategy": "racingjunk",
+            "request_headers": {"X-Test": "true"},
+            "page_delay_seconds": 1.25,
+            "max_pages": 3,
+        }
+    ]
+
+
 # ── Shared helpers ────────────────────────────────────────────────────────────
 
 def test_is_event_page_keyword_in_url():
@@ -128,6 +321,24 @@ def test_url_to_filename_includes_hash():
     assert len(stem.split("-")[-1]) == 8
 
 
+def test_get_request_headers_merges_source_headers():
+    headers = crawl.get_request_headers({"request_headers": {"X-Test": "true", "User-Agent": "CustomBot/1.0"}})
+    assert headers["X-Test"] == "true"
+    assert headers["User-Agent"] == "CustomBot/1.0"
+
+
+def test_get_source_delay_uses_defaults_and_override():
+    assert crawl.get_source_delay({"strategy": "racingjunk"}) == 0.75
+    assert crawl.get_source_delay({"strategy": "rss"}, default=0.2) == 0.2
+    assert crawl.get_source_delay({"strategy": "racingjunk", "page_delay_seconds": 1.5}) == 1.5
+
+
+def test_get_source_max_pages_uses_defaults_and_override():
+    assert crawl.get_source_max_pages({"strategy": "racingjunk"}) == 10
+    assert crawl.get_source_max_pages({"strategy": "rss"}, default=2) == 2
+    assert crawl.get_source_max_pages({"strategy": "racingjunk", "max_pages": 4}) == 4
+
+
 # ── download_image ────────────────────────────────────────────────────────────
 
 def test_download_image_skips_existing(tmp_flyers_dir):
@@ -187,6 +398,14 @@ def test_fetch_page_connection_error_returns_none(capsys):
         result = crawl.fetch_page("http://track.com")
     assert result is None
     assert "Could not fetch" in capsys.readouterr().out
+
+
+def test_fetch_page_uses_custom_headers():
+    resp = _mock_response(text="<html><body>Hello</body></html>")
+    headers = {"User-Agent": "CustomBot/1.0", "X-Test": "true"}
+    with patch("drag_events.crawl.requests.get", return_value=resp) as mock_get:
+        crawl.fetch_page("http://track.com", headers=headers)
+    assert mock_get.call_args.kwargs["headers"] == headers
 
 
 # ── crawl_track ───────────────────────────────────────────────────────────────
@@ -265,6 +484,30 @@ def test_crawl_bracketraces_skips_fetch_failure():
     assert result == []
 
 
+def test_crawl_bracketraces_uses_request_headers_and_configured_delay(tmp_flyers_dir):
+    state = {"seen_urls": []}
+    html = '<img src="/spring-fling.webp" width="800" height="600">'
+    img_resp = _mock_response(content=b"WEBP", content_type="image/webp")
+
+    def side_effect(url, **kwargs):
+        assert kwargs["headers"]["X-Test"] == "true"
+        if ".webp" in url:
+            return img_resp
+        return _mock_response(text=html)
+
+    source = {
+        "url": "http://bracketraces.com",
+        "event_pages": ["/event-spring-fling.php"],
+        "request_headers": {"X-Test": "true"},
+        "page_delay_seconds": 1.25,
+    }
+    with patch("drag_events.crawl.requests.get", side_effect=side_effect), \
+         patch("drag_events.crawl.time.sleep") as mock_sleep:
+        result = crawl.crawl_bracketraces(source, state)
+    assert len(result) == 1
+    mock_sleep.assert_called_once_with(1.25)
+
+
 # ── crawl_racingjunk ──────────────────────────────────────────────────────────
 
 _RJ_HTML = """
@@ -316,6 +559,30 @@ def test_crawl_racingjunk_stops_on_empty_page():
             state,
         )
     assert result == []
+
+
+def test_crawl_racingjunk_honors_max_pages_and_delay():
+    state = {"seen_urls": [], "racingjunk_events": []}
+    page_one = _mock_response(text=_RJ_HTML.replace("Summer Bracket Race", "Race One"))
+    page_two = _mock_response(text=_RJ_HTML.replace("Summer Bracket Race", "Race Two"))
+
+    with patch("drag_events.crawl.requests.get", side_effect=[page_one, page_two]) as mock_get, \
+         patch("drag_events.crawl.time.sleep") as mock_sleep:
+        result = crawl.crawl_racingjunk(
+            {
+                "url": "http://racingjunk.com/events",
+                "drag_racing_url": "http://racingjunk.com/drag",
+                "max_pages": 2,
+                "page_delay_seconds": 1.5,
+                "request_headers": {"X-Test": "true"},
+            },
+            state,
+        )
+    assert len(result) == 2
+    assert mock_get.call_count == 2
+    assert all(call.kwargs["headers"]["X-Test"] == "true" for call in mock_get.call_args_list)
+    assert mock_sleep.call_count == 2
+    assert all(mock_call == call(1.5) for mock_call in mock_sleep.call_args_list)
 
 
 # ── crawl_myracepass ──────────────────────────────────────────────────────────
@@ -848,7 +1115,8 @@ def test_run_extraction_text_error_continues(tmp_events_file, capsys):
 
 def test_main_runs_all_by_default(tmp_crawl_state):
     with patch.object(sys, "argv", ["crawl.py"]), \
-         patch("drag_events.crawl.json.loads", return_value=[]), \
+         patch("drag_events.crawl.load_tracks_config", return_value=[]), \
+         patch("drag_events.crawl.load_sources_config", return_value=[]), \
          patch("drag_events.crawl.run_extraction"), \
          patch("drag_events.crawl.save_state"), \
          patch("drag_events.crawl.time.sleep"):
@@ -857,7 +1125,7 @@ def test_main_runs_all_by_default(tmp_crawl_state):
 
 def test_main_tracks_only(tmp_crawl_state):
     with patch.object(sys, "argv", ["crawl.py", "--tracks"]), \
-         patch("drag_events.crawl.json.loads", return_value=[]), \
+         patch("drag_events.crawl.load_tracks_config", return_value=[]), \
          patch("drag_events.crawl.run_extraction"), \
          patch("drag_events.crawl.save_state"), \
          patch("drag_events.crawl.time.sleep"):
@@ -866,7 +1134,7 @@ def test_main_tracks_only(tmp_crawl_state):
 
 def test_main_sources_only(tmp_crawl_state):
     with patch.object(sys, "argv", ["crawl.py", "--sources"]), \
-         patch("drag_events.crawl.json.loads", return_value=[]), \
+         patch("drag_events.crawl.load_sources_config", return_value=[]), \
          patch("drag_events.crawl.run_extraction"), \
          patch("drag_events.crawl.save_state"), \
          patch("drag_events.crawl.time.sleep"):
@@ -878,12 +1146,11 @@ def test_main_track_filter(tmp_crawl_state):
     tracks = [{"name": "Texas Motorplex", "url": "http://a.com"},
               {"name": "Tulsa Raceway Park", "url": "http://b.com"}]
     with patch.object(sys, "argv", ["crawl.py", "--track", "texas"]), \
-         patch("drag_events.crawl.TRACKS_FILE") as mock_tf, \
+         patch("drag_events.crawl.load_tracks_config", return_value=tracks), \
          patch("drag_events.crawl.crawl_track", return_value=[]) as mock_ct, \
          patch("drag_events.crawl.run_extraction"), \
          patch("drag_events.crawl.save_state"), \
          patch("drag_events.crawl.time.sleep"):
-        mock_tf.read_text.return_value = json.dumps(tracks)
         crawl.main()
     # Only Texas Motorplex matches "texas"
     assert mock_ct.call_count == 1
@@ -895,12 +1162,11 @@ def test_main_source_filter(tmp_crawl_state):
     sources = [{"name": "Bracketraces.com", "strategy": "bracketraces", "url": "http://a.com", "event_pages": []},
                {"name": "RacingJunk Events", "strategy": "racingjunk", "url": "http://b.com", "drag_racing_url": "http://b.com/drag"}]
     with patch.object(sys, "argv", ["crawl.py", "--source", "bracketraces"]), \
-         patch("drag_events.crawl.SOURCES_FILE") as mock_sf, \
+         patch("drag_events.crawl.load_sources_config", return_value=sources), \
          patch("drag_events.crawl.crawl_source", return_value=([], [])) as mock_cs, \
          patch("drag_events.crawl.run_extraction"), \
          patch("drag_events.crawl.save_state"), \
          patch("drag_events.crawl.time.sleep"):
-        mock_sf.read_text.return_value = json.dumps(sources)
         crawl.main()
     assert mock_cs.call_count == 1
     assert mock_cs.call_args[0][0]["name"] == "Bracketraces.com"
@@ -911,12 +1177,11 @@ def test_main_iterates_tracks_and_saves_state(tmp_crawl_state):
     tracks = [{"name": "Track A", "url": "http://a.com"},
               {"name": "Track B", "url": "http://b.com"}]
     with patch.object(sys, "argv", ["crawl.py", "--tracks"]), \
-         patch("drag_events.crawl.TRACKS_FILE") as mock_tf, \
+         patch("drag_events.crawl.load_tracks_config", return_value=tracks), \
          patch("drag_events.crawl.crawl_track", return_value=[]) as mock_ct, \
          patch("drag_events.crawl.run_extraction"), \
          patch("drag_events.crawl.save_state") as mock_ss, \
          patch("drag_events.crawl.time.sleep") as mock_sleep:
-        mock_tf.read_text.return_value = json.dumps(tracks)
         crawl.main()
     assert mock_ct.call_count == 2
     assert mock_ss.call_count == 2
@@ -930,16 +1195,28 @@ def test_main_iterates_sources_and_saves_state(tmp_crawl_state):
         {"name": "Source B", "strategy": "bracketraces", "url": "http://b.com", "event_pages": []},
     ]
     with patch.object(sys, "argv", ["crawl.py", "--sources"]), \
-         patch("drag_events.crawl.SOURCES_FILE") as mock_sf, \
+         patch("drag_events.crawl.load_sources_config", return_value=sources), \
          patch("drag_events.crawl.crawl_source", return_value=([], [])) as mock_cs, \
          patch("drag_events.crawl.run_extraction"), \
          patch("drag_events.crawl.save_state") as mock_ss, \
          patch("drag_events.crawl.time.sleep") as mock_sleep:
-        mock_sf.read_text.return_value = json.dumps(sources)
         crawl.main()
     assert mock_cs.call_count == 2
     assert mock_ss.call_count == 2
     assert mock_sleep.call_count == 2
+
+
+def test_main_fails_fast_on_invalid_tracks_config(tmp_crawl_state):
+    with patch.object(sys, "argv", ["crawl.py", "--tracks"]), \
+         patch("drag_events.crawl.load_tracks_config", side_effect=crawl.ConfigValidationError("bad tracks config")), \
+         patch("drag_events.crawl.should_record_runtime_metrics", return_value=False), \
+         patch("drag_events.crawl.record_run_metrics", return_value={}), \
+         patch("drag_events.crawl.log_error") as mock_log, \
+         patch("drag_events.crawl.time.sleep"):
+        with pytest.raises(crawl.ConfigValidationError, match="bad tracks config"):
+            crawl.main()
+
+    mock_log.assert_called_once()
 
 
 # ── Previously uncovered edge cases ──────────────────────────────────────────

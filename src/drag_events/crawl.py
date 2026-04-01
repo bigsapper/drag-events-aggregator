@@ -78,6 +78,19 @@ HEADERS = {
     "User-Agent": "Mozilla/5.0 (compatible; DragEventsBot/1.0; fetching public event info)"
 }
 
+VALID_SOURCE_STRATEGIES = {"bracketraces", "racingjunk", "myracepass", "tmccc", "rss"}
+DEFAULT_SOURCE_DELAY_SECONDS = {
+    "bracketraces": 0.5,
+    "racingjunk": 0.75,
+}
+DEFAULT_SOURCE_MAX_PAGES = {
+    "racingjunk": 10,
+}
+
+
+class ConfigValidationError(ValueError):
+    """Raised when a config file is malformed or missing required fields."""
+
 
 # ── State management ──────────────────────────────────────────────────────────
 
@@ -241,7 +254,122 @@ def print_metrics_summary(summary: dict) -> None:
         print(f"  last run:        {status} at {started} ({elapsed})")
 
 
+# ── Config validation ─────────────────────────────────────────────────────────
+
+def _load_json_file(path: Path) -> object:
+    try:
+        return json.loads(path.read_text())
+    except json.JSONDecodeError as exc:
+        raise ConfigValidationError(f"Invalid JSON in {path}: {exc.msg}") from exc
+
+
+def validate_tracks_config(data: object) -> list[dict]:
+    if not isinstance(data, list):
+        raise ConfigValidationError("tracks config must be a list of objects")
+
+    validated = []
+    for index, entry in enumerate(data):
+        if not isinstance(entry, dict):
+            raise ConfigValidationError(f"tracks[{index}] must be an object")
+
+        name = entry.get("name")
+        state = entry.get("state")
+        url = entry.get("url")
+        enabled = entry.get("enabled", True)
+        if not isinstance(name, str) or not name.strip():
+            raise ConfigValidationError(f"tracks[{index}].name must be a non-empty string")
+        if not isinstance(state, str) or not re.fullmatch(r"[A-Z]{2}", state):
+            raise ConfigValidationError(f"tracks[{index}].state must be a 2-letter uppercase state code")
+        if not isinstance(url, str) or not url.startswith(("http://", "https://")):
+            raise ConfigValidationError(f"tracks[{index}].url must be an http/https URL")
+        if not isinstance(enabled, bool):
+            raise ConfigValidationError(f"tracks[{index}].enabled must be a boolean when provided")
+        validated.append(entry)
+    return validated
+
+
+def validate_sources_config(data: object) -> list[dict]:
+    if not isinstance(data, list):
+        raise ConfigValidationError("sources config must be a list of objects")
+
+    validated = []
+    for index, entry in enumerate(data):
+        if not isinstance(entry, dict):
+            raise ConfigValidationError(f"sources[{index}] must be an object")
+
+        name = entry.get("name")
+        url = entry.get("url")
+        strategy = entry.get("strategy")
+        enabled = entry.get("enabled", True)
+        request_headers = entry.get("request_headers")
+        page_delay_seconds = entry.get("page_delay_seconds")
+        max_pages = entry.get("max_pages")
+        if not isinstance(name, str) or not name.strip():
+            raise ConfigValidationError(f"sources[{index}].name must be a non-empty string")
+        if not isinstance(url, str) or not url.startswith(("http://", "https://")):
+            raise ConfigValidationError(f"sources[{index}].url must be an http/https URL")
+        if not isinstance(enabled, bool):
+            raise ConfigValidationError(f"sources[{index}].enabled must be a boolean when provided")
+        if request_headers is not None:
+            if not isinstance(request_headers, dict):
+                raise ConfigValidationError(f"sources[{index}].request_headers must be an object when provided")
+            for header_name, header_value in request_headers.items():
+                if not isinstance(header_name, str) or not header_name.strip():
+                    raise ConfigValidationError(f"sources[{index}].request_headers keys must be non-empty strings")
+                if not isinstance(header_value, str):
+                    raise ConfigValidationError(f"sources[{index}].request_headers values must be strings")
+        if page_delay_seconds is not None:
+            if isinstance(page_delay_seconds, bool) or not isinstance(page_delay_seconds, (int, float)) or page_delay_seconds < 0:
+                raise ConfigValidationError(f"sources[{index}].page_delay_seconds must be a non-negative number when provided")
+        if max_pages is not None:
+            if isinstance(max_pages, bool) or not isinstance(max_pages, int) or max_pages < 1:
+                raise ConfigValidationError(f"sources[{index}].max_pages must be a positive integer when provided")
+        if strategy not in VALID_SOURCE_STRATEGIES:
+            valid = ", ".join(sorted(VALID_SOURCE_STRATEGIES))
+            raise ConfigValidationError(f"sources[{index}].strategy must be one of: {valid}")
+
+        if strategy == "bracketraces":
+            event_pages = entry.get("event_pages")
+            if not isinstance(event_pages, list) or not event_pages:
+                raise ConfigValidationError("sources[{index}].event_pages must be a non-empty list for bracketraces".format(index=index))
+            if not all(isinstance(page, str) and page.startswith("/") for page in event_pages):
+                raise ConfigValidationError("sources[{index}].event_pages entries must be path strings starting with '/'".format(index=index))
+
+        if strategy == "racingjunk":
+            drag_racing_url = entry.get("drag_racing_url")
+            if drag_racing_url is not None and (not isinstance(drag_racing_url, str) or not drag_racing_url.startswith(("http://", "https://"))):
+                raise ConfigValidationError(f"sources[{index}].drag_racing_url must be an http/https URL when provided")
+
+        validated.append(entry)
+    return validated
+
+
+def load_tracks_config(path: Path = TRACKS_FILE) -> list[dict]:
+    return [track for track in validate_tracks_config(_load_json_file(path)) if track.get("enabled", True)]
+
+
+def load_sources_config(path: Path = SOURCES_FILE) -> list[dict]:
+    return [source for source in validate_sources_config(_load_json_file(path)) if source.get("enabled", True)]
+
+
 # ── Shared helpers ────────────────────────────────────────────────────────────
+
+def get_request_headers(source: dict | None = None) -> dict[str, str]:
+    headers = dict(HEADERS)
+    if source:
+        headers.update(source.get("request_headers", {}))
+    return headers
+
+
+def get_source_delay(source: dict, default: float = 0.0) -> float:
+    strategy = source.get("strategy")
+    return float(source.get("page_delay_seconds", DEFAULT_SOURCE_DELAY_SECONDS.get(strategy, default)))
+
+
+def get_source_max_pages(source: dict, default: int = 1) -> int:
+    strategy = source.get("strategy")
+    return int(source.get("max_pages", DEFAULT_SOURCE_MAX_PAGES.get(strategy, default)))
+
 
 def is_event_page(url: str, text: str) -> bool:
     combined = (url + " " + text).lower()
@@ -288,13 +416,13 @@ def url_to_filename(url: str) -> str:
     return f"{slug}-{url_hash}{ext}"
 
 
-def download_image(url: str) -> Path | None:
+def download_image(url: str, headers: dict[str, str] | None = None) -> Path | None:
     filename = url_to_filename(url)
     dest = FLYERS_DIR / filename
     if dest.exists():
         return None
     try:
-        resp = requests.get(url, headers=HEADERS, timeout=15, stream=True)
+        resp = requests.get(url, headers=headers or HEADERS, timeout=15, stream=True)
         resp.raise_for_status()
         if "image" not in resp.headers.get("content-type", ""):
             return None
@@ -306,9 +434,9 @@ def download_image(url: str) -> Path | None:
         return None
 
 
-def fetch_page(url: str) -> BeautifulSoup | None:
+def fetch_page(url: str, headers: dict[str, str] | None = None) -> BeautifulSoup | None:
     try:
-        resp = requests.get(url, headers=HEADERS, timeout=15)
+        resp = requests.get(url, headers=headers or HEADERS, timeout=15)
         resp.raise_for_status()
         return BeautifulSoup(resp.text, "html.parser")
     except Exception as e:
@@ -358,11 +486,13 @@ def crawl_track(track: dict, state: dict) -> list[Path]:
 def crawl_bracketraces(source: dict, state: dict) -> list[Path]:
     """Scrape individual Bracketraces.com event pages for flyer images."""
     base = source["url"]
+    headers = get_request_headers(source)
+    delay_seconds = get_source_delay(source)
     downloaded = []
     for path in source.get("event_pages", []):
         url = base + path
         print(f"  {url}")
-        soup = fetch_page(url)
+        soup = fetch_page(url, headers=headers)
         if not soup:
             continue
         image_urls = get_image_links(soup, url)
@@ -375,24 +505,27 @@ def crawl_bracketraces(source: dict, state: dict) -> list[Path]:
         new_urls = [u for u in dict.fromkeys(image_urls) if u not in state["seen_urls"]]
         for img_url in new_urls:
             state["seen_urls"].append(img_url)
-            dl = download_image(img_url)
+            dl = download_image(img_url, headers=headers)
             if dl:
                 print(f"    Downloaded: {dl.name}")
                 downloaded.append(dl)
-        time.sleep(0.5)
+        time.sleep(delay_seconds)
     return downloaded
 
 
 def crawl_racingjunk(source: dict, state: dict) -> list[dict]:
     """Scrape RacingJunk drag racing events. Returns structured text records (no flyers)."""
     drag_url = source.get("drag_racing_url", source["url"])
+    headers = get_request_headers(source)
+    delay_seconds = get_source_delay(source)
+    max_pages = get_source_max_pages(source)
     print(f"  {drag_url}")
     new_events = []
     page = 1
 
-    while page <= 10:  # cap at 10 pages (~200 events)
+    while page <= max_pages:
         url = f"{drag_url}?page={page}"
-        soup = fetch_page(url)
+        soup = fetch_page(url, headers=headers)
         if not soup:
             break
 
@@ -427,7 +560,7 @@ def crawl_racingjunk(source: dict, state: dict) -> list[dict]:
         if not found_new:
             break
         page += 1
-        time.sleep(0.75)
+        time.sleep(delay_seconds)
 
     print(f"  Found {len(new_events)} new event listings")
     return new_events
@@ -436,10 +569,11 @@ def crawl_racingjunk(source: dict, state: dict) -> list[dict]:
 def crawl_myracepass(source: dict, state: dict) -> list[dict]:
     """Scrape MyRacePass event listings from public HTML pages."""
     url = source["url"]
+    headers = get_request_headers(source)
     print(f"  {url}")
     new_events = []
 
-    soup = fetch_page(url)
+    soup = fetch_page(url, headers=headers)
     if not soup:
         return []
 
@@ -567,13 +701,14 @@ def crawl_tmccc(source: dict, state: dict) -> list[dict]:
     from playwright.sync_api import TimeoutError as PlaywrightTimeoutError, sync_playwright
 
     url = source["url"]
+    headers = get_request_headers(source)
     print(f"  {url}")
 
     all_raw = []
     seen_page_signatures = set()
     with sync_playwright() as p:
         browser = p.chromium.launch(headless=True, args=["--no-sandbox"])
-        page = browser.new_page(viewport={"width": 1440, "height": 900})
+        page = browser.new_page(viewport={"width": 1440, "height": 900}, extra_http_headers=headers)
         page.goto(url, wait_until="load", timeout=60000)
         page.wait_for_selector("[data-aid='CALENDAR_EVENT_TITLE']", state="attached", timeout=15000)
 
@@ -794,7 +929,7 @@ def main():
         sources = []
 
         if run_tracks:
-            tracks = json.loads(TRACKS_FILE.read_text())
+            tracks = load_tracks_config()
             if track_filter:
                 tracks = [t for t in tracks if track_filter in t["name"].lower()]
             print(f"=== Track websites ({len(tracks)}) ===")
@@ -812,7 +947,7 @@ def main():
                 time.sleep(1)
 
         if run_sources:
-            sources = json.loads(SOURCES_FILE.read_text())
+            sources = load_sources_config()
             if source_filter:
                 sources = [s for s in sources if source_filter in s["name"].lower()]
             print(f"\n=== Aggregator sources ({len(sources)}) ===")
@@ -858,18 +993,17 @@ def main():
         finished_at = datetime.now(timezone.utc)
         run_metrics["finished_at"] = finished_at.isoformat()
         run_metrics["elapsed_seconds"] = round(time.perf_counter() - started_perf, 2)
-        if not should_record_runtime_metrics():
-            return
-        summary = record_run_metrics(run_metrics)
-        print(f"\nRecorded crawl metrics in {METRICS_LOG}")
-        print(f"Error log file: {ERROR_LOG}")
-        if summary.get("average_seconds") is not None:
-            print(
-                "Historical runtime: "
-                f"avg {format_duration(summary['average_seconds'])}, "
-                f"median {format_duration(summary['median_seconds'])}, "
-                f"last {format_duration(run_metrics['elapsed_seconds'])}"
-            )
+        if should_record_runtime_metrics():
+            summary = record_run_metrics(run_metrics)
+            print(f"\nRecorded crawl metrics in {METRICS_LOG}")
+            print(f"Error log file: {ERROR_LOG}")
+            if summary.get("average_seconds") is not None:
+                print(
+                    "Historical runtime: "
+                    f"avg {format_duration(summary['average_seconds'])}, "
+                    f"median {format_duration(summary['median_seconds'])}, "
+                    f"last {format_duration(run_metrics['elapsed_seconds'])}"
+                )
 
 
 if __name__ == "__main__":

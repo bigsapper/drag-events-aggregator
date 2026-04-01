@@ -8,6 +8,13 @@
 | `src/drag_events/config/sources.json` | Aggregator sites with custom scraping strategies (RacingJunk, Bracketraces, RSS, etc.) |
 | `src/drag_events/config/track_aliases.json` | Alternate track names mapped to canonical names for deduplication and normalization |
 
+`tracks.json` and `sources.json` entries may include `"enabled": false` to disable a specific site without deleting its configuration. Omitted `enabled` values default to `true`.
+
+`sources.json` entries may also include these optional per-site settings:
+- `request_headers`: extra HTTP headers merged into the default crawler headers
+- `page_delay_seconds`: override the delay between paginated or sequential source requests
+- `max_pages`: override pagination depth for strategies that page through result sets, such as `racingjunk`
+
 ## Crawl + Extract
 
 ```bash
@@ -71,7 +78,7 @@ PYTHONPATH=src python -m drag_events.process flyer1.jpg flyer2.png
 # Archive the current dist/events.json without resetting anything else
 make archive-events
 
-# Archive dist/events.json, clear flyers/, remove crawl state, and reinitialize dist/events.json
+# Archive dist/events.json, clear flyers/, reinitialize crawl state, and reinitialize dist/events.json
 make fresh-start
 ```
 
