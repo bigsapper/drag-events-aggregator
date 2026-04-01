@@ -59,7 +59,7 @@ HEADERS = {
 def load_state() -> dict:
     if CRAWL_STATE.exists():
         return json.loads(CRAWL_STATE.read_text())
-    return {"seen_urls": [], "racingjunk_events": [], "myracepass_events": []}
+    return {"seen_urls": [], "racingjunk_events": [], "myracepass_events": [], "tmccc_events": []}
 
 
 def save_state(state: dict) -> None:
@@ -291,6 +291,148 @@ def crawl_myracepass(source: dict, state: dict) -> list[dict]:
     return new_events
 
 
+def parse_tmccc_page_events(html: str) -> list[dict]:
+    """Extract and merge TMCCC calendar cards from one rendered page of HTML."""
+    soup = BeautifulSoup(html, "html.parser")
+    cards = soup.find_all(attrs={"data-aid": "CALENDAR_SMALLER_SCREEN_CONTAINER"})
+    merged: dict[str, dict] = {}
+
+    for card in cards:
+        date_block = card.find(attrs={"data-aid": "CALENDAR_EVENT_DATE"})
+        title_tag = card.find(attrs={"data-aid": "CALENDAR_EVENT_TITLE"})
+        if not date_block or not title_tag:
+            continue
+
+        date_text = date_block.get_text(" ", strip=True)
+        title = title_tag.get_text(" ", strip=True)
+        if not title or not date_text:
+            continue
+
+        time_block = card.find(attrs={"data-aid": "CALENDAR_EVENT_TIME"})
+        time_text = location_text = None
+        if time_block:
+            parts = [node.get_text(" ", strip=True) for node in time_block.find_all(["h4", "p"])]
+            parts = [part for part in parts if part]
+            if parts:
+                time_text = " ".join(parts[:-1]) if len(parts) > 1 else parts[0]
+                location_text = parts[-1] if len(parts) > 1 else None
+
+        desc_block = card.find(attrs={"data-aid": "CALENDAR_DESC_TEXT"})
+        desc_text = desc_block.get_text(separator="\n", strip=True) if desc_block else None
+
+        key = f"{title}|{date_text}"
+        existing = merged.get(key)
+        if existing:
+            existing["time_text"] = existing["time_text"] or time_text
+            existing["location_text"] = existing["location_text"] or location_text
+            existing["description"] = existing["description"] or desc_text
+            continue
+
+        merged[key] = {
+            "title": title,
+            "date_text": date_text,
+            "time_text": time_text,
+            "location_text": location_text,
+            "description": desc_text,
+        }
+
+    return list(merged.values())
+
+
+def _tmccc_event_key(event: dict) -> str:
+    return f"{event['title']}|{event['date_text']}"
+
+
+def _advance_tmccc_calendar(page, current_keys: list[str]) -> bool:
+    """Click TMCCC's More Events control and wait for the visible event set to change."""
+    next_btn = page.locator("[data-aid='CALENDAR_SHOW_NEXT_EVENTS']")
+    if next_btn.count() == 0:
+        return False
+
+    button = next_btn.first
+    if hasattr(button, "is_visible") and not button.is_visible():
+        return False
+    if hasattr(button, "is_disabled") and button.is_disabled():
+        return False
+
+    previous_last_key = current_keys[-1] if current_keys else ""
+    button.scroll_into_view_if_needed()
+    button.click()
+    if previous_last_key:
+        page.wait_for_function(
+            """
+            (prevKey) => {
+              const cards = Array.from(
+                document.querySelectorAll("[data-aid='CALENDAR_SMALLER_SCREEN_CONTAINER']")
+              );
+              const keys = cards.map((card) => {
+                const title = card.querySelector("[data-aid='CALENDAR_EVENT_TITLE']")?.textContent?.trim() || "";
+                const date = card.querySelector("[data-aid='CALENDAR_EVENT_DATE']")?.textContent?.trim() || "";
+                return title && date ? `${title}|${date}` : "";
+              }).filter(Boolean);
+              return keys.length > 0 && keys[keys.length - 1] !== prevKey;
+            }
+            """,
+            arg=previous_last_key,
+            timeout=10000,
+        )
+    else:
+        page.wait_for_selector("[data-aid='CALENDAR_EVENT_TITLE']", state="attached", timeout=10000)
+    return True
+
+
+def crawl_tmccc(source: dict, state: dict) -> list[dict]:
+    """Scrape TMCCC event calendar (GoDaddy site builder).
+
+    Uses Playwright to page through the calendar using CALENDAR_SHOW_NEXT_EVENTS,
+    scraping each page until there is no next arrow (end of calendar).
+    """
+    from playwright.sync_api import TimeoutError as PlaywrightTimeoutError, sync_playwright
+
+    url = source["url"]
+    print(f"  {url}")
+
+    all_raw = []
+    seen_page_signatures = set()
+    with sync_playwright() as p:
+        browser = p.chromium.launch(headless=True, args=["--no-sandbox"])
+        page = browser.new_page(viewport={"width": 1440, "height": 900})
+        page.goto(url, wait_until="load", timeout=60000)
+        page.wait_for_selector("[data-aid='CALENDAR_EVENT_TITLE']", state="attached", timeout=15000)
+
+        while True:
+            page_events = parse_tmccc_page_events(page.content())
+            current_keys = [_tmccc_event_key(event) for event in page_events]
+            page_signature = tuple(current_keys)
+            if page_signature and page_signature not in seen_page_signatures:
+                all_raw.extend(page_events)
+                seen_page_signatures.add(page_signature)
+
+            try:
+                if not _advance_tmccc_calendar(page, current_keys):
+                    break
+            except PlaywrightTimeoutError:
+                break
+
+        browser.close()
+
+    new_events = []
+    for event in all_raw:
+        key = _tmccc_event_key(event)
+        if key in state.get("tmccc_events", []):
+            continue
+        state.setdefault("tmccc_events", []).append(key)
+
+        new_events.append({
+            **event,
+            "source_url": url,
+            "source": "TMCCC",
+        })
+
+    print(f"  Found {len(new_events)} new event listings")
+    return new_events
+
+
 def crawl_rss(source: dict, state: dict) -> list[dict]:
     """Parse an RSS feed for event announcements."""
     url = source["url"]
@@ -317,6 +459,7 @@ STRATEGY_MAP = {
     "bracketraces": crawl_bracketraces,
     "racingjunk":   crawl_racingjunk,
     "myracepass":   crawl_myracepass,
+    "tmccc":        crawl_tmccc,
     "rss":          crawl_rss,
 }
 
@@ -407,14 +550,14 @@ def run_extraction(downloaded: list[Path], text_listings: list[dict]) -> None:
 def main():
     args = sys.argv[1:]
 
-    run_tracks  = "--sources" not in args
-    run_sources = "--tracks"  not in args
-
     track_filter  = None
     source_filter = None
     for i, arg in enumerate(args):
         if arg == "--track"  and i + 1 < len(args): track_filter  = args[i + 1].lower()
         if arg == "--source" and i + 1 < len(args): source_filter = args[i + 1].lower()
+
+    run_tracks  = "--sources" not in args and source_filter is None
+    run_sources = "--tracks"  not in args and track_filter  is None
 
     state = load_state()
     total_downloaded = []
