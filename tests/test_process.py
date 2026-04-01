@@ -165,7 +165,7 @@ def test_main_deletes_processed_image(tmp_path, tmp_events_file, mock_vision_cli
 
 def test_main_preserves_test_flyer(tmp_events_file, mock_vision_client):
     """Files inside test-flyers/ must not be deleted after processing."""
-    img = PROJECT_DIR / "test-flyers" / "bad-boys-mayhem.jpg"
+    img = PROJECT_DIR / "tests" / "test-flyers" / "bad-boys-mayhem.jpg"
     assert img.exists()
     with patch.object(sys, "argv", ["process.py", str(img)]), \
          patch("process.compute_phash", return_value="00000000ffffffff"), \

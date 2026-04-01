@@ -11,7 +11,7 @@ from unittest.mock import MagicMock, patch
 import pytest
 
 PROJECT_DIR = Path(__file__).parent.parent
-TEST_FLYERS_DIR = PROJECT_DIR / "test-flyers"
+TEST_FLYERS_DIR = PROJECT_DIR / "tests" / "test-flyers"
 
 
 # ── Shared event data ─────────────────────────────────────────────────────────

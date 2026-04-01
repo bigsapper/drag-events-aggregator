@@ -19,7 +19,7 @@ from dedup import (
 )
 
 PROJECT_DIR = Path(__file__).parent.parent
-TEST_FLYERS = PROJECT_DIR / "test-flyers"
+TEST_FLYERS = PROJECT_DIR / "tests" / "test-flyers"
 
 
 # ── compute_phash / phash_distance ────────────────────────────────────────────
