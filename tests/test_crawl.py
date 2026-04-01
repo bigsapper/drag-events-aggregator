@@ -376,6 +376,17 @@ def test_download_image_request_exception(tmp_flyers_dir, capsys):
     assert "Download failed" in capsys.readouterr().out
 
 
+def test_download_image_retries_transient_request_failure(tmp_flyers_dir):
+    url = "http://track.com/retry.jpg"
+    resp = _mock_response(content=b"\xff\xd8\xff", content_type="image/jpeg")
+    with patch("drag_events.crawl.requests.get", side_effect=[Exception("timeout"), resp]) as mock_get, \
+         patch("drag_events.crawl.time.sleep") as mock_sleep:
+        result = crawl.download_image(url)
+    assert result is not None
+    assert mock_get.call_count == 2
+    mock_sleep.assert_called_once_with(1.0)
+
+
 # ── fetch_page ────────────────────────────────────────────────────────────────
 
 def test_fetch_page_returns_soup():
@@ -398,6 +409,16 @@ def test_fetch_page_connection_error_returns_none(capsys):
         result = crawl.fetch_page("http://track.com")
     assert result is None
     assert "Could not fetch" in capsys.readouterr().out
+
+
+def test_fetch_page_retries_transient_request_failure():
+    resp = _mock_response(text="<html><body>Hello</body></html>")
+    with patch("drag_events.crawl.requests.get", side_effect=[Exception("timeout"), resp]) as mock_get, \
+         patch("drag_events.crawl.time.sleep") as mock_sleep:
+        result = crawl.fetch_page("http://track.com")
+    assert result is not None
+    assert mock_get.call_count == 2
+    mock_sleep.assert_called_once_with(1.0)
 
 
 def test_fetch_page_uses_custom_headers():

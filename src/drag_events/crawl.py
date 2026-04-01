@@ -59,6 +59,7 @@ from .crawl_runtime import (
 )
 from .dedup import find_same_event, merge_events, track_slug
 from .extract_text import extract_from_text
+from .retry_utils import execute_with_retries, get_retry_telemetry, reset_retry_telemetry
 from .strategies.bracketraces import crawl_bracketraces_impl
 from .strategies.myracepass import crawl_myracepass_impl
 from .strategies.racingjunk import crawl_racingjunk_impl
@@ -97,6 +98,9 @@ DIST_DIR.mkdir(exist_ok=True)
 RUNTIME_DIR.mkdir(exist_ok=True)
 STATE_DIR.mkdir(exist_ok=True)
 TRACING_DIR.mkdir(exist_ok=True)
+
+HTTP_MAX_ATTEMPTS = 3
+HTTP_RETRY_BASE_DELAY_SECONDS = 1.0
 
 
 # ── State management ──────────────────────────────────────────────────────────
@@ -194,8 +198,13 @@ def download_image(url: str, headers: dict[str, str] | None = None) -> Path | No
     if dest.exists():
         return None
     try:
-        resp = requests.get(url, headers=headers or HEADERS, timeout=15, stream=True)
-        resp.raise_for_status()
+        resp = execute_with_retries(
+            lambda: _request_image(url, headers or HEADERS),
+            category="http",
+            max_attempts=HTTP_MAX_ATTEMPTS,
+            base_delay_seconds=HTTP_RETRY_BASE_DELAY_SECONDS,
+            sleep=time.sleep,
+        )
         if "image" not in resp.headers.get("content-type", ""):
             return None
         dest.write_bytes(resp.content)
@@ -208,8 +217,13 @@ def download_image(url: str, headers: dict[str, str] | None = None) -> Path | No
 
 def fetch_page(url: str, headers: dict[str, str] | None = None) -> BeautifulSoup | None:
     try:
-        resp = requests.get(url, headers=headers or HEADERS, timeout=15)
-        resp.raise_for_status()
+        resp = execute_with_retries(
+            lambda: _request_page(url, headers or HEADERS),
+            category="http",
+            max_attempts=HTTP_MAX_ATTEMPTS,
+            base_delay_seconds=HTTP_RETRY_BASE_DELAY_SECONDS,
+            sleep=time.sleep,
+        )
         return BeautifulSoup(resp.text, "html.parser")
     except Exception as e:
         print(f"  Could not fetch {url}: {e}")
@@ -343,6 +357,18 @@ def crawl_source(source: dict, state: dict) -> tuple[list[Path], list[dict]]:
     return [], result
 
 
+def _request_page(url: str, headers: dict[str, str]):
+    response = requests.get(url, headers=headers, timeout=15)
+    response.raise_for_status()
+    return response
+
+
+def _request_image(url: str, headers: dict[str, str]):
+    response = requests.get(url, headers=headers, timeout=15, stream=True)
+    response.raise_for_status()
+    return response
+
+
 # ── Main ──────────────────────────────────────────────────────────────────────
 
 def run_extraction(downloaded: list[Path], text_listings: list[dict]) -> dict:
@@ -357,6 +383,7 @@ def run_extraction(downloaded: list[Path], text_listings: list[dict]) -> dict:
             "duplicate": 0,
             "error": 0,
             "total_events": 0,
+            "retries": get_retry_telemetry().get("claude", {}),
         }
 
     events = process.load_events()
@@ -440,6 +467,7 @@ def run_extraction(downloaded: list[Path], text_listings: list[dict]) -> dict:
         "duplicate": counts["duplicate"],
         "error": counts["error"],
         "total_events": len(events),
+        "retries": get_retry_telemetry().get("claude", {}),
     }
 
 
@@ -458,6 +486,7 @@ def main():
 
     run_tracks  = "--sources" not in args and source_filter is None
     run_sources = "--tracks"  not in args and track_filter  is None
+    reset_retry_telemetry()
     started_at = datetime.now(timezone.utc)
     started_perf = time.perf_counter()
     run_metrics = {
@@ -534,9 +563,11 @@ def main():
             "text_listings": len(total_text_listings),
         }
         run_metrics["extraction"] = extraction_metrics
+        run_metrics["retries"] = get_retry_telemetry()
     except Exception as exc:
         run_metrics["status"] = "error"
         run_metrics["error"] = str(exc)
+        run_metrics["retries"] = get_retry_telemetry()
         log_error("crawl.main", exc, details={"args": args}, include_traceback=True)
         raise
     finally:

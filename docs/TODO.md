@@ -5,10 +5,6 @@ Items related to CI, scheduled execution, and automated notifications are parked
 
 ## Active Priorities
 
-### Resilience
-- [ ] Add retry logic for transient HTTP failures during crawling
-- [ ] Add retry logic for transient Claude API failures during extraction
-
 ## Data Quality
 - [ ] Define and enforce a minimum confidence threshold — exclude or flag events below it
 - [ ] Implement stale event cleanup — archive or remove events whose dates have passed
@@ -32,6 +28,10 @@ maintenance burden as more aggregators are added.
 - [x] Add schema validation for `src/drag_events/config/tracks.json` and `src/drag_events/config/sources.json` at startup so malformed entries fail fast with a clear error
 - [x] Add an `enabled` flag to `src/drag_events/config/tracks.json` and `src/drag_events/config/sources.json` entries so individual sites can be disabled without editing code
 - [x] Add per-site configuration support in `src/drag_events/config/sources.json` for rate limits, custom headers, and pagination depth (currently hardcoded constants)
+
+### Resilience
+- [x] Add retry logic for transient HTTP failures during crawling
+- [x] Add retry logic for transient Claude API failures during extraction
 
 ## Parked
 

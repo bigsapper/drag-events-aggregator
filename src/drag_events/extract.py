@@ -3,10 +3,12 @@
 import anthropic
 import base64
 import os
+import time
 from pathlib import Path
 
 from dotenv import load_dotenv
 
+from .retry_utils import execute_with_retries
 from .schema import EVENT_INPUT_SCHEMA
 
 load_dotenv()
@@ -32,6 +34,9 @@ Drag racing knowledge:
 
 Set confidence based on image clarity and completeness of information visible."""
 
+CLAUDE_MAX_ATTEMPTS = 3
+CLAUDE_RETRY_BASE_DELAY_SECONDS = 1.0
+
 
 def extract_event(image_path: str) -> dict:
     """Send a flyer image to Claude and return extracted event data."""
@@ -43,27 +48,33 @@ def extract_event(image_path: str) -> dict:
     media_type_map = {".jpg": "image/jpeg", ".jpeg": "image/jpeg", ".png": "image/png", ".webp": "image/webp", ".gif": "image/gif"}
     media_type = media_type_map.get(suffix, "image/jpeg")
 
-    response = CLIENT.messages.create(
-        model="claude-sonnet-4-6",
-        max_tokens=1024,
-        system=SYSTEM_PROMPT,
-        tools=[TOOL],
-        tool_choice={"type": "tool", "name": "store_event"},
-        messages=[
-            {
-                "role": "user",
-                "content": [
-                    {
-                        "type": "image",
-                        "source": {"type": "base64", "media_type": media_type, "data": b64}
-                    },
-                    {
-                        "type": "text",
-                        "text": "Extract all drag racing event information from this flyer."
-                    }
-                ]
-            }
-        ]
+    response = execute_with_retries(
+        lambda: CLIENT.messages.create(
+            model="claude-sonnet-4-6",
+            max_tokens=1024,
+            system=SYSTEM_PROMPT,
+            tools=[TOOL],
+            tool_choice={"type": "tool", "name": "store_event"},
+            messages=[
+                {
+                    "role": "user",
+                    "content": [
+                        {
+                            "type": "image",
+                            "source": {"type": "base64", "media_type": media_type, "data": b64}
+                        },
+                        {
+                            "type": "text",
+                            "text": "Extract all drag racing event information from this flyer."
+                        }
+                    ]
+                }
+            ],
+        ),
+        category="claude",
+        max_attempts=CLAUDE_MAX_ATTEMPTS,
+        base_delay_seconds=CLAUDE_RETRY_BASE_DELAY_SECONDS,
+        sleep=time.sleep,
     )
 
     for block in response.content:

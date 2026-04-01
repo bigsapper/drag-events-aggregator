@@ -55,3 +55,20 @@ def test_extract_from_text_raises_if_no_tool_call():
     with patch("drag_events.extract_text.CLIENT.messages.create", return_value=mock_response):
         with pytest.raises(ValueError, match="store_event"):
             extract_text.extract_from_text(SAMPLE_LISTING)
+
+
+def test_extract_from_text_retries_transient_claude_failure(sample_extracted):
+    response = MagicMock()
+    block = MagicMock()
+    block.type = "tool_use"
+    block.name = "store_event"
+    block.input = sample_extracted
+    response.content = [block]
+
+    with patch("drag_events.extract_text.CLIENT.messages.create", side_effect=[RuntimeError("timeout"), response]) as mock_create, \
+         patch("drag_events.extract_text.time.sleep") as mock_sleep:
+        result = extract_text.extract_from_text(SAMPLE_LISTING)
+
+    assert result["title"] == sample_extracted["title"]
+    assert mock_create.call_count == 2
+    mock_sleep.assert_called_once_with(1.0)

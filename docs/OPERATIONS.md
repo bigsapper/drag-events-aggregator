@@ -54,6 +54,7 @@ PYTHONPATH=src python -m drag_events.crawl --source "Bracketraces.com"
 
 Crawling automatically triggers extraction and deduplication for any newly downloaded flyers.
 Each crawl run also records timing and count metrics to `runtime/tracing/crawl_metrics.jsonl` and refreshes a summary snapshot in `runtime/tracing/crawl_metrics_summary.json`.
+Retry telemetry for transient HTTP failures and Claude API failures is included in the recorded crawl metrics for each live run.
 Recoverable and fatal crawl errors from live runs are appended to `runtime/tracing/crawl_errors.log`.
 
 ## Manual Processing

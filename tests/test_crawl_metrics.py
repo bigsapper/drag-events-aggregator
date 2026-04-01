@@ -311,6 +311,7 @@ def test_main_records_metrics_outside_pytest_when_extraction_returns_non_dict(mo
 
     with patch.object(sys, "argv", ["crawl.py"]), \
          patch("drag_events.crawl.json.loads", return_value=[]), \
+         patch("drag_events.crawl.get_retry_telemetry", return_value={"http": {"retries": 1}, "claude": {"retries": 2}}), \
          patch("drag_events.crawl.run_extraction", return_value="not-a-dict"), \
          patch("drag_events.crawl.save_state"), \
          patch("drag_events.crawl.time.sleep"), \
@@ -319,6 +320,23 @@ def test_main_records_metrics_outside_pytest_when_extraction_returns_non_dict(mo
 
     recorded = mock_record.call_args[0][0]
     assert recorded["extraction"] == {}
+    assert recorded["retries"] == {"http": {"retries": 1}, "claude": {"retries": 2}}
+
+
+def test_main_resets_retry_telemetry_before_run(monkeypatch):
+    monkeypatch.delenv("PYTEST_CURRENT_TEST", raising=False)
+
+    with patch.object(sys, "argv", ["crawl.py"]), \
+         patch("drag_events.crawl.json.loads", return_value=[]), \
+         patch("drag_events.crawl.reset_retry_telemetry") as mock_reset, \
+         patch("drag_events.crawl.get_retry_telemetry", return_value={"http": {}, "claude": {}}), \
+         patch("drag_events.crawl.run_extraction", return_value={}), \
+         patch("drag_events.crawl.save_state"), \
+         patch("drag_events.crawl.time.sleep"), \
+         patch("drag_events.crawl.record_run_metrics", return_value={"average_seconds": 10, "median_seconds": 10}):
+        crawl.main()
+
+    mock_reset.assert_called_once()
 
 
 def test_main_logs_and_reraises_top_level_error_outside_pytest(monkeypatch):

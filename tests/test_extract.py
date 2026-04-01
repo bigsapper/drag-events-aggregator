@@ -71,3 +71,21 @@ def test_extract_event_raises_if_no_tool_call(tmp_path):
     with patch("drag_events.extract.CLIENT.messages.create", return_value=mock_response):
         with pytest.raises(ValueError, match="store_event"):
             extract.extract_event(str(img))
+
+
+def test_extract_event_retries_transient_claude_failure(tmp_path, sample_extracted):
+    img = make_1x1_png(tmp_path / "flyer.png")
+    response = MagicMock()
+    block = MagicMock()
+    block.type = "tool_use"
+    block.name = "store_event"
+    block.input = sample_extracted
+    response.content = [block]
+
+    with patch("drag_events.extract.CLIENT.messages.create", side_effect=[RuntimeError("timeout"), response]) as mock_create, \
+         patch("drag_events.extract.time.sleep") as mock_sleep:
+        result = extract.extract_event(str(img))
+
+    assert result["title"] == sample_extracted["title"]
+    assert mock_create.call_count == 2
+    mock_sleep.assert_called_once_with(1.0)
