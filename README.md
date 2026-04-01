@@ -17,20 +17,21 @@ Crawls drag racing track websites and aggregator sources for event flyers, extra
 ## Setup
 
 ```bash
-# Clone the repo
 git clone https://github.com/bigsapper/drag-events-aggregator.git
 cd drag-events-aggregator
+bash setup.sh
+```
 
-# Create and activate virtual environment
-python3 -m venv .venv
-source .venv/bin/activate
+Then copy `.env.example` to `.env` and add your Anthropic API key:
 
-# Install dependencies
-pip install -r requirements.txt
-
-# Configure environment
+```bash
 cp .env.example .env
-# Edit .env and add your Anthropic API key
+```
+
+Activate the virtual environment before running any commands:
+
+```bash
+source .venv/bin/activate
 ```
 
 ## Configuration Files
