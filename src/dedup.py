@@ -16,7 +16,8 @@ from pathlib import Path
 # Hamming distance threshold — hashes within this distance are the same image
 PHASH_THRESHOLD = 10
 
-_ALIASES_FILE = Path(__file__).parent / "track_aliases.json"
+BASE_DIR = Path(__file__).resolve().parent.parent
+_ALIASES_FILE = BASE_DIR / "track_aliases.json"
 
 
 def _load_alias_map() -> dict[str, str]:

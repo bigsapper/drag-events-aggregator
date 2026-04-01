@@ -2,13 +2,13 @@
 
 Usage:
     # Process a single flyer
-    python process.py path/to/flyer.jpg
+    python src/process.py path/to/flyer.jpg
 
     # Process all images in a directory
-    python process.py path/to/flyers/
+    python src/process.py path/to/flyers/
 
     # Process multiple specific files
-    python process.py flyer1.jpg flyer2.png flyer3.jpg
+    python src/process.py flyer1.jpg flyer2.png flyer3.jpg
 """
 
 import json
@@ -24,7 +24,8 @@ from extract import extract_event
 
 load_dotenv()
 
-EVENTS_FILE = Path(__file__).parent / "dist" / "events.json"
+BASE_DIR = Path(__file__).resolve().parent.parent
+EVENTS_FILE = BASE_DIR / "dist" / "events.json"
 IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp", ".gif"}
 
 

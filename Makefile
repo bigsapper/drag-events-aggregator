@@ -23,28 +23,28 @@ coverage:
 	$(PYTHON) -m pytest --cov-report=html && open htmlcov/index.html
 
 crawl:
-	$(PYTHON) crawl.py
+	$(PYTHON) src/crawl.py
 
 crawl-tracks:
-	$(PYTHON) crawl.py --tracks
+	$(PYTHON) src/crawl.py --tracks
 
 crawl-sources:
-	$(PYTHON) crawl.py --sources
+	$(PYTHON) src/crawl.py --sources
 
 crawl-track:
 	@if [ -z "$(NAME)" ]; then echo 'Usage: make crawl-track NAME="Texas Motorplex"'; exit 1; fi
-	$(PYTHON) crawl.py --track "$(NAME)"
+	$(PYTHON) src/crawl.py --track "$(NAME)"
 
 crawl-source:
 	@if [ -z "$(NAME)" ]; then echo 'Usage: make crawl-source NAME="Bracketraces.com"'; exit 1; fi
-	$(PYTHON) crawl.py --source "$(NAME)"
+	$(PYTHON) src/crawl.py --source "$(NAME)"
 
 process:
 	@if [ -z "$(PATHS)" ]; then echo 'Usage: make process PATHS="path/to/flyer.jpg [more paths...]"'; exit 1; fi
-	$(PYTHON) process.py $(PATHS)
+	$(PYTHON) src/process.py $(PATHS)
 
 crawl-metrics:
-	$(PYTHON) crawl.py --metrics
+	$(PYTHON) src/crawl.py --metrics
 
 archive-events:
 	@mkdir -p dist/archive

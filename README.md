@@ -59,31 +59,31 @@ make crawl
 make crawl-metrics
 
 # Crawl all tracks and all aggregator sources
-python crawl.py
+python src/crawl.py
 
 # Crawl track websites only
 make crawl-tracks
 
 # Crawl track websites only
-python crawl.py --tracks
+python src/crawl.py --tracks
 
 # Crawl aggregator sources only
 make crawl-sources
 
 # Crawl aggregator sources only
-python crawl.py --sources
+python src/crawl.py --sources
 
 # Crawl a specific track by name
 make crawl-track NAME="Texas Motorplex"
 
 # Crawl a specific track by name
-python crawl.py --track "Texas Motorplex"
+python src/crawl.py --track "Texas Motorplex"
 
 # Crawl a specific aggregator source by name
 make crawl-source NAME="Bracketraces.com"
 
 # Crawl a specific aggregator source by name
-python crawl.py --source "Bracketraces.com"
+python src/crawl.py --source "Bracketraces.com"
 ```
 
 Crawling automatically triggers extraction and deduplication for any newly downloaded flyers.
@@ -97,13 +97,13 @@ Recoverable and fatal crawl errors from live runs are appended to `runtime/traci
 make process PATHS="path/to/flyer.jpg"
 
 # Process a single flyer image
-python process.py path/to/flyer.jpg
+python src/process.py path/to/flyer.jpg
 
 # Process all images in a directory
-python process.py path/to/flyers/
+python src/process.py path/to/flyers/
 
 # Process multiple specific files
-python process.py flyer1.jpg flyer2.png
+python src/process.py flyer1.jpg flyer2.png
 ```
 
 ### Archive + Reset For A Fresh Start
@@ -139,12 +139,13 @@ drag-events-aggregator/
 │       ├── crawl_errors.log        # Persistent crawl error log for fetch, extraction, and run failures
 │       ├── crawl_metrics.jsonl     # One JSON record per crawl run with timings and counts
 │       └── crawl_metrics_summary.json # Rolling summary derived from crawl_metrics.jsonl
-├── crawl.py                # Web crawler for tracks and aggregator sources
-├── extract.py              # Claude vision extraction for flyer images
-├── extract_text.py         # Claude text extraction for text-based listings
-├── dedup.py                # Perceptual hash and event-level deduplication
-├── process.py              # Orchestrates extraction + dedup for flyer files
-├── schema.py               # Shared Claude tool JSON schema
+├── src/
+│   ├── crawl.py            # Web crawler for tracks and aggregator sources
+│   ├── extract.py          # Claude vision extraction for flyer images
+│   ├── extract_text.py     # Claude text extraction for text-based listings
+│   ├── dedup.py            # Perceptual hash and event-level deduplication
+│   ├── process.py          # Orchestrates extraction + dedup for flyer files
+│   └── schema.py           # Shared Claude tool JSON schema
 ├── tracks.json             # Track website definitions
 ├── sources.json            # Aggregator source definitions
 ├── SCHEMA.md               # Human-readable events.json field reference

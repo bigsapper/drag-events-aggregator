@@ -5,11 +5,11 @@ Two source types:
   sources.json  — aggregator sites with custom strategies per source
 
 Usage:
-    python crawl.py                        # crawl all tracks + all sources
-    python crawl.py --tracks               # track websites only
-    python crawl.py --sources              # aggregator sources only
-    python crawl.py --track "Texas Motorplex"   # one track by name
-    python crawl.py --source "Bracketraces.com" # one source by name
+    python src/crawl.py                        # crawl all tracks + all sources
+    python src/crawl.py --tracks               # track websites only
+    python src/crawl.py --sources              # aggregator sources only
+    python src/crawl.py --track "Texas Motorplex"   # one track by name
+    python src/crawl.py --source "Bracketraces.com" # one source by name
 """
 
 import hashlib
@@ -34,11 +34,12 @@ import process
 from dedup import find_same_event, merge_events, track_slug
 from extract_text import extract_from_text
 
-TRACKS_FILE  = Path(__file__).parent / "tracks.json"
-SOURCES_FILE = Path(__file__).parent / "sources.json"
-FLYERS_DIR   = Path(__file__).parent / "flyers"
-DIST_DIR     = Path(__file__).parent / "dist"
-RUNTIME_DIR  = Path(__file__).parent / "runtime"
+BASE_DIR     = Path(__file__).resolve().parent.parent
+TRACKS_FILE  = BASE_DIR / "tracks.json"
+SOURCES_FILE = BASE_DIR / "sources.json"
+FLYERS_DIR   = BASE_DIR / "flyers"
+DIST_DIR     = BASE_DIR / "dist"
+RUNTIME_DIR  = BASE_DIR / "runtime"
 STATE_DIR    = RUNTIME_DIR / "state"
 TRACING_DIR  = RUNTIME_DIR / "tracing"
 CRAWL_STATE  = STATE_DIR / "crawl_state.json"
@@ -46,7 +47,7 @@ METRICS_LOG  = TRACING_DIR / "crawl_metrics.jsonl"
 METRICS_SUMMARY = TRACING_DIR / "crawl_metrics_summary.json"
 ERROR_LOG    = TRACING_DIR / "crawl_errors.log"
 
-LEGACY_CRAWL_STATE = Path(__file__).parent / ".crawl_state.json"
+LEGACY_CRAWL_STATE = BASE_DIR / ".crawl_state.json"
 LEGACY_METRICS_LOG = DIST_DIR / "crawl_metrics.jsonl"
 LEGACY_METRICS_SUMMARY = DIST_DIR / "crawl_metrics_summary.json"
 LEGACY_ERROR_LOG = DIST_DIR / "crawl_errors.log"
