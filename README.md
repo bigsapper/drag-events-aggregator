@@ -67,7 +67,7 @@ drag-events-aggregator/
 │   ├── events.json         # Primary output — drag racing event database
 │   └── events.schema.json  # JSON Schema contract for events.json
 ├── docs/
-│   ├── OPERATIONS.md      # Setup, crawl, manual processing, reset, and development runbook
+│   ├── OPERATIONS.md      # Crawl process, manual processing, reset, and development runbook
 │   ├── SCHEMA.md          # Human-readable events.json field reference
 │   └── TODO.md            # Project backlog and productionization notes
 ├── runtime/
