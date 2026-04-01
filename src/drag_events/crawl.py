@@ -13,10 +13,8 @@ Usage:
 """
 
 import json
-import math
 import os
 import re
-import statistics
 import sys
 import time
 import traceback
@@ -33,7 +31,6 @@ from . import process
 from .crawl_utils import (
     DEFAULT_HEADERS as HEADERS,
     ConfigValidationError,
-    IMAGE_EXTENSIONS,
     find_event_page_urls,
     get_image_links,
     get_request_headers,
@@ -45,6 +42,20 @@ from .crawl_utils import (
     load_sources_config as _load_sources_config,
     load_tracks_config as _load_tracks_config,
     url_to_filename,
+)
+from .crawl_runtime import (
+    ensure_runtime_layout_impl,
+    format_duration as _format_duration,
+    get_error_log_path as _get_error_log_path,
+    load_metric_entries_impl,
+    load_state_impl,
+    log_error_impl,
+    print_metrics_summary as _print_metrics_summary,
+    record_run_metrics_impl,
+    save_state_impl,
+    should_log_errors as _should_log_errors,
+    should_record_runtime_metrics as _should_record_runtime_metrics,
+    summarize_metrics as _summarize_metrics,
 )
 from .dedup import find_same_event, merge_events, track_slug
 from .extract_text import extract_from_text
@@ -91,163 +102,80 @@ TRACING_DIR.mkdir(exist_ok=True)
 # ── State management ──────────────────────────────────────────────────────────
 
 def ensure_runtime_layout() -> None:
-    RUNTIME_DIR.mkdir(exist_ok=True)
-    STATE_DIR.mkdir(exist_ok=True)
-    TRACING_DIR.mkdir(exist_ok=True)
-    legacy_files = [
-        (LEGACY_CRAWL_STATE, CRAWL_STATE),
-        (LEGACY_METRICS_LOG, METRICS_LOG),
-        (LEGACY_METRICS_SUMMARY, METRICS_SUMMARY),
-        (LEGACY_ERROR_LOG, ERROR_LOG),
-        (RUNTIME_LEGACY_METRICS_LOG, METRICS_LOG),
-        (RUNTIME_LEGACY_METRICS_SUMMARY, METRICS_SUMMARY),
-        (RUNTIME_LEGACY_ERROR_LOG, ERROR_LOG),
-    ]
-    for legacy, current in legacy_files:
-        if legacy.exists() and not current.exists():
-            current.parent.mkdir(parents=True, exist_ok=True)
-            legacy.replace(current)
+    ensure_runtime_layout_impl(
+        RUNTIME_DIR,
+        STATE_DIR,
+        TRACING_DIR,
+        [
+            (LEGACY_CRAWL_STATE, CRAWL_STATE),
+            (LEGACY_METRICS_LOG, METRICS_LOG),
+            (LEGACY_METRICS_SUMMARY, METRICS_SUMMARY),
+            (LEGACY_ERROR_LOG, ERROR_LOG),
+            (RUNTIME_LEGACY_METRICS_LOG, METRICS_LOG),
+            (RUNTIME_LEGACY_METRICS_SUMMARY, METRICS_SUMMARY),
+            (RUNTIME_LEGACY_ERROR_LOG, ERROR_LOG),
+        ],
+    )
 
 def load_state() -> dict:
-    ensure_runtime_layout()
-    if CRAWL_STATE.exists():
-        return json.loads(CRAWL_STATE.read_text())
-    return {"seen_urls": [], "racingjunk_events": [], "myracepass_events": [], "tmccc_events": []}
+    return load_state_impl(CRAWL_STATE, ensure_runtime_layout=ensure_runtime_layout, json_loads=json.loads)
 
 
 def save_state(state: dict) -> None:
-    ensure_runtime_layout()
-    CRAWL_STATE.write_text(json.dumps(state, indent=2))
+    save_state_impl(CRAWL_STATE, state, ensure_runtime_layout=ensure_runtime_layout, json_dumps=json.dumps)
 
 
 def format_duration(seconds: float) -> str:
-    seconds = max(0, int(round(seconds)))
-    minutes, secs = divmod(seconds, 60)
-    hours, minutes = divmod(minutes, 60)
-    if hours:
-        return f"{hours}h {minutes}m {secs}s"
-    if minutes:
-        return f"{minutes}m {secs}s"
-    return f"{secs}s"
+    return _format_duration(seconds)
 
 
 def summarize_metrics(entries: list[dict]) -> dict:
-    successful = [entry for entry in entries if entry.get("status") == "success"]
-    durations = [entry["elapsed_seconds"] for entry in successful if isinstance(entry.get("elapsed_seconds"), (int, float))]
-
-    summary = {
-        "recorded_runs": len(entries),
-        "successful_runs": len(successful),
-        "last_run": entries[-1] if entries else None,
-    }
-    if not durations:
-        return summary
-
-    summary.update({
-        "average_seconds": round(sum(durations) / len(durations), 2),
-        "median_seconds": round(statistics.median(durations), 2),
-        "min_seconds": round(min(durations), 2),
-        "max_seconds": round(max(durations), 2),
-    })
-    if len(durations) >= 2:
-        sorted_durations = sorted(durations)
-        index = math.ceil(0.95 * len(sorted_durations)) - 1
-        summary["p95_seconds"] = round(sorted_durations[max(index, 0)], 2)
-    return summary
+    return _summarize_metrics(entries)
 
 
 def load_metric_entries(metrics_log: Path = METRICS_LOG) -> list[dict]:
-    ensure_runtime_layout()
-    if not metrics_log.exists():
-        return []
-
-    decoder = json.JSONDecoder()
-    entries = []
-    for line in metrics_log.read_text().splitlines():
-        line = line.strip()
-        if not line:
-            continue
-        entries.append(decoder.decode(line))
-    return entries
+    return load_metric_entries_impl(metrics_log, ensure_runtime_layout=ensure_runtime_layout)
 
 
 def record_run_metrics(run_metrics: dict, metrics_log: Path = METRICS_LOG, summary_file: Path = METRICS_SUMMARY) -> dict:
-    ensure_runtime_layout()
-    metrics_log.parent.mkdir(parents=True, exist_ok=True)
-    with metrics_log.open("a", encoding="utf-8") as fh:
-        fh.write(json.dumps(run_metrics) + "\n")
-
-    entries = load_metric_entries(metrics_log)
-    summary = summarize_metrics(entries)
-    summary_file.write_text(json.dumps(summary, indent=2) + "\n")
-    return summary
+    return record_run_metrics_impl(
+        run_metrics,
+        metrics_log=metrics_log,
+        summary_file=summary_file,
+        ensure_runtime_layout=ensure_runtime_layout,
+        load_metric_entries=load_metric_entries,
+        summarize_metrics=summarize_metrics,
+    )
 
 
 def should_record_runtime_metrics() -> bool:
-    return "PYTEST_CURRENT_TEST" not in os.environ
+    return _should_record_runtime_metrics(os.environ)
 
 
 def should_log_errors(details: dict | None = None) -> bool:
-    if "PYTEST_CURRENT_TEST" in os.environ:
-        return False
-    if not details:
-        return True
-
-    for value in details.values():
-        value_str = str(value)
-        if "test-flyers" in value_str:
-            return False
-    return True
+    return _should_log_errors(details, env=os.environ)
 
 
 def get_error_log_path() -> Path:
-    return ERROR_LOG
+    return _get_error_log_path(ERROR_LOG)
 
 
 def log_error(context: str, error: Exception | str, *, error_log: Path | None = None, details: dict | None = None, include_traceback: bool = False) -> None:
-    if not should_log_errors(details):
-        return
-    ensure_runtime_layout()
-    if error_log is None:
-        error_log = get_error_log_path()
-    error_log.parent.mkdir(parents=True, exist_ok=True)
-    timestamp = datetime.now(timezone.utc).isoformat()
-    with error_log.open("a", encoding="utf-8") as fh:
-        fh.write(f"[{timestamp}] {context}\n")
-        fh.write(f"error: {error}\n")
-        if details:
-            for key, value in details.items():
-                fh.write(f"{key}: {value}\n")
-        if include_traceback and isinstance(error, BaseException):
-            fh.write(traceback.format_exc())
-            if not traceback.format_exc().endswith("\n"):
-                fh.write("\n")
-        fh.write("\n")
+    log_error_impl(
+        context,
+        error,
+        error_log=error_log,
+        details=details,
+        include_traceback=include_traceback,
+        should_log_errors=should_log_errors,
+        ensure_runtime_layout=ensure_runtime_layout,
+        get_error_log_path=get_error_log_path,
+        traceback_format_exc=traceback.format_exc,
+    )
 
 
 def print_metrics_summary(summary: dict) -> None:
-    if not summary.get("recorded_runs"):
-        print("No crawl metrics recorded yet.")
-        return
-
-    print("Crawl metrics summary")
-    print(f"  recorded runs:   {summary['recorded_runs']}")
-    print(f"  successful runs: {summary.get('successful_runs', 0)}")
-
-    if summary.get("average_seconds") is not None:
-        print(f"  average runtime: {format_duration(summary['average_seconds'])}")
-        print(f"  median runtime:  {format_duration(summary['median_seconds'])}")
-        print(f"  min runtime:     {format_duration(summary['min_seconds'])}")
-        print(f"  max runtime:     {format_duration(summary['max_seconds'])}")
-        if summary.get("p95_seconds") is not None:
-            print(f"  p95 runtime:     {format_duration(summary['p95_seconds'])}")
-
-    last_run = summary.get("last_run")
-    if last_run:
-        status = last_run.get("status", "unknown")
-        started = last_run.get("started_at", "?")
-        elapsed = format_duration(last_run.get("elapsed_seconds", 0))
-        print(f"  last run:        {status} at {started} ({elapsed})")
+    _print_metrics_summary(summary, format_duration=format_duration)
 
 
 # ── Config validation ─────────────────────────────────────────────────────────
@@ -386,7 +314,7 @@ def crawl_tmccc(source: dict, state: dict) -> list[dict]:
 
 def crawl_rss(source: dict, state: dict) -> list[dict]:
     """Parse an RSS feed for event announcements."""
-    return crawl_rss_impl(source, state)
+    return crawl_rss_impl(source, state, parse_feed=feedparser.parse)
 
 
 STRATEGY_MAP = {

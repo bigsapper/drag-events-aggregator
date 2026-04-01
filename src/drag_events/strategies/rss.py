@@ -1,12 +1,10 @@
 """RSS crawler strategy."""
 
-import feedparser
 
-
-def crawl_rss_impl(source: dict, state: dict) -> list[dict]:
+def crawl_rss_impl(source: dict, state: dict, *, parse_feed) -> list[dict]:
     url = source["url"]
     print(f"  {url}")
-    feed = feedparser.parse(url)
+    feed = parse_feed(url)
     new_items = []
     for entry in feed.entries:
         link = entry.get("link", "")
