@@ -10,7 +10,8 @@ Aggregator crawl strategies have already been extracted into dedicated modules u
 requires modifying `crawl.py` to import it and add it to `STRATEGY_MAP`.
 
 - [ ] Add dynamic strategy registration/loading so new aggregator strategies can be added without editing `crawl.py`
-- [ ] Implement a process to automate searching for event flyers and downloading them for subsequent extraction and deduplication
+- [ ] Define and document the manual flyer intake workflow:
+  searching for flyers and downloading them currently happens outside this project, so the repo needs a clear operator process for sourcing flyer files externally, staging them in `flyers/`, and then running extraction/deduplication against those local files
 
 ## Data Quality
 
