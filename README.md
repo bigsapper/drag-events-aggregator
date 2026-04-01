@@ -79,41 +79,30 @@ python process.py flyer1.jpg flyer2.png
 
 ## Output
 
-Results are written to `events.json` — a JSON array of event records with the following structure:
+Results are written to `dist/events.json` — the primary data output of this project, intended for consumption by websites, APIs, and other external services.
 
-```json
-{
-  "id": "uuid",
-  "title": "Spring Fling",
-  "event_type": "bracket",
-  "series": "NHRA",
-  "track": { "name": "Xtreme Raceway Park", "city": "Ennis", "state": "TX" },
-  "dates": { "start": "2025-04-12", "end": "2025-04-13" },
-  "times": { "gates_open": "07:00", "registration_opens": "08:00", "race_start": "10:00" },
-  "classes": ["Super Pro", "Pro", "Sportsman"],
-  "fees": { "entry": "$60/class", "spectator": "$10" },
-  "contact": { "phone": "555-1234", "email": null, "website": "https://example.com" },
-  "confidence": 0.92,
-  "flyers": [{ "file": "flyer-abc123.jpg", "phash": "f3a1...", "processed_at": "2025-03-31T12:00:00Z" }],
-  "created_at": "2025-03-31T12:00:00Z",
-  "updated_at": "2025-03-31T12:00:00Z"
-}
-```
+The full field reference and JSON Schema contract are documented in [SCHEMA.md](SCHEMA.md).
 
 ## Project Structure
 
 ```
 drag-events-aggregator/
-├── crawl.py          # Web crawler for tracks and aggregator sources
-├── extract.py        # Claude vision extraction for flyer images
-├── extract_text.py   # Claude text extraction for text-based listings
-├── dedup.py          # Perceptual hash and event-level deduplication
-├── process.py        # Orchestrates extraction + dedup for flyer files
-├── tracks.json       # Track website definitions
-├── sources.json      # Aggregator source definitions
-├── requirements.txt  # Python dependencies
-├── setup.sh          # One-time setup script (Linux/macOS)
-└── .env.example      # Environment variable template
+├── dist/
+│   ├── events.json         # Primary output — drag racing event database
+│   └── events.schema.json  # JSON Schema contract for events.json
+├── crawl.py                # Web crawler for tracks and aggregator sources
+├── extract.py              # Claude vision extraction for flyer images
+├── extract_text.py         # Claude text extraction for text-based listings
+├── dedup.py                # Perceptual hash and event-level deduplication
+├── process.py              # Orchestrates extraction + dedup for flyer files
+├── schema.py               # Shared Claude tool JSON schema
+├── tracks.json             # Track website definitions
+├── sources.json            # Aggregator source definitions
+├── SCHEMA.md               # Human-readable events.json field reference
+├── requirements.txt        # Python dependencies
+├── requirements-dev.txt    # Dev/test dependencies
+├── setup.sh                # One-time setup script (Linux/macOS)
+└── .env.example            # Environment variable template
 ```
 
 ## Development Setup

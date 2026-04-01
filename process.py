@@ -24,7 +24,7 @@ from extract import extract_event
 
 load_dotenv()
 
-EVENTS_FILE = Path(__file__).parent / "events.json"
+EVENTS_FILE = Path(__file__).parent / "dist" / "events.json"
 IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp", ".gif"}
 
 
