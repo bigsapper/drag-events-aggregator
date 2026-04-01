@@ -5,6 +5,9 @@ Two-layer dedup:
   2. Event-level: same track + overlapping dates = same event, merge records
 """
 
+import json
+import re
+
 import imagehash
 from PIL import Image
 from datetime import date
@@ -12,6 +15,26 @@ from pathlib import Path
 
 # Hamming distance threshold — hashes within this distance are the same image
 PHASH_THRESHOLD = 10
+
+_ALIASES_FILE = Path(__file__).parent / "track_aliases.json"
+
+
+def _load_alias_map() -> dict[str, str]:
+    """Build a lowercase alias → canonical name lookup from track_aliases.json."""
+    if not _ALIASES_FILE.exists():
+        return {}
+    entries = json.loads(_ALIASES_FILE.read_text())
+    return {alias.lower(): entry["canonical"]
+            for entry in entries
+            for alias in entry.get("aliases", [])}
+
+
+_ALIAS_MAP: dict[str, str] = _load_alias_map()
+
+
+def _resolve_canonical(name: str) -> str:
+    """Substitute a known alias with its canonical track name."""
+    return _ALIAS_MAP.get(name.strip().lower(), name)
 
 
 def compute_phash(image_path: str) -> str:
@@ -55,6 +78,23 @@ def _dates_overlap(event_a: dict, event_b: dict) -> bool:
     return a_start <= b_end and b_start <= a_end
 
 
+def track_slug(name: str | None, state: str | None) -> str | None:
+    """Generate a stable URL-safe slug for a track (e.g. 'texas-motorplex-tx').
+
+    Uses the same normalization as track matching so name variants like
+    'Xtreme Raceway Park' and 'Xtreme Raceway' produce the same slug.
+    Used as track.id in events.json so consumers can filter by track without
+    fuzzy-matching name strings.
+    """
+    if not name:
+        return None
+    normalized = _normalize_track_name(_resolve_canonical(name))
+    slug = re.sub(r"[^a-z0-9]+", "-", normalized).strip("-")
+    if state:
+        slug = f"{slug}-{state.lower()}"
+    return slug or None
+
+
 def _normalize_track_name(name: str) -> str:
     """Lowercase, strip common suffixes for fuzzy matching."""
     stopwords = ["raceway", "race", "way", "park", "dragstrip", "drag", "strip", "motorsports", "the"]
@@ -63,10 +103,17 @@ def _normalize_track_name(name: str) -> str:
 
 
 def _tracks_match(event_a: dict, event_b: dict) -> bool:
-    name_a = _normalize_track_name(event_a.get("track", {}).get("name", ""))
-    name_b = _normalize_track_name(event_b.get("track", {}).get("name", ""))
+    name_a = _normalize_track_name(_resolve_canonical(event_a.get("track", {}).get("name", "")))
+    name_b = _normalize_track_name(_resolve_canonical(event_b.get("track", {}).get("name", "")))
 
     if not name_a or not name_b:
+        return False
+
+    # State must match if both present — check before name comparison to avoid
+    # false positives across states even when names are identical.
+    state_a = (event_a.get("track", {}).get("state") or "").upper()
+    state_b = (event_b.get("track", {}).get("state") or "").upper()
+    if state_a and state_b and state_a != state_b:
         return False
 
     # Exact match after normalization
@@ -76,12 +123,6 @@ def _tracks_match(event_a: dict, event_b: dict) -> bool:
     # One is a substring of the other (handles abbreviations like "GRP" vs "Gainesville Regional Park")
     if name_a in name_b or name_b in name_a:
         return True
-
-    # State must also match if both present (avoid false positives across states)
-    state_a = (event_a.get("track", {}).get("state") or "").upper()
-    state_b = (event_b.get("track", {}).get("state") or "").upper()
-    if state_a and state_b and state_a != state_b:
-        return False
 
     # Shared token count — if 2+ meaningful words in common, likely same track
     tokens_a = set(name_a.split())
@@ -113,10 +154,13 @@ def merge_events(existing: dict, new_data: dict, new_flyer_entry: dict) -> dict:
     # Track — new values fill in missing fields
     existing_track = existing.get("track", {})
     new_track = new_data.get("track", {})
+    merged_name  = new_track.get("name")  or existing_track.get("name")
+    merged_state = new_track.get("state") or existing_track.get("state")
     merged["track"] = {
-        "name": new_track.get("name") or existing_track.get("name"),
-        "city": new_track.get("city") or existing_track.get("city"),
-        "state": new_track.get("state") or existing_track.get("state"),
+        "id":    track_slug(merged_name, merged_state),
+        "name":  merged_name,
+        "city":  new_track.get("city") or existing_track.get("city"),
+        "state": merged_state,
     }
 
     # Dates — new flyer wins (may have corrected or extended dates)

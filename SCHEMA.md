@@ -58,6 +58,7 @@ The root object for a single drag racing event.
 
 | Field | Type | Required | Description |
 |---|---|---|---|
+| `id` | string \| null | No | Stable slug for the track (e.g. `texas-motorplex-tx`). Use this for filtering — reliable across name variations |
 | `name` | string | Yes | Official track name |
 | `city` | string \| null | No | City where the track is located |
 | `state` | string \| null | No | Two-letter US state abbreviation (e.g. `TX`) |
@@ -144,6 +145,7 @@ Fields that were specifically uncertain are listed in `unclear_fields`.
   "event_type": "bracket",
   "series": null,
   "track": {
+    "id": "texas-motorplex-tx",
     "name": "Texas Motorplex",
     "city": "Ennis",
     "state": "TX"

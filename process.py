@@ -19,7 +19,7 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-from dedup import compute_phash, is_duplicate_image, find_same_event, merge_events
+from dedup import compute_phash, is_duplicate_image, find_same_event, merge_events, track_slug
 from extract import extract_event
 
 load_dotenv()
@@ -76,6 +76,13 @@ def process_flyer(image_path: str, events: list[dict]) -> tuple[str, dict]:
         return "merged", merged
 
     # New event
+    track = extracted.get("track") or {}
+    extracted["track"] = {
+        "id":    track_slug(track.get("name"), track.get("state")),
+        "name":  track.get("name"),
+        "city":  track.get("city"),
+        "state": track.get("state"),
+    }
     new_event = {
         "id": str(uuid.uuid4()),
         **extracted,

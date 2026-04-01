@@ -27,7 +27,7 @@ import requests
 from bs4 import BeautifulSoup
 
 import process
-from dedup import find_same_event, merge_events
+from dedup import find_same_event, merge_events, track_slug
 from extract_text import extract_from_text
 
 TRACKS_FILE  = Path(__file__).parent / "tracks.json"
@@ -527,6 +527,13 @@ def run_extraction(downloaded: list[Path], text_listings: list[dict]) -> None:
                 counts["merged"] += 1
                 print(f"  [UPDATED] {merged.get('title', '?')}")
             else:
+                track = extracted.get("track") or {}
+                extracted["track"] = {
+                    "id":    track_slug(track.get("name"), track.get("state")),
+                    "name":  track.get("name"),
+                    "city":  track.get("city"),
+                    "state": track.get("state"),
+                }
                 new_event = {
                     "id": str(uuid.uuid4()),
                     **extracted,

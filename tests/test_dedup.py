@@ -3,15 +3,18 @@
 import pytest
 from pathlib import Path
 
+import dedup
 from dedup import (
     compute_phash,
     phash_distance,
     is_duplicate_image,
     find_same_event,
     merge_events,
+    track_slug,
     _parse_date,
     _dates_overlap,
     _normalize_track_name,
+    _resolve_canonical,
     _tracks_match,
 )
 
@@ -189,15 +192,10 @@ def test_tracks_no_match_empty_name():
 
 
 def test_tracks_state_mismatch_blocks_token_match():
-    # Shared tokens but different states → False
+    # Identical names but different states → False
     a = {"track": {"name": "Dallas Motorplex Racing", "state": "TX"}}
     b = {"track": {"name": "Dallas Motorplex Racing", "state": "CA"}}
-    # After normalization both reduce to same tokens but state guard fires
-    # NOTE: if names normalize to an exact match, state check is NOT reached (known limitation).
-    # This test documents the token-path behavior where state IS checked.
-    result = _tracks_match(a, b)
-    # Exact normalized match ("dallas motorplex racing") → returns True before state check — known limitation
-    assert result is True  # documents current behavior; would be False after bug fix
+    assert _tracks_match(a, b) is False
 
 
 def test_tracks_state_null_does_not_crash():
@@ -214,6 +212,61 @@ def test_tracks_state_mismatch_blocks_token_match_on_distinct_names():
     a = {"track": {"name": "Oklahoma City Thunder Raceway", "state": "OK"}}
     b = {"track": {"name": "Texas City Thunder Raceway",   "state": "TX"}}
     assert _tracks_match(a, b) is False
+
+
+# ── track_slug ───────────────────────────────────────────────────────────────
+
+def test_track_slug_name_and_state():
+    # "motorplex" is not a stopword, so it survives normalization
+    assert track_slug("Texas Motorplex", "TX") == "texas-motorplex-tx"
+
+def test_track_slug_name_only():
+    # "dragway" is not a stopword; "drag" alone is but it doesn't match "dragway"
+    assert track_slug("Little River Dragway", None) == "little-river-dragway"
+
+def test_track_slug_normalizes_variants():
+    # Both "Xtreme Raceway Park" and "Xtreme Raceway" normalize to "xtreme" → same slug
+    assert track_slug("Xtreme Raceway Park", "TX") == track_slug("Xtreme Raceway", "TX")
+
+def test_track_slug_none_name():
+    assert track_slug(None, "TX") is None
+
+def test_track_slug_state_lowercased():
+    # "raceway" and "park" are stopwords → "thunder valley"
+    assert track_slug("Thunder Valley Raceway Park", "OK") == "thunder-valley-ok"
+
+
+# ── alias resolution ─────────────────────────────────────────────────────────
+
+@pytest.fixture()
+def alias_map(monkeypatch):
+    """Install a known alias map for tests that need it."""
+    monkeypatch.setattr(dedup, "_ALIAS_MAP", {"xrp": "Xtreme Raceway Park", "xtreme raceway": "Xtreme Raceway Park"})
+
+
+def test_load_alias_map_missing_file(monkeypatch, tmp_path):
+    """Returns empty dict when track_aliases.json does not exist (line 25)."""
+    monkeypatch.setattr(dedup, "_ALIASES_FILE", tmp_path / "nonexistent.json")
+    assert dedup._load_alias_map() == {}
+
+def test_resolve_canonical_known_alias(alias_map):
+    assert _resolve_canonical("XRP") == "Xtreme Raceway Park"
+
+def test_resolve_canonical_case_insensitive(alias_map):
+    assert _resolve_canonical("xrp") == "Xtreme Raceway Park"
+
+def test_resolve_canonical_unknown_returns_original(alias_map):
+    assert _resolve_canonical("Texas Motorplex") == "Texas Motorplex"
+
+def test_alias_match_abbreviation_and_full_name(alias_map):
+    """'XRP' and 'Xtreme Raceway Park' should match as the same track."""
+    a = {"track": {"name": "XRP", "state": "TX"}}
+    b = {"track": {"name": "Xtreme Raceway Park", "state": "TX"}}
+    assert _tracks_match(a, b) is True
+
+def test_alias_slug_matches_canonical_slug(alias_map):
+    """Alias and canonical name produce the same track.id slug."""
+    assert track_slug("XRP", "TX") == track_slug("Xtreme Raceway Park", "TX")
 
 
 # ── find_same_event ───────────────────────────────────────────────────────────
@@ -301,6 +354,13 @@ def test_merge_track_fills_missing_city(existing, new_flyer):
     new_data = {"track": {"name": "Texas Motorplex", "city": "Ennis", "state": "TX"}, "dates": {"start": "2026-05-10"}, "confidence": 0.7}
     merged = merge_events(existing, new_data, new_flyer)
     assert merged["track"]["city"] == "Ennis"
+    assert merged["track"]["id"] == track_slug("Texas Motorplex", "TX")
+
+
+def test_merge_track_id_set_on_merge(existing, new_flyer):
+    new_data = {"track": {"name": "Texas Motorplex", "state": "TX"}, "dates": {"start": "2026-05-10"}, "confidence": 0.9}
+    merged = merge_events(existing, new_data, new_flyer)
+    assert merged["track"]["id"] == track_slug("Texas Motorplex", "TX")
 
 
 def test_merge_preserves_id(existing, new_flyer):

@@ -1,0 +1,74 @@
+[
+  {
+    "canonical": "Xtreme Raceway Park",
+    "aliases": ["XRP", "Xtreme Raceway"]
+  },
+  {
+    "canonical": "Texas Motorplex",
+    "aliases": ["TMP", "Motorplex"]
+  },
+  {
+    "canonical": "Yello Belly Drag Strip",
+    "aliases": ["YBDS", "Yello Belly"]
+  },
+  {
+    "canonical": "Tulsa Raceway Park",
+    "aliases": ["TRP"]
+  },
+  {
+    "canonical": "Bradenton Motorsports Park",
+    "aliases": ["BMP", "Bradenton Motorsports"]
+  },
+  {
+    "canonical": "South Georgia Motorsports Park",
+    "aliases": ["SGMP", "South Georgia Motorsports"]
+  },
+  {
+    "canonical": "zMAX Dragway",
+    "aliases": ["ZMAX Dragway", "zMax Dragway", "zMAX"]
+  },
+  {
+    "canonical": "Rockingham Dragway",
+    "aliases": ["The Rock"]
+  },
+  {
+    "canonical": "Galot Motorsports Park",
+    "aliases": ["GALOT", "Galot Motorsports"]
+  },
+  {
+    "canonical": "Maryland International Raceway",
+    "aliases": ["MIR"]
+  },
+  {
+    "canonical": "Kil-Kare Raceway",
+    "aliases": ["Kil Kare Raceway", "KilKare Raceway", "Kil Kare"]
+  },
+  {
+    "canonical": "Lucas Oil Indianapolis Raceway Park",
+    "aliases": ["IRP", "Indianapolis Raceway Park", "Lucas Oil Raceway"]
+  },
+  {
+    "canonical": "World Wide Technology Raceway",
+    "aliases": ["WWTR", "Gateway Motorsports Park", "Gateway Raceway"]
+  },
+  {
+    "canonical": "Brainerd International Raceway",
+    "aliases": ["BIR"]
+  },
+  {
+    "canonical": "The Strip at Las Vegas Motor Speedway",
+    "aliases": ["The Strip", "LVMS Strip", "Las Vegas Motor Speedway Strip"]
+  },
+  {
+    "canonical": "Sonoma Raceway",
+    "aliases": ["Infineon Raceway", "Sears Point", "Sears Point Raceway"]
+  },
+  {
+    "canonical": "Pacific Raceways",
+    "aliases": ["Pacific Raceway", "Seattle International Raceway", "SIR"]
+  },
+  {
+    "canonical": "Thunder Valley Raceway Park",
+    "aliases": ["TVRP", "Thunder Valley Raceway", "Thunder Valley"]
+  }
+]
