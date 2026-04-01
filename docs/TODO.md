@@ -10,6 +10,7 @@ Aggregator crawl strategies have already been extracted into dedicated modules u
 requires modifying `crawl.py` to import it and add it to `STRATEGY_MAP`.
 
 - [ ] Add dynamic strategy registration/loading so new aggregator strategies can be added without editing `crawl.py`
+- [ ] Implement a process to automate searching for event flyers and downloading them for subsequent extraction and deduplication
 
 ## Data Quality
 
