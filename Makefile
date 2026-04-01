@@ -21,7 +21,14 @@ test:
 	$(PYTHON) -m pytest
 
 coverage:
-	$(PYTHON) -m pytest --cov-report=html && open htmlcov/index.html
+	$(PYTHON) -m pytest --cov-report=html
+	@if command -v xdg-open >/dev/null 2>&1; then \
+		xdg-open htmlcov/index.html; \
+	elif command -v open >/dev/null 2>&1; then \
+		open htmlcov/index.html; \
+	else \
+		echo "HTML coverage report generated at htmlcov/index.html"; \
+	fi
 
 crawl:
 	$(PYTHONPATH_RUN) $(PYTHON) -m drag_events.crawl

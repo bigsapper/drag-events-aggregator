@@ -88,6 +88,8 @@ make fresh-start
 
 ```bash
 pip install -r requirements-dev.txt
+make test
+make coverage
 pytest
 ```
 

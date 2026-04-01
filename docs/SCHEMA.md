@@ -1,6 +1,6 @@
 # events.json Schema Reference
 
-`dist/events.json` is the primary output of this project. It is a JSON array of structured drag racing event records extracted from track websites and event flyers via Claude AI vision.
+`dist/events.json` is the primary output of this project. It is a JSON array of structured drag racing event records extracted from track websites, flyer images, and text listings using Claude-powered extraction.
 
 The machine-readable contract is defined in [`dist/events.schema.json`](dist/events.schema.json) (JSON Schema draft-07).
 
