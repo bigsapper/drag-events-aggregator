@@ -1,19 +1,12 @@
 """Claude vision extraction for drag racing event flyers."""
 
-import anthropic
 import base64
-import os
 import time
 from pathlib import Path
 
-from dotenv import load_dotenv
-
 from .retry_utils import execute_with_retries
+from .secrets import get_anthropic_client
 from .schema import EVENT_INPUT_SCHEMA
-
-load_dotenv()
-
-CLIENT = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
 
 TOOL = {
     "name": "store_event",
@@ -49,7 +42,7 @@ def extract_event(image_path: str) -> dict:
     media_type = media_type_map.get(suffix, "image/jpeg")
 
     response = execute_with_retries(
-        lambda: CLIENT.messages.create(
+        lambda: get_anthropic_client().messages.create(
             model="claude-sonnet-4-6",
             max_tokens=1024,
             system=SYSTEM_PROMPT,

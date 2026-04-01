@@ -17,13 +17,9 @@ import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 
-from dotenv import load_dotenv
-
 from .dedup import compute_phash, is_duplicate_image, find_same_event, merge_events, track_slug
 from .extract import extract_event
 from .logging_utils import get_logger
-
-load_dotenv()
 
 LOGGER = get_logger(__name__)
 

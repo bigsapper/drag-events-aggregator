@@ -6,14 +6,11 @@ Items related to CI, scheduled execution, and automated notifications are parked
 ## Active Priorities
 
 ## Architecture — Crawl Strategy Scalability
-Adding aggregator sources with unique page structures currently requires modifying `crawl.py` directly
-(new function + `STRATEGY_MAP` entry). This is manageable at the current scale but will become a
-maintenance burden as more aggregators are added.
+Aggregator crawl strategies have already been extracted into dedicated modules under
+`src/drag_events/strategies/`. The remaining coupling is registration: adding a new strategy still
+requires modifying `crawl.py` to import it and add it to `STRATEGY_MAP`.
 
-- [ ] Extract each crawl strategy into its own file (e.g. `strategies/racingjunk.py`) loaded dynamically, so adding a new aggregator no longer requires editing `crawl.py`
-
-## Security
-- [ ] Replace `.env` file pattern with proper secrets injection for production (CI secrets, AWS Secrets Manager, or equivalent)
+- [ ] Add dynamic strategy registration/loading so new aggregator strategies can be added without editing `crawl.py`
 
 ## Recently Completed
 
@@ -28,6 +25,9 @@ maintenance burden as more aggregators are added.
 
 ### Observability
 - [x] Replace `print()` statements with structured logging (`logging` module) with configurable log levels
+
+### Security
+- [x] Replace the repo-local `.env` file pattern with explicit secret injection via `ANTHROPIC_API_KEY` or `ANTHROPIC_API_KEY_FILE`
 
 ## Deferred
 

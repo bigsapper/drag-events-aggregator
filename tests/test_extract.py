@@ -68,7 +68,9 @@ def test_extract_event_raises_if_no_tool_call(tmp_path):
     text_block.type = "text"
     mock_response = MagicMock()
     mock_response.content = [text_block]
-    with patch("drag_events.extract.CLIENT.messages.create", return_value=mock_response):
+    client = MagicMock()
+    client.messages.create.return_value = mock_response
+    with patch("drag_events.extract.get_anthropic_client", return_value=client):
         with pytest.raises(ValueError, match="store_event"):
             extract.extract_event(str(img))
 
@@ -82,7 +84,9 @@ def test_extract_event_retries_transient_claude_failure(tmp_path, sample_extract
     block.input = sample_extracted
     response.content = [block]
 
-    with patch("drag_events.extract.CLIENT.messages.create", side_effect=[RuntimeError("timeout"), response]) as mock_create, \
+    client = MagicMock()
+    with patch("drag_events.extract.get_anthropic_client", return_value=client), \
+         patch.object(client.messages, "create", side_effect=[RuntimeError("timeout"), response]) as mock_create, \
          patch("drag_events.extract.time.sleep") as mock_sleep:
         result = extract.extract_event(str(img))
 

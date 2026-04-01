@@ -1,17 +1,10 @@
 """Convert text-based event listings (RacingJunk, MyRacePass) into structured event records."""
 
-import os
 import time
 
-import anthropic
-from dotenv import load_dotenv
-
 from .retry_utils import execute_with_retries
+from .secrets import get_anthropic_client
 from .schema import EVENT_INPUT_SCHEMA
-
-load_dotenv()
-
-CLIENT = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
 
 TOOL = {
     "name": "store_event",
@@ -28,7 +21,7 @@ def extract_from_text(listing: dict) -> dict:
     text = "\n".join(f"{k}: {v}" for k, v in listing.items() if v and k != "source")
 
     response = execute_with_retries(
-        lambda: CLIENT.messages.create(
+        lambda: get_anthropic_client().messages.create(
             model="claude-haiku-4-5-20251001",  # text-only; haiku is sufficient and cheaper
             max_tokens=512,
             tools=[TOOL],

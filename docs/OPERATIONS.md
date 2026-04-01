@@ -15,6 +15,28 @@
 - `page_delay_seconds`: override the delay between paginated or sequential source requests
 - `max_pages`: override pagination depth for strategies that page through result sets, such as `racingjunk`
 
+## Secrets
+
+The runtime supports these Anthropic API key sources:
+
+- a repo-local `.env` file containing `ANTHROPIC_API_KEY=...`
+- `ANTHROPIC_API_KEY`: inject the key directly into the process environment
+- `ANTHROPIC_API_KEY_FILE`: point to a file outside the repo whose contents are the key
+
+Examples:
+
+```bash
+printf '%s\n' 'ANTHROPIC_API_KEY=your_api_key_here' > .env
+
+export ANTHROPIC_API_KEY="your_api_key_here"
+export ANTHROPIC_API_KEY_FILE="/path/to/anthropic_api_key"
+```
+
+Resolution order is:
+1. `ANTHROPIC_API_KEY`
+2. `ANTHROPIC_API_KEY_FILE`
+3. repo-local `.env` with `ANTHROPIC_API_KEY=...`
+
 ## Crawl + Extract
 
 ```bash
@@ -118,7 +140,6 @@ DRAG_EVENTS_LOG_TO_FILE=1 DRAG_EVENTS_LOG_FILE=runtime/tracing/custom.log make c
 
 | File/Dir | Purpose |
 |---|---|
-| `.env` | Your API key |
 | `.venv/` | Python virtual environment |
 | `flyers/` | Downloaded flyer images (auto-deleted after successful processing) |
 | `dist/archive/` | Archived `dist/events.json` snapshots created during reset workflows |

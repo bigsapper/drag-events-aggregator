@@ -1,9 +1,3 @@
-import os
-
-# Must be set before any project module is imported, because extract.py and
-# extract_text.py create anthropic.Anthropic(api_key=...) at module scope.
-os.environ.setdefault("ANTHROPIC_API_KEY", "sk-ant-test-key-for-testing")
-
 import json
 from pathlib import Path
 from unittest.mock import MagicMock, patch
@@ -63,16 +57,20 @@ def _make_tool_response(event_data: dict) -> MagicMock:
 
 @pytest.fixture
 def mock_vision_client(sample_extracted):
-    """Patch extract.CLIENT.messages.create with a canned vision response."""
-    with patch("drag_events.extract.CLIENT.messages.create", return_value=_make_tool_response(sample_extracted)) as m:
-        yield m
+    """Patch the Anthropic client used by extract.py with a canned vision response."""
+    client = MagicMock()
+    client.messages.create.return_value = _make_tool_response(sample_extracted)
+    with patch("drag_events.extract.get_anthropic_client", return_value=client):
+        yield client.messages.create
 
 
 @pytest.fixture
 def mock_text_client(sample_extracted):
-    """Patch extract_text.CLIENT.messages.create with a canned text response."""
-    with patch("drag_events.extract_text.CLIENT.messages.create", return_value=_make_tool_response(sample_extracted)) as m:
-        yield m
+    """Patch the Anthropic client used by extract_text.py with a canned text response."""
+    client = MagicMock()
+    client.messages.create.return_value = _make_tool_response(sample_extracted)
+    with patch("drag_events.extract_text.get_anthropic_client", return_value=client):
+        yield client.messages.create
 
 
 # ── File-system redirects ─────────────────────────────────────────────────────

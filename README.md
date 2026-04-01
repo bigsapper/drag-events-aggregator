@@ -30,10 +30,14 @@ bash setup.sh
 
 Because it uses `sudo apt-get`, you may be prompted for your password. If you are not on a Debian/Ubuntu-based system, create `.venv/` manually and install the requirements yourself instead.
 
-Then copy `.env.example` to `.env` and add your Anthropic API key:
+Then provide your Anthropic API key using one of these supported methods:
+
+- keep `ANTHROPIC_API_KEY=...` in a repo-local `.env` file
+- or export `ANTHROPIC_API_KEY` in your shell session
+- or set `ANTHROPIC_API_KEY_FILE` to a file path managed outside the repo
 
 ```bash
-cp .env.example .env
+printf '%s\n' 'ANTHROPIC_API_KEY=your_api_key_here' > .env
 ```
 
 Activate the virtual environment before running any commands:
@@ -88,9 +92,9 @@ drag-events-aggregator/
 │       ├── extract_text.py     # Claude text extraction for text-based listings
 │       ├── dedup.py            # Perceptual hash and event-level deduplication
 │       ├── process.py          # Orchestrates extraction + dedup for flyer files
+│       ├── secrets.py          # Secret resolution and Anthropic client construction
 │       └── schema.py           # Shared Claude tool JSON schema
 ├── requirements.txt        # Python dependencies
 ├── requirements-dev.txt    # Dev/test dependencies
-├── setup.sh                # One-time setup script for Debian/Ubuntu-style environments
-└── .env.example            # Environment variable template
+└── setup.sh                # One-time setup script for Debian/Ubuntu-style environments
 ```
