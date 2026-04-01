@@ -87,8 +87,8 @@ python crawl.py --source "Bracketraces.com"
 ```
 
 Crawling automatically triggers extraction and deduplication for any newly downloaded flyers.
-Each crawl run also records timing and count metrics to `dist/crawl_metrics.jsonl` and refreshes a summary snapshot in `dist/crawl_metrics_summary.json`.
-Recoverable and fatal crawl errors from live runs are appended to `dist/crawl_errors.log`.
+Each crawl run also records timing and count metrics to `runtime/crawl_metrics.jsonl` and refreshes a summary snapshot in `runtime/crawl_metrics_summary.json`.
+Recoverable and fatal crawl errors from live runs are appended to `runtime/crawl_errors.log`.
 
 ### Process Flyers Manually
 
@@ -130,11 +130,13 @@ The full field reference and JSON Schema contract are documented in [SCHEMA.md](
 drag-events-aggregator/
 ├── dist/
 │   ├── archive/           # Timestamped backups created by make archive-events / make fresh-start
+│   ├── events.json         # Primary output — drag racing event database
+│   └── events.schema.json  # JSON Schema contract for events.json
+├── runtime/
 │   ├── crawl_errors.log    # Persistent crawl error log for fetch, extraction, and run failures
 │   ├── crawl_metrics.jsonl # One JSON record per crawl run with timings and counts
 │   ├── crawl_metrics_summary.json # Rolling summary derived from crawl_metrics.jsonl
-│   ├── events.json         # Primary output — drag racing event database
-│   └── events.schema.json  # JSON Schema contract for events.json
+│   └── crawl_state.json    # Crawl state (seen URLs, known listings)
 ├── crawl.py                # Web crawler for tracks and aggregator sources
 ├── extract.py              # Claude vision extraction for flyer images
 ├── extract_text.py         # Claude text extraction for text-based listings
@@ -176,8 +178,9 @@ Tests use mocked Claude API calls and temporary file system paths — no API key
 | `.venv/` | Python virtual environment |
 | `flyers/` | Downloaded flyer images (auto-deleted after successful processing) |
 | `dist/archive/` | Archived `dist/events.json` snapshots created during reset workflows |
-| `dist/crawl_errors.log` | Persistent crawl error log for troubleshooting failed runs |
-| `dist/crawl_metrics.jsonl` | Historical crawl run metrics used for runtime estimation |
-| `dist/crawl_metrics_summary.json` | Latest aggregate timing summary |
-| `events.json` | Extracted event database |
-| `.crawl_state.json` | Crawl state (seen URLs, known listings) |
+| `runtime/` | Operational state and telemetry for crawls |
+| `runtime/crawl_errors.log` | Persistent crawl error log for troubleshooting failed runs |
+| `runtime/crawl_metrics.jsonl` | Historical crawl run metrics used for runtime estimation |
+| `runtime/crawl_metrics_summary.json` | Latest aggregate timing summary |
+| `runtime/crawl_state.json` | Crawl state (seen URLs, known listings) |
+| `dist/events.json` | Extracted event database |

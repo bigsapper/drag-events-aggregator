@@ -37,14 +37,21 @@ from extract_text import extract_from_text
 TRACKS_FILE  = Path(__file__).parent / "tracks.json"
 SOURCES_FILE = Path(__file__).parent / "sources.json"
 FLYERS_DIR   = Path(__file__).parent / "flyers"
-CRAWL_STATE  = Path(__file__).parent / ".crawl_state.json"
 DIST_DIR     = Path(__file__).parent / "dist"
-METRICS_LOG  = DIST_DIR / "crawl_metrics.jsonl"
-METRICS_SUMMARY = DIST_DIR / "crawl_metrics_summary.json"
-ERROR_LOG    = DIST_DIR / "crawl_errors.log"
+RUNTIME_DIR  = Path(__file__).parent / "runtime"
+CRAWL_STATE  = RUNTIME_DIR / "crawl_state.json"
+METRICS_LOG  = RUNTIME_DIR / "crawl_metrics.jsonl"
+METRICS_SUMMARY = RUNTIME_DIR / "crawl_metrics_summary.json"
+ERROR_LOG    = RUNTIME_DIR / "crawl_errors.log"
+
+LEGACY_CRAWL_STATE = Path(__file__).parent / ".crawl_state.json"
+LEGACY_METRICS_LOG = DIST_DIR / "crawl_metrics.jsonl"
+LEGACY_METRICS_SUMMARY = DIST_DIR / "crawl_metrics_summary.json"
+LEGACY_ERROR_LOG = DIST_DIR / "crawl_errors.log"
 
 FLYERS_DIR.mkdir(exist_ok=True)
 DIST_DIR.mkdir(exist_ok=True)
+RUNTIME_DIR.mkdir(exist_ok=True)
 
 # Pages on a track site most likely to contain event flyers
 EVENT_PAGE_KEYWORDS = [
@@ -65,13 +72,28 @@ HEADERS = {
 
 # ── State management ──────────────────────────────────────────────────────────
 
+def ensure_runtime_layout() -> None:
+    RUNTIME_DIR.mkdir(exist_ok=True)
+    legacy_files = [
+        (LEGACY_CRAWL_STATE, CRAWL_STATE),
+        (LEGACY_METRICS_LOG, METRICS_LOG),
+        (LEGACY_METRICS_SUMMARY, METRICS_SUMMARY),
+        (LEGACY_ERROR_LOG, ERROR_LOG),
+    ]
+    for legacy, current in legacy_files:
+        if legacy.exists() and not current.exists():
+            current.parent.mkdir(parents=True, exist_ok=True)
+            legacy.replace(current)
+
 def load_state() -> dict:
+    ensure_runtime_layout()
     if CRAWL_STATE.exists():
         return json.loads(CRAWL_STATE.read_text())
     return {"seen_urls": [], "racingjunk_events": [], "myracepass_events": [], "tmccc_events": []}
 
 
 def save_state(state: dict) -> None:
+    ensure_runtime_layout()
     CRAWL_STATE.write_text(json.dumps(state, indent=2))
 
 
@@ -112,6 +134,7 @@ def summarize_metrics(entries: list[dict]) -> dict:
 
 
 def load_metric_entries(metrics_log: Path = METRICS_LOG) -> list[dict]:
+    ensure_runtime_layout()
     if not metrics_log.exists():
         return []
 
@@ -126,6 +149,7 @@ def load_metric_entries(metrics_log: Path = METRICS_LOG) -> list[dict]:
 
 
 def record_run_metrics(run_metrics: dict, metrics_log: Path = METRICS_LOG, summary_file: Path = METRICS_SUMMARY) -> dict:
+    ensure_runtime_layout()
     metrics_log.parent.mkdir(parents=True, exist_ok=True)
     with metrics_log.open("a", encoding="utf-8") as fh:
         fh.write(json.dumps(run_metrics) + "\n")
@@ -160,6 +184,7 @@ def get_error_log_path() -> Path:
 def log_error(context: str, error: Exception | str, *, error_log: Path | None = None, details: dict | None = None, include_traceback: bool = False) -> None:
     if not should_log_errors(details):
         return
+    ensure_runtime_layout()
     if error_log is None:
         error_log = get_error_log_path()
     error_log.parent.mkdir(parents=True, exist_ok=True)

@@ -3,8 +3,7 @@
 .venv/
 
 # Runtime state
-.crawl_state.json
-dist/*.log
+runtime/
 
 # Downloaded data
 flyers/

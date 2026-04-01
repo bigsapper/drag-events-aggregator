@@ -51,6 +51,49 @@ def test_load_metric_entries_handles_missing_file_and_blank_lines(tmp_path):
     assert entries[0]["run_id"] == "run-1"
 
 
+def test_ensure_runtime_layout_moves_legacy_files(tmp_path, monkeypatch):
+    runtime_dir = tmp_path / "runtime"
+    dist_dir = tmp_path / "dist"
+    runtime_dir.mkdir()
+    dist_dir.mkdir()
+
+    crawl_state = runtime_dir / "crawl_state.json"
+    metrics_log = runtime_dir / "crawl_metrics.jsonl"
+    metrics_summary = runtime_dir / "crawl_metrics_summary.json"
+    error_log = runtime_dir / "crawl_errors.log"
+
+    legacy_state = tmp_path / ".crawl_state.json"
+    legacy_metrics = dist_dir / "crawl_metrics.jsonl"
+    legacy_summary = dist_dir / "crawl_metrics_summary.json"
+    legacy_error = dist_dir / "crawl_errors.log"
+
+    legacy_state.write_text('{"seen_urls": []}')
+    legacy_metrics.write_text('{"run_id":"old"}\n')
+    legacy_summary.write_text('{"recorded_runs": 1}\n')
+    legacy_error.write_text("old error\n")
+
+    monkeypatch.setattr(crawl, "RUNTIME_DIR", runtime_dir)
+    monkeypatch.setattr(crawl, "CRAWL_STATE", crawl_state)
+    monkeypatch.setattr(crawl, "METRICS_LOG", metrics_log)
+    monkeypatch.setattr(crawl, "METRICS_SUMMARY", metrics_summary)
+    monkeypatch.setattr(crawl, "ERROR_LOG", error_log)
+    monkeypatch.setattr(crawl, "LEGACY_CRAWL_STATE", legacy_state)
+    monkeypatch.setattr(crawl, "LEGACY_METRICS_LOG", legacy_metrics)
+    monkeypatch.setattr(crawl, "LEGACY_METRICS_SUMMARY", legacy_summary)
+    monkeypatch.setattr(crawl, "LEGACY_ERROR_LOG", legacy_error)
+
+    crawl.ensure_runtime_layout()
+
+    assert crawl_state.exists()
+    assert metrics_log.exists()
+    assert metrics_summary.exists()
+    assert error_log.exists()
+    assert not legacy_state.exists()
+    assert not legacy_metrics.exists()
+    assert not legacy_summary.exists()
+    assert not legacy_error.exists()
+
+
 def test_record_run_metrics_appends_jsonl_and_updates_summary(tmp_path):
     metrics_log = tmp_path / "crawl_metrics.jsonl"
     summary_file = tmp_path / "crawl_metrics_summary.json"

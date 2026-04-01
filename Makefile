@@ -57,10 +57,10 @@ archive-events:
 	fi
 
 fresh-start: archive-events
-	@mkdir -p flyers dist
-	@rm -f .crawl_state.json
+	@mkdir -p flyers dist runtime
+	@rm -f runtime/crawl_state.json
 	@find flyers -type f -delete
 	@printf "[]\n" > dist/events.json
-	@echo "Reset complete: cleared flyers/, removed .crawl_state.json, and reinitialized dist/events.json"
+	@echo "Reset complete: cleared flyers/, removed runtime/crawl_state.json, and reinitialized dist/events.json"
 
 .PHONY: help test coverage crawl crawl-tracks crawl-sources crawl-track crawl-source process crawl-metrics archive-events fresh-start
