@@ -78,8 +78,8 @@ def _tracks_match(event_a: dict, event_b: dict) -> bool:
         return True
 
     # State must also match if both present (avoid false positives across states)
-    state_a = event_a.get("track", {}).get("state", "").upper()
-    state_b = event_b.get("track", {}).get("state", "").upper()
+    state_a = (event_a.get("track", {}).get("state") or "").upper()
+    state_b = (event_b.get("track", {}).get("state") or "").upper()
     if state_a and state_b and state_a != state_b:
         return False
 

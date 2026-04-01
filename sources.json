@@ -28,6 +28,12 @@
     "api_key_required": true
   },
   {
+    "name": "TMCCC",
+    "url": "https://tmccc.org/events",
+    "strategy": "tmccc",
+    "notes": "GoDaddy site builder calendar. Events use data-aid attributes for reliable scraping. Static fetch only captures initially visible events — JS-loaded 'More Events' are not retrieved."
+  },
+  {
     "name": "Dragzine RSS",
     "url": "https://www.dragzine.com/feed/",
     "strategy": "rss",

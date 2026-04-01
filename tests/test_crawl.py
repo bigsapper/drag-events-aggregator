@@ -2,6 +2,7 @@
 
 import json
 import sys
+import types
 from pathlib import Path
 from unittest.mock import MagicMock, patch, call
 
@@ -351,6 +352,353 @@ def test_crawl_myracepass_fetch_failure():
     with patch("crawl.requests.get", side_effect=Exception("timeout")):
         result = crawl.crawl_myracepass({"url": "http://myracepass.com/events"}, state)
     assert result == []
+
+
+# ── crawl_tmccc ──────────────────────────────────────────────────────────────
+
+def test_parse_tmccc_page_events_merges_summary_and_detail_cards():
+    html = """
+    <div data-aid="CALENDAR_SMALLER_SCREEN_CONTAINER">
+      <div data-aid="CALENDAR_EVENT_DATE">4/12/2026</div>
+      <div data-aid="CALENDAR_EVENT_TITLE">Race #2 Thunder Valley Raceway Park</div>
+      <div data-aid="CALENDAR_EVENT_TIME">
+        <h4>8am</h4><h4>-</h4><h4>4pm</h4>
+        <p>10500 48th St., Lexington, OK 73051</p>
+      </div>
+    </div>
+    <div data-aid="CALENDAR_SMALLER_SCREEN_CONTAINER">
+      <div data-aid="CALENDAR_EVENT_DATE">4/12/2026</div>
+      <div data-aid="CALENDAR_EVENT_TITLE">Race #2 Thunder Valley Raceway Park</div>
+      <div data-aid="CALENDAR_DESC_TEXT">1/4 Mile\n4 Points 1st Round</div>
+    </div>
+    """
+
+    events = crawl.parse_tmccc_page_events(html)
+
+    assert len(events) == 1
+    assert events[0]["title"] == "Race #2 Thunder Valley Raceway Park"
+    assert events[0]["time_text"] == "8am - 4pm"
+    assert events[0]["location_text"] == "10500 48th St., Lexington, OK 73051"
+    assert events[0]["description"] == "1/4 Mile\n4 Points 1st Round"
+
+
+def test_crawl_tmccc_pages_until_button_is_disabled(monkeypatch):
+    page_html = [
+        """
+        <div data-aid="CALENDAR_SMALLER_SCREEN_CONTAINER">
+          <div data-aid="CALENDAR_EVENT_DATE">3/22/2026</div>
+          <div data-aid="CALENDAR_EVENT_TITLE">Race #1 Xtreme Raceway Park</div>
+        </div>
+        """,
+        """
+        <div data-aid="CALENDAR_SMALLER_SCREEN_CONTAINER">
+          <div data-aid="CALENDAR_EVENT_DATE">4/12/2026</div>
+          <div data-aid="CALENDAR_EVENT_TITLE">Race #2 Thunder Valley Raceway Park</div>
+        </div>
+        """,
+    ]
+
+    class FakeLocator:
+        def __init__(self, page):
+            self.page = page
+            self.first = self
+
+        def count(self):
+            return 1
+
+        def is_visible(self):
+            return True
+
+        def is_disabled(self):
+            return self.page.index >= len(page_html) - 1
+
+        def scroll_into_view_if_needed(self):
+            return None
+
+        def click(self):
+            if self.page.index < len(page_html) - 1:
+                self.page.index += 1
+
+    class FakePage:
+        def __init__(self):
+            self.index = 0
+
+        def goto(self, *args, **kwargs):
+            return None
+
+        def wait_for_selector(self, *args, **kwargs):
+            return None
+
+        def wait_for_function(self, *args, **kwargs):
+            return None
+
+        def content(self):
+            return page_html[self.index]
+
+        def locator(self, selector):
+            assert selector == "[data-aid='CALENDAR_SHOW_NEXT_EVENTS']"
+            return FakeLocator(self)
+
+    class FakeBrowser:
+        def new_page(self, **kwargs):
+            return FakePage()
+
+        def close(self):
+            return None
+
+    class FakePlaywright:
+        class chromium:
+            @staticmethod
+            def launch(headless=True, **kwargs):
+                return FakeBrowser()
+
+    class FakeContextManager:
+        def __enter__(self):
+            return FakePlaywright()
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
+    class FakeTimeoutError(Exception):
+        pass
+
+    monkeypatch.setitem(
+        sys.modules,
+        "playwright.sync_api",
+        types.SimpleNamespace(
+            sync_playwright=lambda: FakeContextManager(),
+            TimeoutError=FakeTimeoutError,
+        ),
+    )
+
+    state = {"seen_urls": [], "racingjunk_events": [], "myracepass_events": [], "tmccc_events": []}
+    result = crawl.crawl_tmccc({"url": "http://tmccc.test/events"}, state)
+
+    assert [item["title"] for item in result] == [
+        "Race #1 Xtreme Raceway Park",
+        "Race #2 Thunder Valley Raceway Park",
+    ]
+    assert state["tmccc_events"] == [
+        "Race #1 Xtreme Raceway Park|3/22/2026",
+        "Race #2 Thunder Valley Raceway Park|4/12/2026",
+    ]
+
+
+def test_parse_tmccc_page_events_skips_card_missing_date_or_title():
+    """Cards without both a date and title are silently skipped (line 304)."""
+    html = """
+    <div data-aid="CALENDAR_SMALLER_SCREEN_CONTAINER">
+      <div data-aid="CALENDAR_EVENT_TITLE">No Date Card</div>
+    </div>
+    <div data-aid="CALENDAR_SMALLER_SCREEN_CONTAINER">
+      <div data-aid="CALENDAR_EVENT_DATE">3/22/2026</div>
+    </div>
+    """
+    assert crawl.parse_tmccc_page_events(html) == []
+
+
+def test_parse_tmccc_page_events_skips_card_with_empty_title():
+    """Cards where title text resolves to empty are skipped (line 309)."""
+    html = """
+    <div data-aid="CALENDAR_SMALLER_SCREEN_CONTAINER">
+      <div data-aid="CALENDAR_EVENT_DATE">3/22/2026</div>
+      <div data-aid="CALENDAR_EVENT_TITLE">   </div>
+    </div>
+    """
+    assert crawl.parse_tmccc_page_events(html) == []
+
+
+def _make_tmccc_playwright_mock(page_html, monkeypatch, *, timeout_on_advance=False):
+    """Build and install a fake playwright module for TMCCC tests."""
+
+    class FakeLocator:
+        def __init__(self, page):
+            self.page = page
+            self.first = self
+
+        def count(self):
+            return 1
+
+        def is_visible(self):
+            return True
+
+        def is_disabled(self):
+            return self.page.index >= len(page_html) - 1
+
+        def scroll_into_view_if_needed(self):
+            return None
+
+        def click(self):
+            if self.page.index < len(page_html) - 1:
+                self.page.index += 1
+
+    class FakePage:
+        def __init__(self):
+            self.index = 0
+
+        def goto(self, *args, **kwargs):
+            return None
+
+        def wait_for_selector(self, *args, **kwargs):
+            return None
+
+        def wait_for_function(self, *args, **kwargs):
+            if timeout_on_advance:
+                raise FakeTimeoutError("timeout")
+
+        def content(self):
+            return page_html[self.index]
+
+        def locator(self, selector):
+            assert selector == "[data-aid='CALENDAR_SHOW_NEXT_EVENTS']"
+            return FakeLocator(self)
+
+    class FakeBrowser:
+        def new_page(self, **kwargs):
+            return FakePage()
+
+        def close(self):
+            return None
+
+    class FakePlaywright:
+        class chromium:
+            @staticmethod
+            def launch(headless=True, **kwargs):
+                return FakeBrowser()
+
+    class FakeContextManager:
+        def __enter__(self):
+            return FakePlaywright()
+
+        def __exit__(self, exc_type, exc, tb):
+            return False
+
+    class FakeTimeoutError(Exception):
+        pass
+
+    monkeypatch.setitem(
+        sys.modules,
+        "playwright.sync_api",
+        types.SimpleNamespace(
+            sync_playwright=lambda: FakeContextManager(),
+            TimeoutError=FakeTimeoutError,
+        ),
+    )
+
+
+def test_crawl_tmccc_skips_already_seen_events(monkeypatch):
+    """Events already in state['tmccc_events'] are not returned again (line 423)."""
+    page_html = [
+        """
+        <div data-aid="CALENDAR_SMALLER_SCREEN_CONTAINER">
+          <div data-aid="CALENDAR_EVENT_DATE">3/22/2026</div>
+          <div data-aid="CALENDAR_EVENT_TITLE">Race #1 Xtreme Raceway Park</div>
+        </div>
+        """
+    ]
+    _make_tmccc_playwright_mock(page_html, monkeypatch)
+    state = {"tmccc_events": ["Race #1 Xtreme Raceway Park|3/22/2026"]}
+    result = crawl.crawl_tmccc({"url": "http://tmccc.test/events"}, state)
+    assert result == []
+
+
+def test_crawl_tmccc_timeout_on_advance_stops_gracefully(monkeypatch):
+    """A PlaywrightTimeoutError from wait_for_function exits the loop cleanly (line 414)."""
+    page_html = [
+        """
+        <div data-aid="CALENDAR_SMALLER_SCREEN_CONTAINER">
+          <div data-aid="CALENDAR_EVENT_DATE">3/22/2026</div>
+          <div data-aid="CALENDAR_EVENT_TITLE">Race #1 Xtreme Raceway Park</div>
+        </div>
+        """,
+        """
+        <div data-aid="CALENDAR_SMALLER_SCREEN_CONTAINER">
+          <div data-aid="CALENDAR_EVENT_DATE">4/12/2026</div>
+          <div data-aid="CALENDAR_EVENT_TITLE">Race #2 Thunder Valley Raceway Park</div>
+        </div>
+        """,
+    ]
+    _make_tmccc_playwright_mock(page_html, monkeypatch, timeout_on_advance=True)
+    state = {"tmccc_events": []}
+    result = crawl.crawl_tmccc({"url": "http://tmccc.test/events"}, state)
+    # First page was scraped before the timeout; second page was never reached
+    assert len(result) == 1
+    assert result[0]["title"] == "Race #1 Xtreme Raceway Park"
+
+
+def test_advance_tmccc_calendar_returns_false_when_no_next_button():
+    """Returns False immediately when CALENDAR_SHOW_NEXT_EVENTS is absent (line 350)."""
+    class FakeLocator:
+        first = None
+        def count(self):
+            return 0
+
+    class FakePage:
+        def locator(self, selector):
+            return FakeLocator()
+
+    assert crawl._advance_tmccc_calendar(FakePage(), ["some|key"]) is False
+
+
+def test_advance_tmccc_calendar_returns_false_when_button_not_visible():
+    """Returns False when the next button exists but is not visible (line 354)."""
+    class FakeLocator:
+        first = None
+
+        def __init__(self):
+            self.first = self
+
+        def count(self):
+            return 1
+
+        def is_visible(self):
+            return False
+
+    class FakePage:
+        def locator(self, selector):
+            return FakeLocator()
+
+    assert crawl._advance_tmccc_calendar(FakePage(), ["some|key"]) is False
+
+
+def test_advance_tmccc_calendar_empty_keys_uses_wait_for_selector():
+    """When current_keys is empty, falls back to wait_for_selector after clicking (line 380)."""
+    waited = []
+
+    class FakeLocator:
+        first = None
+
+        def __init__(self):
+            self.first = self
+
+        def count(self):
+            return 1
+
+        def is_visible(self):
+            return True
+
+        def is_disabled(self):
+            return False
+
+        def scroll_into_view_if_needed(self):
+            pass
+
+        def click(self):
+            pass
+
+    class FakePage:
+        def locator(self, selector):
+            return FakeLocator()
+
+        def wait_for_selector(self, selector, **kwargs):
+            waited.append(selector)
+
+        def wait_for_function(self, *args, **kwargs):
+            raise AssertionError("should not be called")
+
+    result = crawl._advance_tmccc_calendar(FakePage(), [])
+    assert result is True
+    assert waited == ["[data-aid='CALENDAR_EVENT_TITLE']"]
 
 
 # ── crawl_rss ─────────────────────────────────────────────────────────────────

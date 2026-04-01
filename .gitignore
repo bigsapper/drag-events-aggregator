@@ -12,6 +12,8 @@ flyers/
 CLAUDE.md
 memory/
 .claude/
+.codex
+.codex/
 .coverage
 
 # Python

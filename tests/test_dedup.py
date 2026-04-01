@@ -200,6 +200,22 @@ def test_tracks_state_mismatch_blocks_token_match():
     assert result is True  # documents current behavior; would be False after bug fix
 
 
+def test_tracks_state_null_does_not_crash():
+    """state: null (explicit None) must not raise AttributeError on .upper() (line 84)."""
+    a = {"track": {"name": "Little River Dragway", "state": None}}
+    b = {"track": {"name": "Little River Dragway", "state": None}}
+    assert _tracks_match(a, b) is True
+
+
+def test_tracks_state_mismatch_blocks_token_match_on_distinct_names():
+    """Shared tokens + differing states → False (line 84 reachable when names are distinct)."""
+    # Use distinct names that share 2+ tokens but do NOT normalize to identical strings
+    # so the early exact/substring returns are skipped and state is checked.
+    a = {"track": {"name": "Oklahoma City Thunder Raceway", "state": "OK"}}
+    b = {"track": {"name": "Texas City Thunder Raceway",   "state": "TX"}}
+    assert _tracks_match(a, b) is False
+
+
 # ── find_same_event ───────────────────────────────────────────────────────────
 
 def test_find_same_event_match(sample_events):
