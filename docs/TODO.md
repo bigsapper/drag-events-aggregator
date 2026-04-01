@@ -5,13 +5,6 @@ Items related to CI, scheduled execution, and automated notifications are parked
 
 ## Active Priorities
 
-## Data Quality
-- [ ] Define and enforce a minimum confidence threshold — exclude or flag events below it
-- [ ] Implement stale event cleanup — archive or remove events whose dates have passed
-
-## Observability
-- [ ] Replace `print()` statements with structured logging (`logging` module) with configurable log levels
-
 ## Architecture — Crawl Strategy Scalability
 Adding aggregator sources with unique page structures currently requires modifying `crawl.py` directly
 (new function + `STRATEGY_MAP` entry). This is manageable at the current scale but will become a
@@ -32,6 +25,28 @@ maintenance burden as more aggregators are added.
 ### Resilience
 - [x] Add retry logic for transient HTTP failures during crawling
 - [x] Add retry logic for transient Claude API failures during extraction
+
+### Observability
+- [x] Replace `print()` statements with structured logging (`logging` module) with configurable log levels
+
+## Deferred
+
+### Data Quality
+These items are intentionally deferred for now. The current project direction does not require
+implementing them immediately, but the design considerations below should be preserved.
+
+- [ ] Define and enforce a minimum confidence threshold — exclude or flag events below it
+- [ ] Implement stale event cleanup — archive or remove events whose dates have passed
+
+Notes on stale event cleanup:
+- First decide whether `dist/events.json` is intended to be a live upcoming-events feed, a historical archive, or a hybrid.
+- If `dist/events.json` is treated as a live feed, stale cleanup is useful so downstream consumers do not have to filter past events themselves.
+- If the project should retain history, hard deletion is probably the wrong behavior; status-based retention or archival is safer.
+- The recommended direction discussed so far is a hybrid:
+  keep `dist/events.json` focused on current/upcoming events while archiving past events instead of deleting them permanently.
+- A practical stale rule would use `dates.end` when present, otherwise `dates.start`, with an optional short grace period after the event.
+- If this is implemented later, the preferred behavior discussed was:
+  automatic cleanup during crawl, removal from `dist/events.json`, and preservation in an archive-oriented output for historical reference.
 
 ## Parked
 

@@ -370,7 +370,8 @@ def test_download_image_non_image_content_type(tmp_flyers_dir):
 
 def test_download_image_request_exception(tmp_flyers_dir, capsys):
     url = "http://track.com/broken.jpg"
-    with patch("drag_events.crawl.requests.get", side_effect=Exception("timeout")):
+    with patch("drag_events.crawl.requests.get", side_effect=Exception("timeout")), \
+         patch("drag_events.crawl.time.sleep"):
         result = crawl.download_image(url)
     assert result is None
     assert "Download failed" in capsys.readouterr().out
@@ -399,13 +400,15 @@ def test_fetch_page_returns_soup():
 
 def test_fetch_page_http_error_returns_none(capsys):
     resp = _mock_response(raise_for_status=True)
-    with patch("drag_events.crawl.requests.get", return_value=resp):
+    with patch("drag_events.crawl.requests.get", return_value=resp), \
+         patch("drag_events.crawl.time.sleep"):
         result = crawl.fetch_page("http://track.com")
     assert result is None
 
 
 def test_fetch_page_connection_error_returns_none(capsys):
-    with patch("drag_events.crawl.requests.get", side_effect=Exception("connection refused")):
+    with patch("drag_events.crawl.requests.get", side_effect=Exception("connection refused")), \
+         patch("drag_events.crawl.time.sleep"):
         result = crawl.fetch_page("http://track.com")
     assert result is None
     assert "Could not fetch" in capsys.readouterr().out
@@ -637,7 +640,8 @@ def test_crawl_myracepass_skips_known():
 
 def test_crawl_myracepass_fetch_failure():
     state = {"seen_urls": [], "myracepass_events": []}
-    with patch("drag_events.crawl.requests.get", side_effect=Exception("timeout")):
+    with patch("drag_events.crawl.requests.get", side_effect=Exception("timeout")), \
+         patch("drag_events.crawl.time.sleep"):
         result = crawl.crawl_myracepass({"url": "http://myracepass.com/events"}, state)
     assert result == []
 

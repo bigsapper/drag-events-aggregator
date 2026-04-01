@@ -1,9 +1,13 @@
 """RSS crawler strategy."""
 
+from ..logging_utils import get_logger
+
+LOGGER = get_logger(__name__)
+
 
 def crawl_rss_impl(source: dict, state: dict, *, parse_feed) -> list[dict]:
     url = source["url"]
-    print(f"  {url}")
+    LOGGER.info(f"  {url}")
     feed = parse_feed(url)
     new_items = []
     for entry in feed.entries:
@@ -18,5 +22,5 @@ def crawl_rss_impl(source: dict, state: dict, *, parse_feed) -> list[dict]:
             "source_url": link,
             "source": source["name"],
         })
-    print(f"  Found {len(new_items)} new RSS items")
+    LOGGER.info(f"  Found {len(new_items)} new RSS items")
     return new_items

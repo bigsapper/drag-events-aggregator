@@ -3,6 +3,10 @@
 import re
 from urllib.parse import urljoin
 
+from ..logging_utils import get_logger
+
+LOGGER = get_logger(__name__)
+
 
 def crawl_racingjunk_impl(
     source: dict,
@@ -15,7 +19,7 @@ def crawl_racingjunk_impl(
     sleep,
 ) -> list[dict]:
     drag_url = source.get("drag_racing_url", source["url"])
-    print(f"  {drag_url}")
+    LOGGER.info(f"  {drag_url}")
     new_events = []
     page = 1
 
@@ -57,5 +61,5 @@ def crawl_racingjunk_impl(
         page += 1
         sleep(delay_seconds)
 
-    print(f"  Found {len(new_events)} new event listings")
+    LOGGER.info(f"  Found {len(new_events)} new event listings")
     return new_events

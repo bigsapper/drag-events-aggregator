@@ -21,8 +21,11 @@ from dotenv import load_dotenv
 
 from .dedup import compute_phash, is_duplicate_image, find_same_event, merge_events, track_slug
 from .extract import extract_event
+from .logging_utils import get_logger
 
 load_dotenv()
+
+LOGGER = get_logger(__name__)
 
 BASE_DIR = Path(__file__).resolve().parents[2]
 EVENTS_FILE = BASE_DIR / "dist" / "events.json"
@@ -46,17 +49,17 @@ def process_flyer(image_path: str, events: list[dict]) -> tuple[str, dict]:
       'duplicate' — exact image already processed, skipped
     """
     path = Path(image_path)
-    print(f"  Computing image hash...")
+    LOGGER.info("  Computing image hash...")
     phash = compute_phash(image_path)
 
     # Layer 1: exact/near-duplicate image check
     existing = is_duplicate_image(phash, events)
     if existing:
-        print(f"  Duplicate image detected (matches event: {existing.get('title', existing['id'])}), skipping API call.")
+        LOGGER.info(f"  Duplicate image detected (matches event: {existing.get('title', existing['id'])}), skipping API call.")
         return "duplicate", existing
 
     # Layer 2: call Claude to extract event data
-    print(f"  Calling Claude vision API...")
+    LOGGER.info("  Calling Claude vision API...")
     extracted = extract_event(image_path)
 
     flyer_entry = {
@@ -68,7 +71,7 @@ def process_flyer(image_path: str, events: list[dict]) -> tuple[str, dict]:
     # Layer 3: same event, different flyer (reminder/update flyer)
     same_event = find_same_event(extracted, events)
     if same_event:
-        print(f"  Same event detected ('{same_event.get('title', same_event['id'])}'), merging...")
+        LOGGER.info(f"  Same event detected ('{same_event.get('title', same_event['id'])}'), merging...")
         merged = merge_events(same_event, extracted, flyer_entry)
         merged["updated_at"] = datetime.now(timezone.utc).isoformat()
         # Replace in list
@@ -106,27 +109,27 @@ def collect_images(paths: list[str]) -> list[Path]:
         elif path.suffix.lower() in IMAGE_EXTENSIONS:
             images.append(path)
         else:
-            print(f"  Skipping {p} (not a supported image type)")
+            LOGGER.warning(f"  Skipping {p} (not a supported image type)")
     return sorted(set(images))
 
 
 def main():
     if len(sys.argv) < 2:
-        print(__doc__)
+        LOGGER.info(__doc__.rstrip())
         sys.exit(1)
 
     images = collect_images(sys.argv[1:])
     if not images:
-        print("No images found.")
+        LOGGER.info("No images found.")
         sys.exit(1)
 
     events = load_events()
-    print(f"Loaded {len(events)} existing events.\n")
+    LOGGER.info(f"Loaded {len(events)} existing events.\n")
 
     counts = {"new": 0, "merged": 0, "duplicate": 0, "error": 0}
 
     for image_path in images:
-        print(f"Processing: {image_path.name}")
+        LOGGER.info(f"Processing: {image_path.name}")
         try:
             outcome, event = process_flyer(str(image_path), events)
             counts[outcome] += 1
@@ -134,19 +137,19 @@ def main():
             title = event.get("title", event.get("id", "?"))
             date_start = event.get("dates", {}).get("start", "?")
             track = event.get("track", {}).get("name", "?")
-            print(f"  [{label}] {title} — {track} — {date_start}")
+            LOGGER.info(f"  [{label}] {title} — {track} — {date_start}")
             if "test-flyers" not in image_path.parts:
                 image_path.unlink()
         except Exception as e:
-            print(f"  [ERROR] {e}")
+            LOGGER.error(f"  [ERROR] {e}")
             counts["error"] += 1
-        print()
+        LOGGER.info("")
 
     save_events(events)
 
-    print("─" * 50)
-    print(f"Done. {len(events)} total events in database.")
-    print(f"  {counts['new']} new  |  {counts['merged']} updated  |  {counts['duplicate']} duplicate  |  {counts['error']} errors")
+    LOGGER.info("─" * 50)
+    LOGGER.info(f"Done. {len(events)} total events in database.")
+    LOGGER.info(f"  {counts['new']} new  |  {counts['merged']} updated  |  {counts['duplicate']} duplicate  |  {counts['error']} errors")
 
 
 if __name__ == "__main__":

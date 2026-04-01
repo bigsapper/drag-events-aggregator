@@ -8,6 +8,10 @@ import traceback
 from datetime import datetime, timezone
 from pathlib import Path
 
+from .logging_utils import get_logger
+
+LOGGER = get_logger(__name__)
+
 
 def ensure_runtime_layout_impl(
     runtime_dir: Path,
@@ -165,24 +169,24 @@ def log_error_impl(
 
 def print_metrics_summary(summary: dict, *, format_duration) -> None:
     if not summary.get("recorded_runs"):
-        print("No crawl metrics recorded yet.")
+        LOGGER.info("No crawl metrics recorded yet.")
         return
 
-    print("Crawl metrics summary")
-    print(f"  recorded runs:   {summary['recorded_runs']}")
-    print(f"  successful runs: {summary.get('successful_runs', 0)}")
+    LOGGER.info("Crawl metrics summary")
+    LOGGER.info(f"  recorded runs:   {summary['recorded_runs']}")
+    LOGGER.info(f"  successful runs: {summary.get('successful_runs', 0)}")
 
     if summary.get("average_seconds") is not None:
-        print(f"  average runtime: {format_duration(summary['average_seconds'])}")
-        print(f"  median runtime:  {format_duration(summary['median_seconds'])}")
-        print(f"  min runtime:     {format_duration(summary['min_seconds'])}")
-        print(f"  max runtime:     {format_duration(summary['max_seconds'])}")
+        LOGGER.info(f"  average runtime: {format_duration(summary['average_seconds'])}")
+        LOGGER.info(f"  median runtime:  {format_duration(summary['median_seconds'])}")
+        LOGGER.info(f"  min runtime:     {format_duration(summary['min_seconds'])}")
+        LOGGER.info(f"  max runtime:     {format_duration(summary['max_seconds'])}")
         if summary.get("p95_seconds") is not None:
-            print(f"  p95 runtime:     {format_duration(summary['p95_seconds'])}")
+            LOGGER.info(f"  p95 runtime:     {format_duration(summary['p95_seconds'])}")
 
     last_run = summary.get("last_run")
     if last_run:
         status = last_run.get("status", "unknown")
         started = last_run.get("started_at", "?")
         elapsed = format_duration(last_run.get("elapsed_seconds", 0))
-        print(f"  last run:        {status} at {started} ({elapsed})")
+        LOGGER.info(f"  last run:        {status} at {started} ({elapsed})")

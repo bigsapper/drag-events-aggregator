@@ -96,6 +96,20 @@ pytest
 
 Tests use mocked Claude API calls and temporary file system paths, so no API key is needed to run them.
 
+Logging uses the Python `logging` module and defaults to `INFO` level output. You can override the verbosity with `DRAG_EVENTS_LOG_LEVEL`, for example:
+
+```bash
+DRAG_EVENTS_LOG_LEVEL=DEBUG make crawl
+```
+
+Persistent application logging is off by default. To enable it, set `DRAG_EVENTS_LOG_TO_FILE=1`.
+The default file path is `runtime/tracing/drag_events.log`, and you can override it with `DRAG_EVENTS_LOG_FILE`.
+
+```bash
+DRAG_EVENTS_LOG_TO_FILE=1 make crawl
+DRAG_EVENTS_LOG_TO_FILE=1 DRAG_EVENTS_LOG_FILE=runtime/tracing/custom.log make crawl
+```
+
 ## Test Flyers
 
 `tests/test-flyers/` contains sample flyers for local validation and unit testing. Files in this directory are never deleted after processing.
@@ -110,6 +124,7 @@ Tests use mocked Claude API calls and temporary file system paths, so no API key
 | `dist/archive/` | Archived `dist/events.json` snapshots created during reset workflows |
 | `runtime/` | Operational state and telemetry for crawls |
 | `runtime/state/crawl_state.json` | Crawl state (seen URLs, known listings); checked in and resettable |
+| `runtime/tracing/drag_events.log` | Optional persistent application log when `DRAG_EVENTS_LOG_TO_FILE=1` is enabled |
 | `runtime/tracing/crawl_errors.log` | Persistent crawl error log for troubleshooting failed runs |
 | `runtime/tracing/crawl_metrics.jsonl` | Historical crawl run metrics used for runtime estimation |
 | `runtime/tracing/crawl_metrics_summary.json` | Latest aggregate timing summary |

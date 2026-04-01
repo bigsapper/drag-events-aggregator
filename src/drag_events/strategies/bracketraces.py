@@ -4,6 +4,9 @@ from pathlib import Path
 from urllib.parse import urljoin, urlparse
 
 from ..crawl_utils import IMAGE_EXTENSIONS, get_image_links
+from ..logging_utils import get_logger
+
+LOGGER = get_logger(__name__)
 
 
 def crawl_bracketraces_impl(
@@ -20,7 +23,7 @@ def crawl_bracketraces_impl(
     downloaded = []
     for path in source.get("event_pages", []):
         url = base + path
-        print(f"  {url}")
+        LOGGER.info(f"  {url}")
         soup = fetch_page(url, headers=headers)
         if not soup:
             continue
@@ -35,7 +38,7 @@ def crawl_bracketraces_impl(
             state["seen_urls"].append(img_url)
             dl = download_image(img_url, headers=headers)
             if dl:
-                print(f"    Downloaded: {dl.name}")
+                LOGGER.info(f"    Downloaded: {dl.name}")
                 downloaded.append(dl)
         sleep(delay_seconds)
     return downloaded

@@ -2,6 +2,10 @@
 
 from bs4 import BeautifulSoup
 
+from ..logging_utils import get_logger
+
+LOGGER = get_logger(__name__)
+
 
 def parse_tmccc_page_events_impl(html: str) -> list[dict]:
     soup = BeautifulSoup(html, "html.parser")
@@ -103,7 +107,7 @@ def crawl_tmccc_impl(
     from playwright.sync_api import TimeoutError as PlaywrightTimeoutError, sync_playwright
 
     url = source["url"]
-    print(f"  {url}")
+    LOGGER.info(f"  {url}")
 
     all_raw = []
     seen_page_signatures = set()
@@ -142,5 +146,5 @@ def crawl_tmccc_impl(
             "source": "TMCCC",
         })
 
-    print(f"  Found {len(new_events)} new event listings")
+    LOGGER.info(f"  Found {len(new_events)} new event listings")
     return new_events

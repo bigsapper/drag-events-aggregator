@@ -3,10 +3,14 @@
 import re
 from urllib.parse import urljoin
 
+from ..logging_utils import get_logger
+
+LOGGER = get_logger(__name__)
+
 
 def crawl_myracepass_impl(source: dict, state: dict, *, fetch_page, headers: dict[str, str]) -> list[dict]:
     url = source["url"]
-    print(f"  {url}")
+    LOGGER.info(f"  {url}")
     new_events = []
 
     soup = fetch_page(url, headers=headers)
@@ -33,5 +37,5 @@ def crawl_myracepass_impl(source: dict, state: dict, *, fetch_page, headers: dic
             "source": "MyRacePass",
         })
 
-    print(f"  Found {len(new_events)} new event listings")
+    LOGGER.info(f"  Found {len(new_events)} new event listings")
     return new_events

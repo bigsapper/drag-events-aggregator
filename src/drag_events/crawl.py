@@ -59,6 +59,7 @@ from .crawl_runtime import (
 )
 from .dedup import find_same_event, merge_events, track_slug
 from .extract_text import extract_from_text
+from .logging_utils import get_logger
 from .retry_utils import execute_with_retries, get_retry_telemetry, reset_retry_telemetry
 from .strategies.bracketraces import crawl_bracketraces_impl
 from .strategies.myracepass import crawl_myracepass_impl
@@ -101,6 +102,7 @@ TRACING_DIR.mkdir(exist_ok=True)
 
 HTTP_MAX_ATTEMPTS = 3
 HTTP_RETRY_BASE_DELAY_SECONDS = 1.0
+LOGGER = get_logger(__name__)
 
 
 # ── State management ──────────────────────────────────────────────────────────
@@ -210,7 +212,7 @@ def download_image(url: str, headers: dict[str, str] | None = None) -> Path | No
         dest.write_bytes(resp.content)
         return dest
     except Exception as e:
-        print(f"    Download failed {url}: {e}")
+        LOGGER.error(f"    Download failed {url}: {e}")
         log_error("download_image", e, details={"url": url, "destination": dest})
         return None
 
@@ -226,7 +228,7 @@ def fetch_page(url: str, headers: dict[str, str] | None = None) -> BeautifulSoup
         )
         return BeautifulSoup(resp.text, "html.parser")
     except Exception as e:
-        print(f"  Could not fetch {url}: {e}")
+        LOGGER.error(f"  Could not fetch {url}: {e}")
         log_error("fetch_page", e, details={"url": url})
         return None
 
@@ -236,7 +238,7 @@ def fetch_page(url: str, headers: dict[str, str] | None = None) -> BeautifulSoup
 def crawl_track(track: dict, state: dict) -> list[Path]:
     name = track["name"]
     home_url = track["url"]
-    print(f"\n{name} ({home_url})")
+    LOGGER.info(f"\n{name} ({home_url})")
 
     home_soup = fetch_page(home_url)
     if not home_soup:
@@ -254,14 +256,14 @@ def crawl_track(track: dict, state: dict) -> list[Path]:
             time.sleep(0.5)
 
     new_urls = [u for u in dict.fromkeys(all_image_urls) if u not in state["seen_urls"]]
-    print(f"  {len(new_urls)} new candidate images across {len(pages_to_scan)} pages")
+    LOGGER.info(f"  {len(new_urls)} new candidate images across {len(pages_to_scan)} pages")
 
     downloaded = []
     for url in new_urls:
         state["seen_urls"].append(url)
         path = download_image(url)
         if path:
-            print(f"  Downloaded: {path.name}")
+            LOGGER.info(f"  Downloaded: {path.name}")
             downloaded.append(path)
 
     return downloaded
@@ -347,7 +349,7 @@ def crawl_source(source: dict, state: dict) -> tuple[list[Path], list[dict]]:
     strategy = source.get("strategy")
     fn = STRATEGY_MAP.get(strategy)
     if not fn:
-        print(f"  Unknown strategy '{strategy}', skipping.")
+        LOGGER.warning(f"  Unknown strategy '{strategy}', skipping.")
         return [], []
     result = fn(source, state)
     if not result:
@@ -391,27 +393,27 @@ def run_extraction(downloaded: list[Path], text_listings: list[dict]) -> dict:
 
     # Image flyers → Claude vision
     if downloaded:
-        print("\nRunning vision extraction on new flyers...")
+        LOGGER.info("\nRunning vision extraction on new flyers...")
     for path in downloaded:
-        print(f"\nProcessing: {path.name}")
+        LOGGER.info(f"\nProcessing: {path.name}")
         try:
             outcome, event = process.process_flyer(str(path), events)
             counts[outcome] += 1
             label = {"new": "NEW", "merged": "UPDATED", "duplicate": "SKIPPED"}[outcome]
-            print(f"  [{label}] {event.get('title', '?')} — {event.get('track', {}).get('name', '?')}")
+            LOGGER.info(f"  [{label}] {event.get('title', '?')} — {event.get('track', {}).get('name', '?')}")
             if "test-flyers" not in path.parts:
                 path.unlink()
         except Exception as e:
-            print(f"  [ERROR] {e}")
+            LOGGER.error(f"  [ERROR] {e}")
             counts["error"] += 1
             log_error("run_extraction.process_flyer", e, details={"flyer_path": path}, include_traceback=True)
 
     # Text listings → Claude text (haiku)
     if text_listings:
-        print(f"\nParsing {len(text_listings)} text listings...")
+        LOGGER.info(f"\nParsing {len(text_listings)} text listings...")
     for listing in text_listings:
         title = listing.get("title", "?")
-        print(f"\nParsing: {title}")
+        LOGGER.info(f"\nParsing: {title}")
         try:
             extracted = extract_from_text(listing)
 
@@ -425,7 +427,7 @@ def run_extraction(downloaded: list[Path], text_listings: list[dict]) -> dict:
                 idx = next(i for i, e in enumerate(events) if e["id"] == same["id"])
                 events[idx] = merged
                 counts["merged"] += 1
-                print(f"  [UPDATED] {merged.get('title', '?')}")
+                LOGGER.info(f"  [UPDATED] {merged.get('title', '?')}")
             else:
                 track = extracted.get("track") or {}
                 extracted["track"] = {
@@ -444,9 +446,9 @@ def run_extraction(downloaded: list[Path], text_listings: list[dict]) -> dict:
                 }
                 events.append(new_event)
                 counts["new"] += 1
-                print(f"  [NEW] {new_event.get('title', '?')} — {new_event.get('track', {}).get('name', '?')}")
+                LOGGER.info(f"  [NEW] {new_event.get('title', '?')} — {new_event.get('track', {}).get('name', '?')}")
         except Exception as e:
-            print(f"  [ERROR] {e}")
+            LOGGER.error(f"  [ERROR] {e}")
             counts["error"] += 1
             log_error(
                 "run_extraction.extract_from_text",
@@ -456,8 +458,8 @@ def run_extraction(downloaded: list[Path], text_listings: list[dict]) -> dict:
             )
 
     process.save_events(events)
-    print(f"\n{len(events)} total events in database.")
-    print(f"  {counts['new']} new  |  {counts['merged']} updated  |  {counts['duplicate']} duplicate  |  {counts['error']} errors")
+    LOGGER.info(f"\n{len(events)} total events in database.")
+    LOGGER.info(f"  {counts['new']} new  |  {counts['merged']} updated  |  {counts['duplicate']} duplicate  |  {counts['error']} errors")
     return {
         "elapsed_seconds": round(time.perf_counter() - start, 2),
         "image_flyers": len(downloaded),
@@ -511,7 +513,7 @@ def main():
             tracks = load_tracks_config()
             if track_filter:
                 tracks = [t for t in tracks if track_filter in t["name"].lower()]
-            print(f"=== Track websites ({len(tracks)}) ===")
+            LOGGER.info(f"=== Track websites ({len(tracks)}) ===")
             for track in tracks:
                 item_start = time.perf_counter()
                 files = crawl_track(track, state)
@@ -529,9 +531,9 @@ def main():
             sources = load_sources_config()
             if source_filter:
                 sources = [s for s in sources if source_filter in s["name"].lower()]
-            print(f"\n=== Aggregator sources ({len(sources)}) ===")
+            LOGGER.info(f"\n=== Aggregator sources ({len(sources)}) ===")
             for source in sources:
-                print(f"\n{source['name']}")
+                LOGGER.info(f"\n{source['name']}")
                 item_start = time.perf_counter()
                 files, listings = crawl_source(source, state)
                 elapsed = round(time.perf_counter() - item_start, 2)
@@ -547,8 +549,8 @@ def main():
                 save_state(state)
                 time.sleep(1)
 
-        print(f"\n{'─' * 50}")
-        print(f"Crawl complete. {len(total_downloaded)} new flyer images, {len(total_text_listings)} text listings.")
+        LOGGER.info(f"\n{'─' * 50}")
+        LOGGER.info(f"Crawl complete. {len(total_downloaded)} new flyer images, {len(total_text_listings)} text listings.")
         extraction_metrics = run_extraction(total_downloaded, total_text_listings)
         if not isinstance(extraction_metrics, dict):
             extraction_metrics = {}
@@ -576,10 +578,10 @@ def main():
         run_metrics["elapsed_seconds"] = round(time.perf_counter() - started_perf, 2)
         if should_record_runtime_metrics():
             summary = record_run_metrics(run_metrics)
-            print(f"\nRecorded crawl metrics in {METRICS_LOG}")
-            print(f"Error log file: {ERROR_LOG}")
+            LOGGER.info(f"\nRecorded crawl metrics in {METRICS_LOG}")
+            LOGGER.info(f"Error log file: {ERROR_LOG}")
             if summary.get("average_seconds") is not None:
-                print(
+                LOGGER.info(
                     "Historical runtime: "
                     f"avg {format_duration(summary['average_seconds'])}, "
                     f"median {format_duration(summary['median_seconds'])}, "
