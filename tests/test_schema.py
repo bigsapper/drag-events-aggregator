@@ -1,9 +1,9 @@
 """Tests for schema.py — structural assertions on EVENT_INPUT_SCHEMA."""
 
-import extract
-import extract_text
-import schema
-from schema import EVENT_INPUT_SCHEMA
+from drag_events import extract
+from drag_events import extract_text
+from drag_events import schema
+from drag_events.schema import EVENT_INPUT_SCHEMA
 
 
 def test_required_fields():

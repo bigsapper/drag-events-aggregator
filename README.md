@@ -78,16 +78,17 @@ drag-events-aggregator/
 │       ├── crawl_metrics.jsonl     # One JSON record per crawl run with timings and counts
 │       └── crawl_metrics_summary.json # Rolling summary derived from crawl_metrics.jsonl
 ├── src/
-│   ├── config/
-│   │   ├── track_aliases.json # Track alias normalization data
-│   │   ├── tracks.json        # Track website definitions
-│   │   └── sources.json       # Aggregator source definitions
-│   ├── crawl.py            # Web crawler for tracks and aggregator sources
-│   ├── extract.py          # Claude vision extraction for flyer images
-│   ├── extract_text.py     # Claude text extraction for text-based listings
-│   ├── dedup.py            # Perceptual hash and event-level deduplication
-│   ├── process.py          # Orchestrates extraction + dedup for flyer files
-│   └── schema.py           # Shared Claude tool JSON schema
+│   └── drag_events/
+│       ├── config/
+│       │   ├── track_aliases.json # Track alias normalization data
+│       │   ├── tracks.json        # Track website definitions
+│       │   └── sources.json       # Aggregator source definitions
+│       ├── crawl.py            # Web crawler for tracks and aggregator sources
+│       ├── extract.py          # Claude vision extraction for flyer images
+│       ├── extract_text.py     # Claude text extraction for text-based listings
+│       ├── dedup.py            # Perceptual hash and event-level deduplication
+│       ├── process.py          # Orchestrates extraction + dedup for flyer files
+│       └── schema.py           # Shared Claude tool JSON schema
 ├── requirements.txt        # Python dependencies
 ├── requirements-dev.txt    # Dev/test dependencies
 ├── setup.sh                # One-time setup script (Linux/macOS)

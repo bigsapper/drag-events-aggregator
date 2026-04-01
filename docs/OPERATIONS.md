@@ -4,9 +4,9 @@
 
 | File | Purpose |
 |---|---|
-| `src/config/tracks.json` | Individual track websites to crawl (generic image scraper) |
-| `src/config/sources.json` | Aggregator sites with custom scraping strategies (RacingJunk, Bracketraces, RSS, etc.) |
-| `src/config/track_aliases.json` | Alternate track names mapped to canonical names for deduplication and normalization |
+| `src/drag_events/config/tracks.json` | Individual track websites to crawl (generic image scraper) |
+| `src/drag_events/config/sources.json` | Aggregator sites with custom scraping strategies (RacingJunk, Bracketraces, RSS, etc.) |
+| `src/drag_events/config/track_aliases.json` | Alternate track names mapped to canonical names for deduplication and normalization |
 
 ## Crawl + Extract
 
@@ -18,31 +18,31 @@ make crawl
 make crawl-metrics
 
 # Crawl all tracks and all aggregator sources
-python src/crawl.py
+PYTHONPATH=src python -m drag_events.crawl
 
 # Crawl track websites only
 make crawl-tracks
 
 # Crawl track websites only
-python src/crawl.py --tracks
+PYTHONPATH=src python -m drag_events.crawl --tracks
 
 # Crawl aggregator sources only
 make crawl-sources
 
 # Crawl aggregator sources only
-python src/crawl.py --sources
+PYTHONPATH=src python -m drag_events.crawl --sources
 
 # Crawl a specific track by name
 make crawl-track NAME="Texas Motorplex"
 
 # Crawl a specific track by name
-python src/crawl.py --track "Texas Motorplex"
+PYTHONPATH=src python -m drag_events.crawl --track "Texas Motorplex"
 
 # Crawl a specific aggregator source by name
 make crawl-source NAME="Bracketraces.com"
 
 # Crawl a specific aggregator source by name
-python src/crawl.py --source "Bracketraces.com"
+PYTHONPATH=src python -m drag_events.crawl --source "Bracketraces.com"
 ```
 
 Crawling automatically triggers extraction and deduplication for any newly downloaded flyers.
@@ -56,13 +56,13 @@ Recoverable and fatal crawl errors from live runs are appended to `runtime/traci
 make process PATHS="path/to/flyer.jpg"
 
 # Process a single flyer image
-python src/process.py path/to/flyer.jpg
+PYTHONPATH=src python -m drag_events.process path/to/flyer.jpg
 
 # Process all images in a directory
-python src/process.py path/to/flyers/
+PYTHONPATH=src python -m drag_events.process path/to/flyers/
 
 # Process multiple specific files
-python src/process.py flyer1.jpg flyer2.png
+PYTHONPATH=src python -m drag_events.process flyer1.jpg flyer2.png
 ```
 
 ## Reset Workflow

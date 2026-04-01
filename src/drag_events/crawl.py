@@ -1,15 +1,15 @@
 """Crawl track websites and event aggregators for drag racing flyer images.
 
 Two source types:
-  src/config/tracks.json   — individual track websites (generic image scraper)
-  src/config/sources.json  — aggregator sites with custom strategies per source
+  src/drag_events/config/tracks.json   — individual track websites (generic image scraper)
+  src/drag_events/config/sources.json  — aggregator sites with custom strategies per source
 
 Usage:
-    python src/crawl.py                        # crawl all tracks + all sources
-    python src/crawl.py --tracks               # track websites only
-    python src/crawl.py --sources              # aggregator sources only
-    python src/crawl.py --track "Texas Motorplex"   # one track by name
-    python src/crawl.py --source "Bracketraces.com" # one source by name
+    python -m drag_events.crawl                        # crawl all tracks + all sources
+    python -m drag_events.crawl --tracks               # track websites only
+    python -m drag_events.crawl --sources              # aggregator sources only
+    python -m drag_events.crawl --track "Texas Motorplex"   # one track by name
+    python -m drag_events.crawl --source "Bracketraces.com" # one source by name
 """
 
 import hashlib
@@ -30,12 +30,12 @@ import feedparser
 import requests
 from bs4 import BeautifulSoup
 
-import process
-from dedup import find_same_event, merge_events, track_slug
-from extract_text import extract_from_text
+from . import process
+from .dedup import find_same_event, merge_events, track_slug
+from .extract_text import extract_from_text
 
-BASE_DIR     = Path(__file__).resolve().parent.parent
-CONFIG_DIR   = BASE_DIR / "src" / "config"
+BASE_DIR     = Path(__file__).resolve().parents[2]
+CONFIG_DIR   = BASE_DIR / "src" / "drag_events" / "config"
 TRACKS_FILE  = CONFIG_DIR / "tracks.json"
 SOURCES_FILE = CONFIG_DIR / "sources.json"
 FLYERS_DIR   = BASE_DIR / "flyers"

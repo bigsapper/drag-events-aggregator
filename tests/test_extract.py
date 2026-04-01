@@ -4,7 +4,7 @@ import pytest
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
-import extract
+from drag_events import extract
 from tests.conftest import make_1x1_png
 
 
@@ -68,6 +68,6 @@ def test_extract_event_raises_if_no_tool_call(tmp_path):
     text_block.type = "text"
     mock_response = MagicMock()
     mock_response.content = [text_block]
-    with patch("extract.CLIENT.messages.create", return_value=mock_response):
+    with patch("drag_events.extract.CLIENT.messages.create", return_value=mock_response):
         with pytest.raises(ValueError, match="store_event"):
             extract.extract_event(str(img))

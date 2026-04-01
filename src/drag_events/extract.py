@@ -7,7 +7,7 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-from schema import EVENT_INPUT_SCHEMA
+from .schema import EVENT_INPUT_SCHEMA
 
 load_dotenv()
 

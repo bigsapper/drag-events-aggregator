@@ -1,4 +1,5 @@
 PYTHON = .venv/bin/python
+PYTHONPATH_RUN = PYTHONPATH=src
 MAKEFLAGS += --no-builtin-rules
 .DEFAULT_GOAL := help
 
@@ -23,28 +24,28 @@ coverage:
 	$(PYTHON) -m pytest --cov-report=html && open htmlcov/index.html
 
 crawl:
-	$(PYTHON) src/crawl.py
+	$(PYTHONPATH_RUN) $(PYTHON) -m drag_events.crawl
 
 crawl-tracks:
-	$(PYTHON) src/crawl.py --tracks
+	$(PYTHONPATH_RUN) $(PYTHON) -m drag_events.crawl --tracks
 
 crawl-sources:
-	$(PYTHON) src/crawl.py --sources
+	$(PYTHONPATH_RUN) $(PYTHON) -m drag_events.crawl --sources
 
 crawl-track:
 	@if [ -z "$(NAME)" ]; then echo 'Usage: make crawl-track NAME="Texas Motorplex"'; exit 1; fi
-	$(PYTHON) src/crawl.py --track "$(NAME)"
+	$(PYTHONPATH_RUN) $(PYTHON) -m drag_events.crawl --track "$(NAME)"
 
 crawl-source:
 	@if [ -z "$(NAME)" ]; then echo 'Usage: make crawl-source NAME="Bracketraces.com"'; exit 1; fi
-	$(PYTHON) src/crawl.py --source "$(NAME)"
+	$(PYTHONPATH_RUN) $(PYTHON) -m drag_events.crawl --source "$(NAME)"
 
 process:
 	@if [ -z "$(PATHS)" ]; then echo 'Usage: make process PATHS="path/to/flyer.jpg [more paths...]"'; exit 1; fi
-	$(PYTHON) src/process.py $(PATHS)
+	$(PYTHONPATH_RUN) $(PYTHON) -m drag_events.process $(PATHS)
 
 crawl-metrics:
-	$(PYTHON) src/crawl.py --metrics
+	$(PYTHONPATH_RUN) $(PYTHON) -m drag_events.crawl --metrics
 
 archive-events:
 	@mkdir -p dist/archive

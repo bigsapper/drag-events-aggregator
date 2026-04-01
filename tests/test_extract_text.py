@@ -3,7 +3,7 @@
 import pytest
 from unittest.mock import MagicMock, patch
 
-import extract_text
+from drag_events import extract_text
 
 
 SAMPLE_LISTING = {
@@ -52,6 +52,6 @@ def test_extract_from_text_raises_if_no_tool_call():
     text_block.type = "text"
     mock_response = MagicMock()
     mock_response.content = [text_block]
-    with patch("extract_text.CLIENT.messages.create", return_value=mock_response):
+    with patch("drag_events.extract_text.CLIENT.messages.create", return_value=mock_response):
         with pytest.raises(ValueError, match="store_event"):
             extract_text.extract_from_text(SAMPLE_LISTING)

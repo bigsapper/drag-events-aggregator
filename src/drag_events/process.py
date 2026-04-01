@@ -2,13 +2,13 @@
 
 Usage:
     # Process a single flyer
-    python src/process.py path/to/flyer.jpg
+    python -m drag_events.process path/to/flyer.jpg
 
     # Process all images in a directory
-    python src/process.py path/to/flyers/
+    python -m drag_events.process path/to/flyers/
 
     # Process multiple specific files
-    python src/process.py flyer1.jpg flyer2.png flyer3.jpg
+    python -m drag_events.process flyer1.jpg flyer2.png flyer3.jpg
 """
 
 import json
@@ -19,12 +19,12 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-from dedup import compute_phash, is_duplicate_image, find_same_event, merge_events, track_slug
-from extract import extract_event
+from .dedup import compute_phash, is_duplicate_image, find_same_event, merge_events, track_slug
+from .extract import extract_event
 
 load_dotenv()
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parents[2]
 EVENTS_FILE = BASE_DIR / "dist" / "events.json"
 IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp", ".gif"}
 

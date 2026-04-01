@@ -64,14 +64,14 @@ def _make_tool_response(event_data: dict) -> MagicMock:
 @pytest.fixture
 def mock_vision_client(sample_extracted):
     """Patch extract.CLIENT.messages.create with a canned vision response."""
-    with patch("extract.CLIENT.messages.create", return_value=_make_tool_response(sample_extracted)) as m:
+    with patch("drag_events.extract.CLIENT.messages.create", return_value=_make_tool_response(sample_extracted)) as m:
         yield m
 
 
 @pytest.fixture
 def mock_text_client(sample_extracted):
     """Patch extract_text.CLIENT.messages.create with a canned text response."""
-    with patch("extract_text.CLIENT.messages.create", return_value=_make_tool_response(sample_extracted)) as m:
+    with patch("drag_events.extract_text.CLIENT.messages.create", return_value=_make_tool_response(sample_extracted)) as m:
         yield m
 
 
@@ -79,7 +79,7 @@ def mock_text_client(sample_extracted):
 
 @pytest.fixture
 def tmp_events_file(tmp_path, monkeypatch):
-    import process
+    from drag_events import process
     path = tmp_path / "events.json"
     monkeypatch.setattr(process, "EVENTS_FILE", path)
     return path
@@ -87,7 +87,7 @@ def tmp_events_file(tmp_path, monkeypatch):
 
 @pytest.fixture
 def tmp_crawl_state(tmp_path, monkeypatch):
-    import crawl
+    from drag_events import crawl
     path = tmp_path / ".crawl_state.json"
     monkeypatch.setattr(crawl, "CRAWL_STATE", path)
     return path
@@ -95,7 +95,7 @@ def tmp_crawl_state(tmp_path, monkeypatch):
 
 @pytest.fixture
 def tmp_flyers_dir(tmp_path, monkeypatch):
-    import crawl
+    from drag_events import crawl
     flyers = tmp_path / "flyers"
     flyers.mkdir()
     monkeypatch.setattr(crawl, "FLYERS_DIR", flyers)

@@ -16,8 +16,8 @@ from pathlib import Path
 # Hamming distance threshold — hashes within this distance are the same image
 PHASH_THRESHOLD = 10
 
-BASE_DIR = Path(__file__).resolve().parent.parent
-CONFIG_DIR = BASE_DIR / "src" / "config"
+BASE_DIR = Path(__file__).resolve().parents[2]
+CONFIG_DIR = BASE_DIR / "src" / "drag_events" / "config"
 _ALIASES_FILE = CONFIG_DIR / "track_aliases.json"
 
 
