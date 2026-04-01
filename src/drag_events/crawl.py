@@ -12,7 +12,6 @@ Usage:
     python -m drag_events.crawl --source "Bracketraces.com" # one source by name
 """
 
-import hashlib
 import json
 import math
 import os
@@ -31,8 +30,34 @@ import requests
 from bs4 import BeautifulSoup
 
 from . import process
+from .crawl_utils import (
+    DEFAULT_HEADERS as HEADERS,
+    ConfigValidationError,
+    IMAGE_EXTENSIONS,
+    find_event_page_urls,
+    get_image_links,
+    get_request_headers,
+    get_source_delay,
+    get_source_max_pages,
+    is_event_page,
+    validate_sources_config,
+    validate_tracks_config,
+    load_sources_config as _load_sources_config,
+    load_tracks_config as _load_tracks_config,
+    url_to_filename,
+)
 from .dedup import find_same_event, merge_events, track_slug
 from .extract_text import extract_from_text
+from .strategies.bracketraces import crawl_bracketraces_impl
+from .strategies.myracepass import crawl_myracepass_impl
+from .strategies.racingjunk import crawl_racingjunk_impl
+from .strategies.rss import crawl_rss_impl
+from .strategies.tmccc import (
+    advance_tmccc_calendar_impl,
+    crawl_tmccc_impl,
+    parse_tmccc_page_events_impl,
+    tmccc_event_key,
+)
 
 BASE_DIR     = Path(__file__).resolve().parents[2]
 CONFIG_DIR   = BASE_DIR / "src" / "drag_events" / "config"
@@ -61,35 +86,6 @@ DIST_DIR.mkdir(exist_ok=True)
 RUNTIME_DIR.mkdir(exist_ok=True)
 STATE_DIR.mkdir(exist_ok=True)
 TRACING_DIR.mkdir(exist_ok=True)
-
-# Pages on a track site most likely to contain event flyers
-EVENT_PAGE_KEYWORDS = [
-    "event", "schedule", "race", "calendar", "upcoming",
-    "news", "flyer", "announcement"
-]
-
-# Minimum image dimensions to be considered a flyer (filters out icons/logos)
-MIN_WIDTH  = 400
-MIN_HEIGHT = 400
-
-IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp"}
-
-HEADERS = {
-    "User-Agent": "Mozilla/5.0 (compatible; DragEventsBot/1.0; fetching public event info)"
-}
-
-VALID_SOURCE_STRATEGIES = {"bracketraces", "racingjunk", "myracepass", "tmccc", "rss"}
-DEFAULT_SOURCE_DELAY_SECONDS = {
-    "bracketraces": 0.5,
-    "racingjunk": 0.75,
-}
-DEFAULT_SOURCE_MAX_PAGES = {
-    "racingjunk": 10,
-}
-
-
-class ConfigValidationError(ValueError):
-    """Raised when a config file is malformed or missing required fields."""
 
 
 # ── State management ──────────────────────────────────────────────────────────
@@ -256,164 +252,12 @@ def print_metrics_summary(summary: dict) -> None:
 
 # ── Config validation ─────────────────────────────────────────────────────────
 
-def _load_json_file(path: Path) -> object:
-    try:
-        return json.loads(path.read_text())
-    except json.JSONDecodeError as exc:
-        raise ConfigValidationError(f"Invalid JSON in {path}: {exc.msg}") from exc
-
-
-def validate_tracks_config(data: object) -> list[dict]:
-    if not isinstance(data, list):
-        raise ConfigValidationError("tracks config must be a list of objects")
-
-    validated = []
-    for index, entry in enumerate(data):
-        if not isinstance(entry, dict):
-            raise ConfigValidationError(f"tracks[{index}] must be an object")
-
-        name = entry.get("name")
-        state = entry.get("state")
-        url = entry.get("url")
-        enabled = entry.get("enabled", True)
-        if not isinstance(name, str) or not name.strip():
-            raise ConfigValidationError(f"tracks[{index}].name must be a non-empty string")
-        if not isinstance(state, str) or not re.fullmatch(r"[A-Z]{2}", state):
-            raise ConfigValidationError(f"tracks[{index}].state must be a 2-letter uppercase state code")
-        if not isinstance(url, str) or not url.startswith(("http://", "https://")):
-            raise ConfigValidationError(f"tracks[{index}].url must be an http/https URL")
-        if not isinstance(enabled, bool):
-            raise ConfigValidationError(f"tracks[{index}].enabled must be a boolean when provided")
-        validated.append(entry)
-    return validated
-
-
-def validate_sources_config(data: object) -> list[dict]:
-    if not isinstance(data, list):
-        raise ConfigValidationError("sources config must be a list of objects")
-
-    validated = []
-    for index, entry in enumerate(data):
-        if not isinstance(entry, dict):
-            raise ConfigValidationError(f"sources[{index}] must be an object")
-
-        name = entry.get("name")
-        url = entry.get("url")
-        strategy = entry.get("strategy")
-        enabled = entry.get("enabled", True)
-        request_headers = entry.get("request_headers")
-        page_delay_seconds = entry.get("page_delay_seconds")
-        max_pages = entry.get("max_pages")
-        if not isinstance(name, str) or not name.strip():
-            raise ConfigValidationError(f"sources[{index}].name must be a non-empty string")
-        if not isinstance(url, str) or not url.startswith(("http://", "https://")):
-            raise ConfigValidationError(f"sources[{index}].url must be an http/https URL")
-        if not isinstance(enabled, bool):
-            raise ConfigValidationError(f"sources[{index}].enabled must be a boolean when provided")
-        if request_headers is not None:
-            if not isinstance(request_headers, dict):
-                raise ConfigValidationError(f"sources[{index}].request_headers must be an object when provided")
-            for header_name, header_value in request_headers.items():
-                if not isinstance(header_name, str) or not header_name.strip():
-                    raise ConfigValidationError(f"sources[{index}].request_headers keys must be non-empty strings")
-                if not isinstance(header_value, str):
-                    raise ConfigValidationError(f"sources[{index}].request_headers values must be strings")
-        if page_delay_seconds is not None:
-            if isinstance(page_delay_seconds, bool) or not isinstance(page_delay_seconds, (int, float)) or page_delay_seconds < 0:
-                raise ConfigValidationError(f"sources[{index}].page_delay_seconds must be a non-negative number when provided")
-        if max_pages is not None:
-            if isinstance(max_pages, bool) or not isinstance(max_pages, int) or max_pages < 1:
-                raise ConfigValidationError(f"sources[{index}].max_pages must be a positive integer when provided")
-        if strategy not in VALID_SOURCE_STRATEGIES:
-            valid = ", ".join(sorted(VALID_SOURCE_STRATEGIES))
-            raise ConfigValidationError(f"sources[{index}].strategy must be one of: {valid}")
-
-        if strategy == "bracketraces":
-            event_pages = entry.get("event_pages")
-            if not isinstance(event_pages, list) or not event_pages:
-                raise ConfigValidationError("sources[{index}].event_pages must be a non-empty list for bracketraces".format(index=index))
-            if not all(isinstance(page, str) and page.startswith("/") for page in event_pages):
-                raise ConfigValidationError("sources[{index}].event_pages entries must be path strings starting with '/'".format(index=index))
-
-        if strategy == "racingjunk":
-            drag_racing_url = entry.get("drag_racing_url")
-            if drag_racing_url is not None and (not isinstance(drag_racing_url, str) or not drag_racing_url.startswith(("http://", "https://"))):
-                raise ConfigValidationError(f"sources[{index}].drag_racing_url must be an http/https URL when provided")
-
-        validated.append(entry)
-    return validated
-
-
 def load_tracks_config(path: Path = TRACKS_FILE) -> list[dict]:
-    return [track for track in validate_tracks_config(_load_json_file(path)) if track.get("enabled", True)]
+    return _load_tracks_config(path)
 
 
 def load_sources_config(path: Path = SOURCES_FILE) -> list[dict]:
-    return [source for source in validate_sources_config(_load_json_file(path)) if source.get("enabled", True)]
-
-
-# ── Shared helpers ────────────────────────────────────────────────────────────
-
-def get_request_headers(source: dict | None = None) -> dict[str, str]:
-    headers = dict(HEADERS)
-    if source:
-        headers.update(source.get("request_headers", {}))
-    return headers
-
-
-def get_source_delay(source: dict, default: float = 0.0) -> float:
-    strategy = source.get("strategy")
-    return float(source.get("page_delay_seconds", DEFAULT_SOURCE_DELAY_SECONDS.get(strategy, default)))
-
-
-def get_source_max_pages(source: dict, default: int = 1) -> int:
-    strategy = source.get("strategy")
-    return int(source.get("max_pages", DEFAULT_SOURCE_MAX_PAGES.get(strategy, default)))
-
-
-def is_event_page(url: str, text: str) -> bool:
-    combined = (url + " " + text).lower()
-    return any(kw in combined for kw in EVENT_PAGE_KEYWORDS)
-
-
-def get_image_links(soup: BeautifulSoup, base_url: str) -> list[str]:
-    urls = []
-    for tag in soup.find_all("img"):
-        src = tag.get("src") or tag.get("data-src") or tag.get("data-lazy-src")
-        if not src:
-            continue
-        full = urljoin(base_url, src)
-        ext = Path(urlparse(full).path).suffix.lower()
-        if ext not in IMAGE_EXTENSIONS:
-            continue
-        try:
-            w = int(tag.get("width", 0))
-            h = int(tag.get("height", 0))
-            if w and h and (w < MIN_WIDTH or h < MIN_HEIGHT):
-                continue
-        except (ValueError, TypeError):
-            pass
-        urls.append(full)
-    return urls
-
-
-def find_event_page_urls(soup: BeautifulSoup, base_url: str, home_url: str) -> list[str]:
-    home_domain = urlparse(home_url).netloc
-    candidates = []
-    for tag in soup.find_all("a", href=True):
-        href = urljoin(base_url, tag["href"])
-        if urlparse(href).netloc != home_domain:
-            continue
-        if is_event_page(href, tag.get_text(strip=True)):
-            candidates.append(href)
-    return list(dict.fromkeys(candidates))
-
-
-def url_to_filename(url: str) -> str:
-    url_hash = hashlib.md5(url.encode()).hexdigest()[:8]
-    ext = Path(urlparse(url).path).suffix.lower() or ".jpg"
-    slug = re.sub(r"[^\w]", "-", Path(urlparse(url).path).stem)[:40]
-    return f"{slug}-{url_hash}{ext}"
+    return _load_sources_config(path)
 
 
 def download_image(url: str, headers: dict[str, str] | None = None) -> Path | None:
@@ -485,286 +329,64 @@ def crawl_track(track: dict, state: dict) -> list[Path]:
 
 def crawl_bracketraces(source: dict, state: dict) -> list[Path]:
     """Scrape individual Bracketraces.com event pages for flyer images."""
-    base = source["url"]
-    headers = get_request_headers(source)
-    delay_seconds = get_source_delay(source)
-    downloaded = []
-    for path in source.get("event_pages", []):
-        url = base + path
-        print(f"  {url}")
-        soup = fetch_page(url, headers=headers)
-        if not soup:
-            continue
-        image_urls = get_image_links(soup, url)
-        # Also look for links with "flyer" in the text or href
-        for tag in soup.find_all("a", href=True):
-            href = urljoin(url, tag["href"])
-            ext = Path(urlparse(href).path).suffix.lower()
-            if ext in IMAGE_EXTENSIONS and "flyer" in (href + tag.get_text()).lower():
-                image_urls.append(href)
-        new_urls = [u for u in dict.fromkeys(image_urls) if u not in state["seen_urls"]]
-        for img_url in new_urls:
-            state["seen_urls"].append(img_url)
-            dl = download_image(img_url, headers=headers)
-            if dl:
-                print(f"    Downloaded: {dl.name}")
-                downloaded.append(dl)
-        time.sleep(delay_seconds)
-    return downloaded
+    return crawl_bracketraces_impl(
+        source,
+        state,
+        fetch_page=fetch_page,
+        download_image=download_image,
+        headers=get_request_headers(source),
+        delay_seconds=get_source_delay(source),
+        sleep=time.sleep,
+    )
 
 
 def crawl_racingjunk(source: dict, state: dict) -> list[dict]:
     """Scrape RacingJunk drag racing events. Returns structured text records (no flyers)."""
-    drag_url = source.get("drag_racing_url", source["url"])
-    headers = get_request_headers(source)
-    delay_seconds = get_source_delay(source)
-    max_pages = get_source_max_pages(source)
-    print(f"  {drag_url}")
-    new_events = []
-    page = 1
-
-    while page <= max_pages:
-        url = f"{drag_url}?page={page}"
-        soup = fetch_page(url, headers=headers)
-        if not soup:
-            break
-
-        cards = soup.select(".event-listing, .event-card, article, .listing-item")
-        if not cards:
-            # Try generic fallback: any element with a date and title
-            cards = soup.find_all(attrs={"class": re.compile(r"event|listing|card", re.I)})
-        if not cards:
-            break
-
-        found_new = False
-        for card in cards:
-            title_tag = card.find(["h2", "h3", "h4", "a"])
-            title = title_tag.get_text(strip=True) if title_tag else ""
-            if not title or title in state.get("racingjunk_events", []):
-                continue
-            state.setdefault("racingjunk_events", []).append(title)
-            found_new = True
-
-            date_tag = card.find(attrs={"class": re.compile(r"date|time", re.I)})
-            location_tag = card.find(attrs={"class": re.compile(r"location|venue|city", re.I)})
-            link_tag = card.find("a", href=True)
-
-            new_events.append({
-                "title": title,
-                "date_text": date_tag.get_text(strip=True) if date_tag else None,
-                "location_text": location_tag.get_text(strip=True) if location_tag else None,
-                "source_url": urljoin(drag_url, link_tag["href"]) if link_tag else drag_url,
-                "source": "RacingJunk"
-            })
-
-        if not found_new:
-            break
-        page += 1
-        time.sleep(delay_seconds)
-
-    print(f"  Found {len(new_events)} new event listings")
-    return new_events
+    return crawl_racingjunk_impl(
+        source,
+        state,
+        fetch_page=fetch_page,
+        headers=get_request_headers(source),
+        delay_seconds=get_source_delay(source),
+        max_pages=get_source_max_pages(source),
+        sleep=time.sleep,
+    )
 
 
 def crawl_myracepass(source: dict, state: dict) -> list[dict]:
     """Scrape MyRacePass event listings from public HTML pages."""
-    url = source["url"]
-    headers = get_request_headers(source)
-    print(f"  {url}")
-    new_events = []
-
-    soup = fetch_page(url, headers=headers)
-    if not soup:
-        return []
-
-    # MyRacePass renders events as cards with track name, event type, date
-    cards = soup.find_all(attrs={"class": re.compile(r"event|card|listing|schedule", re.I)})
-    for card in cards:
-        title_tag = card.find(["h2", "h3", "h4", "a"])
-        title = title_tag.get_text(strip=True) if title_tag else ""
-        if not title or title in state.get("myracepass_events", []):
-            continue
-        state.setdefault("myracepass_events", []).append(title)
-
-        date_tag = card.find(attrs={"class": re.compile(r"date|time", re.I)})
-        type_tag = card.find(attrs={"class": re.compile(r"type|category|kind", re.I)})
-        link_tag = card.find("a", href=True)
-
-        new_events.append({
-            "title": title,
-            "date_text": date_tag.get_text(strip=True) if date_tag else None,
-            "event_type_text": type_tag.get_text(strip=True) if type_tag else None,
-            "source_url": urljoin(url, link_tag["href"]) if link_tag else url,
-            "source": "MyRacePass"
-        })
-
-    print(f"  Found {len(new_events)} new event listings")
-    return new_events
+    return crawl_myracepass_impl(source, state, fetch_page=fetch_page, headers=get_request_headers(source))
 
 
 def parse_tmccc_page_events(html: str) -> list[dict]:
     """Extract and merge TMCCC calendar cards from one rendered page of HTML."""
-    soup = BeautifulSoup(html, "html.parser")
-    cards = soup.find_all(attrs={"data-aid": "CALENDAR_SMALLER_SCREEN_CONTAINER"})
-    merged: dict[str, dict] = {}
-
-    for card in cards:
-        date_block = card.find(attrs={"data-aid": "CALENDAR_EVENT_DATE"})
-        title_tag = card.find(attrs={"data-aid": "CALENDAR_EVENT_TITLE"})
-        if not date_block or not title_tag:
-            continue
-
-        date_text = date_block.get_text(" ", strip=True)
-        title = title_tag.get_text(" ", strip=True)
-        if not title or not date_text:
-            continue
-
-        time_block = card.find(attrs={"data-aid": "CALENDAR_EVENT_TIME"})
-        time_text = location_text = None
-        if time_block:
-            parts = [node.get_text(" ", strip=True) for node in time_block.find_all(["h4", "p"])]
-            parts = [part for part in parts if part]
-            if parts:
-                time_text = " ".join(parts[:-1]) if len(parts) > 1 else parts[0]
-                location_text = parts[-1] if len(parts) > 1 else None
-
-        desc_block = card.find(attrs={"data-aid": "CALENDAR_DESC_TEXT"})
-        desc_text = desc_block.get_text(separator="\n", strip=True) if desc_block else None
-
-        key = f"{title}|{date_text}"
-        existing = merged.get(key)
-        if existing:
-            existing["time_text"] = existing["time_text"] or time_text
-            existing["location_text"] = existing["location_text"] or location_text
-            existing["description"] = existing["description"] or desc_text
-            continue
-
-        merged[key] = {
-            "title": title,
-            "date_text": date_text,
-            "time_text": time_text,
-            "location_text": location_text,
-            "description": desc_text,
-        }
-
-    return list(merged.values())
+    return parse_tmccc_page_events_impl(html)
 
 
 def _tmccc_event_key(event: dict) -> str:
-    return f"{event['title']}|{event['date_text']}"
+    return tmccc_event_key(event)
 
 
 def _advance_tmccc_calendar(page, current_keys: list[str]) -> bool:
     """Click TMCCC's More Events control and wait for the visible event set to change."""
-    next_btn = page.locator("[data-aid='CALENDAR_SHOW_NEXT_EVENTS']")
-    if next_btn.count() == 0:
-        return False
-
-    button = next_btn.first
-    if hasattr(button, "is_visible") and not button.is_visible():
-        return False
-    if hasattr(button, "is_disabled") and button.is_disabled():
-        return False
-
-    previous_last_key = current_keys[-1] if current_keys else ""
-    button.scroll_into_view_if_needed()
-    button.click()
-    if previous_last_key:
-        page.wait_for_function(
-            """
-            (prevKey) => {
-              const cards = Array.from(
-                document.querySelectorAll("[data-aid='CALENDAR_SMALLER_SCREEN_CONTAINER']")
-              );
-              const keys = cards.map((card) => {
-                const title = card.querySelector("[data-aid='CALENDAR_EVENT_TITLE']")?.textContent?.trim() || "";
-                const date = card.querySelector("[data-aid='CALENDAR_EVENT_DATE']")?.textContent?.trim() || "";
-                return title && date ? `${title}|${date}` : "";
-              }).filter(Boolean);
-              return keys.length > 0 && keys[keys.length - 1] !== prevKey;
-            }
-            """,
-            arg=previous_last_key,
-            timeout=10000,
-        )
-    else:
-        page.wait_for_selector("[data-aid='CALENDAR_EVENT_TITLE']", state="attached", timeout=10000)
-    return True
+    return advance_tmccc_calendar_impl(page, current_keys)
 
 
 def crawl_tmccc(source: dict, state: dict) -> list[dict]:
-    """Scrape TMCCC event calendar (GoDaddy site builder).
-
-    Uses Playwright to page through the calendar using CALENDAR_SHOW_NEXT_EVENTS,
-    scraping each page until there is no next arrow (end of calendar).
-    """
-    from playwright.sync_api import TimeoutError as PlaywrightTimeoutError, sync_playwright
-
-    url = source["url"]
-    headers = get_request_headers(source)
-    print(f"  {url}")
-
-    all_raw = []
-    seen_page_signatures = set()
-    with sync_playwright() as p:
-        browser = p.chromium.launch(headless=True, args=["--no-sandbox"])
-        page = browser.new_page(viewport={"width": 1440, "height": 900}, extra_http_headers=headers)
-        page.goto(url, wait_until="load", timeout=60000)
-        page.wait_for_selector("[data-aid='CALENDAR_EVENT_TITLE']", state="attached", timeout=15000)
-
-        while True:
-            page_events = parse_tmccc_page_events(page.content())
-            current_keys = [_tmccc_event_key(event) for event in page_events]
-            page_signature = tuple(current_keys)
-            if page_signature and page_signature not in seen_page_signatures:
-                all_raw.extend(page_events)
-                seen_page_signatures.add(page_signature)
-
-            try:
-                if not _advance_tmccc_calendar(page, current_keys):
-                    break
-            except PlaywrightTimeoutError:
-                break
-
-        browser.close()
-
-    new_events = []
-    for event in all_raw:
-        key = _tmccc_event_key(event)
-        if key in state.get("tmccc_events", []):
-            continue
-        state.setdefault("tmccc_events", []).append(key)
-
-        new_events.append({
-            **event,
-            "source_url": url,
-            "source": "TMCCC",
-        })
-
-    print(f"  Found {len(new_events)} new event listings")
-    return new_events
+    """Scrape TMCCC event calendar (GoDaddy site builder)."""
+    return crawl_tmccc_impl(
+        source,
+        state,
+        headers=get_request_headers(source),
+        parse_page_events=parse_tmccc_page_events,
+        event_key=_tmccc_event_key,
+        advance_calendar=_advance_tmccc_calendar,
+    )
 
 
 def crawl_rss(source: dict, state: dict) -> list[dict]:
     """Parse an RSS feed for event announcements."""
-    url = source["url"]
-    print(f"  {url}")
-    feed = feedparser.parse(url)
-    new_items = []
-    for entry in feed.entries:
-        link = entry.get("link", "")
-        if link in state.get("seen_urls", []):
-            continue
-        state.setdefault("seen_urls", []).append(link)
-        new_items.append({
-            "title": entry.get("title", ""),
-            "published": entry.get("published", ""),
-            "summary": entry.get("summary", ""),
-            "source_url": link,
-            "source": source["name"]
-        })
-    print(f"  Found {len(new_items)} new RSS items")
-    return new_items
+    return crawl_rss_impl(source, state)
 
 
 STRATEGY_MAP = {
