@@ -44,8 +44,8 @@ make
 
 | File | Purpose |
 |---|---|
-| `tracks.json` | Individual track websites to crawl (generic image scraper) |
-| `sources.json` | Aggregator sites with custom scraping strategies (RacingJunk, Bracketraces, RSS, etc.) |
+| `src/config/tracks.json` | Individual track websites to crawl (generic image scraper) |
+| `src/config/sources.json` | Aggregator sites with custom scraping strategies (RacingJunk, Bracketraces, RSS, etc.) |
 
 ## Usage
 
@@ -140,14 +140,16 @@ drag-events-aggregator/
 │       ├── crawl_metrics.jsonl     # One JSON record per crawl run with timings and counts
 │       └── crawl_metrics_summary.json # Rolling summary derived from crawl_metrics.jsonl
 ├── src/
+│   ├── config/
+│   │   ├── track_aliases.json # Track alias normalization data
+│   │   ├── tracks.json        # Track website definitions
+│   │   └── sources.json       # Aggregator source definitions
 │   ├── crawl.py            # Web crawler for tracks and aggregator sources
 │   ├── extract.py          # Claude vision extraction for flyer images
 │   ├── extract_text.py     # Claude text extraction for text-based listings
 │   ├── dedup.py            # Perceptual hash and event-level deduplication
 │   ├── process.py          # Orchestrates extraction + dedup for flyer files
 │   └── schema.py           # Shared Claude tool JSON schema
-├── tracks.json             # Track website definitions
-├── sources.json            # Aggregator source definitions
 ├── SCHEMA.md               # Human-readable events.json field reference
 ├── requirements.txt        # Python dependencies
 ├── requirements-dev.txt    # Dev/test dependencies

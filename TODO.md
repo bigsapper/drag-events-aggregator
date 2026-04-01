@@ -27,9 +27,9 @@ Adding aggregator sources with unique page structures currently requires modifyi
 maintenance burden as more aggregators are added.
 
 - [ ] Extract each crawl strategy into its own file (e.g. `strategies/racingjunk.py`) loaded dynamically, so adding a new aggregator no longer requires editing `crawl.py`
-- [ ] Add per-site configuration support in `sources.json` for rate limits, custom headers, and pagination depth (currently hardcoded constants)
-- [ ] Add an `enabled` flag to `tracks.json` and `sources.json` entries so individual sites can be disabled without editing code
-- [ ] Add schema validation for `tracks.json` and `sources.json` at startup so malformed entries fail fast with a clear error
+- [ ] Add per-site configuration support in `src/config/sources.json` for rate limits, custom headers, and pagination depth (currently hardcoded constants)
+- [ ] Add an `enabled` flag to `src/config/tracks.json` and `src/config/sources.json` entries so individual sites can be disabled without editing code
+- [ ] Add schema validation for `src/config/tracks.json` and `src/config/sources.json` at startup so malformed entries fail fast with a clear error
 
 ## Security
 - [ ] Replace `.env` file pattern with proper secrets injection for production (CI secrets, AWS Secrets Manager, or equivalent)

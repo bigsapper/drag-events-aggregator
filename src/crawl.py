@@ -1,8 +1,8 @@
 """Crawl track websites and event aggregators for drag racing flyer images.
 
 Two source types:
-  tracks.json   — individual track websites (generic image scraper)
-  sources.json  — aggregator sites with custom strategies per source
+  src/config/tracks.json   — individual track websites (generic image scraper)
+  src/config/sources.json  — aggregator sites with custom strategies per source
 
 Usage:
     python src/crawl.py                        # crawl all tracks + all sources
@@ -35,8 +35,9 @@ from dedup import find_same_event, merge_events, track_slug
 from extract_text import extract_from_text
 
 BASE_DIR     = Path(__file__).resolve().parent.parent
-TRACKS_FILE  = BASE_DIR / "tracks.json"
-SOURCES_FILE = BASE_DIR / "sources.json"
+CONFIG_DIR   = BASE_DIR / "src" / "config"
+TRACKS_FILE  = CONFIG_DIR / "tracks.json"
+SOURCES_FILE = CONFIG_DIR / "sources.json"
 FLYERS_DIR   = BASE_DIR / "flyers"
 DIST_DIR     = BASE_DIR / "dist"
 RUNTIME_DIR  = BASE_DIR / "runtime"

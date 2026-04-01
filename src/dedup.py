@@ -17,11 +17,12 @@ from pathlib import Path
 PHASH_THRESHOLD = 10
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-_ALIASES_FILE = BASE_DIR / "track_aliases.json"
+CONFIG_DIR = BASE_DIR / "src" / "config"
+_ALIASES_FILE = CONFIG_DIR / "track_aliases.json"
 
 
 def _load_alias_map() -> dict[str, str]:
-    """Build a lowercase alias → canonical name lookup from track_aliases.json."""
+    """Build a lowercase alias -> canonical name lookup from track_aliases.json."""
     if not _ALIASES_FILE.exists():
         return {}
     entries = json.loads(_ALIASES_FILE.read_text())
