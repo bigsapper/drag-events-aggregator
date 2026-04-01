@@ -12,6 +12,8 @@ events.json
 # Claude Code
 CLAUDE.md
 memory/
+.claude/
+.coverage
 
 # Python
 __pycache__/
