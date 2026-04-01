@@ -14,9 +14,13 @@ Usage:
 
 import hashlib
 import json
+import math
+import os
 import re
+import statistics
 import sys
 import time
+import traceback
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
@@ -34,8 +38,13 @@ TRACKS_FILE  = Path(__file__).parent / "tracks.json"
 SOURCES_FILE = Path(__file__).parent / "sources.json"
 FLYERS_DIR   = Path(__file__).parent / "flyers"
 CRAWL_STATE  = Path(__file__).parent / ".crawl_state.json"
+DIST_DIR     = Path(__file__).parent / "dist"
+METRICS_LOG  = DIST_DIR / "crawl_metrics.jsonl"
+METRICS_SUMMARY = DIST_DIR / "crawl_metrics_summary.json"
+ERROR_LOG    = DIST_DIR / "crawl_errors.log"
 
 FLYERS_DIR.mkdir(exist_ok=True)
+DIST_DIR.mkdir(exist_ok=True)
 
 # Pages on a track site most likely to contain event flyers
 EVENT_PAGE_KEYWORDS = [
@@ -64,6 +73,133 @@ def load_state() -> dict:
 
 def save_state(state: dict) -> None:
     CRAWL_STATE.write_text(json.dumps(state, indent=2))
+
+
+def format_duration(seconds: float) -> str:
+    seconds = max(0, int(round(seconds)))
+    minutes, secs = divmod(seconds, 60)
+    hours, minutes = divmod(minutes, 60)
+    if hours:
+        return f"{hours}h {minutes}m {secs}s"
+    if minutes:
+        return f"{minutes}m {secs}s"
+    return f"{secs}s"
+
+
+def summarize_metrics(entries: list[dict]) -> dict:
+    successful = [entry for entry in entries if entry.get("status") == "success"]
+    durations = [entry["elapsed_seconds"] for entry in successful if isinstance(entry.get("elapsed_seconds"), (int, float))]
+
+    summary = {
+        "recorded_runs": len(entries),
+        "successful_runs": len(successful),
+        "last_run": entries[-1] if entries else None,
+    }
+    if not durations:
+        return summary
+
+    summary.update({
+        "average_seconds": round(sum(durations) / len(durations), 2),
+        "median_seconds": round(statistics.median(durations), 2),
+        "min_seconds": round(min(durations), 2),
+        "max_seconds": round(max(durations), 2),
+    })
+    if len(durations) >= 2:
+        sorted_durations = sorted(durations)
+        index = math.ceil(0.95 * len(sorted_durations)) - 1
+        summary["p95_seconds"] = round(sorted_durations[max(index, 0)], 2)
+    return summary
+
+
+def load_metric_entries(metrics_log: Path = METRICS_LOG) -> list[dict]:
+    if not metrics_log.exists():
+        return []
+
+    decoder = json.JSONDecoder()
+    entries = []
+    for line in metrics_log.read_text().splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        entries.append(decoder.decode(line))
+    return entries
+
+
+def record_run_metrics(run_metrics: dict, metrics_log: Path = METRICS_LOG, summary_file: Path = METRICS_SUMMARY) -> dict:
+    metrics_log.parent.mkdir(parents=True, exist_ok=True)
+    with metrics_log.open("a", encoding="utf-8") as fh:
+        fh.write(json.dumps(run_metrics) + "\n")
+
+    entries = load_metric_entries(metrics_log)
+    summary = summarize_metrics(entries)
+    summary_file.write_text(json.dumps(summary, indent=2) + "\n")
+    return summary
+
+
+def should_record_runtime_metrics() -> bool:
+    return "PYTEST_CURRENT_TEST" not in os.environ
+
+
+def should_log_errors(details: dict | None = None) -> bool:
+    if "PYTEST_CURRENT_TEST" in os.environ:
+        return False
+    if not details:
+        return True
+
+    for value in details.values():
+        value_str = str(value)
+        if "test-flyers" in value_str:
+            return False
+    return True
+
+
+def get_error_log_path() -> Path:
+    return ERROR_LOG
+
+
+def log_error(context: str, error: Exception | str, *, error_log: Path | None = None, details: dict | None = None, include_traceback: bool = False) -> None:
+    if not should_log_errors(details):
+        return
+    if error_log is None:
+        error_log = get_error_log_path()
+    error_log.parent.mkdir(parents=True, exist_ok=True)
+    timestamp = datetime.now(timezone.utc).isoformat()
+    with error_log.open("a", encoding="utf-8") as fh:
+        fh.write(f"[{timestamp}] {context}\n")
+        fh.write(f"error: {error}\n")
+        if details:
+            for key, value in details.items():
+                fh.write(f"{key}: {value}\n")
+        if include_traceback and isinstance(error, BaseException):
+            fh.write(traceback.format_exc())
+            if not traceback.format_exc().endswith("\n"):
+                fh.write("\n")
+        fh.write("\n")
+
+
+def print_metrics_summary(summary: dict) -> None:
+    if not summary.get("recorded_runs"):
+        print("No crawl metrics recorded yet.")
+        return
+
+    print("Crawl metrics summary")
+    print(f"  recorded runs:   {summary['recorded_runs']}")
+    print(f"  successful runs: {summary.get('successful_runs', 0)}")
+
+    if summary.get("average_seconds") is not None:
+        print(f"  average runtime: {format_duration(summary['average_seconds'])}")
+        print(f"  median runtime:  {format_duration(summary['median_seconds'])}")
+        print(f"  min runtime:     {format_duration(summary['min_seconds'])}")
+        print(f"  max runtime:     {format_duration(summary['max_seconds'])}")
+        if summary.get("p95_seconds") is not None:
+            print(f"  p95 runtime:     {format_duration(summary['p95_seconds'])}")
+
+    last_run = summary.get("last_run")
+    if last_run:
+        status = last_run.get("status", "unknown")
+        started = last_run.get("started_at", "?")
+        elapsed = format_duration(last_run.get("elapsed_seconds", 0))
+        print(f"  last run:        {status} at {started} ({elapsed})")
 
 
 # ── Shared helpers ────────────────────────────────────────────────────────────
@@ -127,6 +263,7 @@ def download_image(url: str) -> Path | None:
         return dest
     except Exception as e:
         print(f"    Download failed {url}: {e}")
+        log_error("download_image", e, details={"url": url, "destination": dest})
         return None
 
 
@@ -137,6 +274,7 @@ def fetch_page(url: str) -> BeautifulSoup | None:
         return BeautifulSoup(resp.text, "html.parser")
     except Exception as e:
         print(f"  Could not fetch {url}: {e}")
+        log_error("fetch_page", e, details={"url": url})
         return None
 
 
@@ -483,9 +621,19 @@ def crawl_source(source: dict, state: dict) -> tuple[list[Path], list[dict]]:
 
 # ── Main ──────────────────────────────────────────────────────────────────────
 
-def run_extraction(downloaded: list[Path], text_listings: list[dict]) -> None:
+def run_extraction(downloaded: list[Path], text_listings: list[dict]) -> dict:
+    start = time.perf_counter()
     if not downloaded and not text_listings:
-        return
+        return {
+            "elapsed_seconds": 0.0,
+            "image_flyers": 0,
+            "text_listings": 0,
+            "new": 0,
+            "merged": 0,
+            "duplicate": 0,
+            "error": 0,
+            "total_events": 0,
+        }
 
     events = process.load_events()
     counts = {"new": 0, "merged": 0, "duplicate": 0, "error": 0}
@@ -505,6 +653,7 @@ def run_extraction(downloaded: list[Path], text_listings: list[dict]) -> None:
         except Exception as e:
             print(f"  [ERROR] {e}")
             counts["error"] += 1
+            log_error("run_extraction.process_flyer", e, details={"flyer_path": path}, include_traceback=True)
 
     # Text listings → Claude text (haiku)
     if text_listings:
@@ -548,14 +697,34 @@ def run_extraction(downloaded: list[Path], text_listings: list[dict]) -> None:
         except Exception as e:
             print(f"  [ERROR] {e}")
             counts["error"] += 1
+            log_error(
+                "run_extraction.extract_from_text",
+                e,
+                details={"listing_title": title, "source_url": listing.get("source_url", "")},
+                include_traceback=True,
+            )
 
     process.save_events(events)
     print(f"\n{len(events)} total events in database.")
     print(f"  {counts['new']} new  |  {counts['merged']} updated  |  {counts['duplicate']} duplicate  |  {counts['error']} errors")
+    return {
+        "elapsed_seconds": round(time.perf_counter() - start, 2),
+        "image_flyers": len(downloaded),
+        "text_listings": len(text_listings),
+        "new": counts["new"],
+        "merged": counts["merged"],
+        "duplicate": counts["duplicate"],
+        "error": counts["error"],
+        "total_events": len(events),
+    }
 
 
 def main():
     args = sys.argv[1:]
+
+    if "--metrics" in args:
+        print_metrics_summary(summarize_metrics(load_metric_entries()))
+        return
 
     track_filter  = None
     source_filter = None
@@ -565,39 +734,103 @@ def main():
 
     run_tracks  = "--sources" not in args and source_filter is None
     run_sources = "--tracks"  not in args and track_filter  is None
+    started_at = datetime.now(timezone.utc)
+    started_perf = time.perf_counter()
+    run_metrics = {
+        "run_id": started_at.strftime("%Y%m%d-%H%M%S"),
+        "started_at": started_at.isoformat(),
+        "status": "success",
+        "args": args,
+        "filters": {"track": track_filter, "source": source_filter},
+        "tracks": [],
+        "sources": [],
+    }
 
-    state = load_state()
-    total_downloaded = []
+    try:
+        state = load_state()
+        total_downloaded = []
+        total_text_listings = []
 
-    if run_tracks:
-        tracks = json.loads(TRACKS_FILE.read_text())
-        if track_filter:
-            tracks = [t for t in tracks if track_filter in t["name"].lower()]
-        print(f"=== Track websites ({len(tracks)}) ===")
-        for track in tracks:
-            files = crawl_track(track, state)
-            total_downloaded.extend(files)
-            save_state(state)
-            time.sleep(1)
+        tracks = []
+        sources = []
 
-    total_text_listings = []
+        if run_tracks:
+            tracks = json.loads(TRACKS_FILE.read_text())
+            if track_filter:
+                tracks = [t for t in tracks if track_filter in t["name"].lower()]
+            print(f"=== Track websites ({len(tracks)}) ===")
+            for track in tracks:
+                item_start = time.perf_counter()
+                files = crawl_track(track, state)
+                elapsed = round(time.perf_counter() - item_start, 2)
+                total_downloaded.extend(files)
+                run_metrics["tracks"].append({
+                    "name": track["name"],
+                    "elapsed_seconds": elapsed,
+                    "downloaded_images": len(files),
+                })
+                save_state(state)
+                time.sleep(1)
 
-    if run_sources:
-        sources = json.loads(SOURCES_FILE.read_text())
-        if source_filter:
-            sources = [s for s in sources if source_filter in s["name"].lower()]
-        print(f"\n=== Aggregator sources ({len(sources)}) ===")
-        for source in sources:
-            print(f"\n{source['name']}")
-            files, listings = crawl_source(source, state)
-            total_downloaded.extend(files)
-            total_text_listings.extend(listings)
-            save_state(state)
-            time.sleep(1)
+        if run_sources:
+            sources = json.loads(SOURCES_FILE.read_text())
+            if source_filter:
+                sources = [s for s in sources if source_filter in s["name"].lower()]
+            print(f"\n=== Aggregator sources ({len(sources)}) ===")
+            for source in sources:
+                print(f"\n{source['name']}")
+                item_start = time.perf_counter()
+                files, listings = crawl_source(source, state)
+                elapsed = round(time.perf_counter() - item_start, 2)
+                total_downloaded.extend(files)
+                total_text_listings.extend(listings)
+                run_metrics["sources"].append({
+                    "name": source["name"],
+                    "strategy": source.get("strategy"),
+                    "elapsed_seconds": elapsed,
+                    "downloaded_images": len(files),
+                    "text_listings": len(listings),
+                })
+                save_state(state)
+                time.sleep(1)
 
-    print(f"\n{'─' * 50}")
-    print(f"Crawl complete. {len(total_downloaded)} new flyer images, {len(total_text_listings)} text listings.")
-    run_extraction(total_downloaded, total_text_listings)
+        print(f"\n{'─' * 50}")
+        print(f"Crawl complete. {len(total_downloaded)} new flyer images, {len(total_text_listings)} text listings.")
+        extraction_metrics = run_extraction(total_downloaded, total_text_listings)
+        if not isinstance(extraction_metrics, dict):
+            extraction_metrics = {}
+        run_metrics["selection"] = {
+            "run_tracks": run_tracks,
+            "run_sources": run_sources,
+            "track_count": len(tracks),
+            "source_count": len(sources),
+        }
+        run_metrics["crawl_counts"] = {
+            "downloaded_images": len(total_downloaded),
+            "text_listings": len(total_text_listings),
+        }
+        run_metrics["extraction"] = extraction_metrics
+    except Exception as exc:
+        run_metrics["status"] = "error"
+        run_metrics["error"] = str(exc)
+        log_error("crawl.main", exc, details={"args": args}, include_traceback=True)
+        raise
+    finally:
+        finished_at = datetime.now(timezone.utc)
+        run_metrics["finished_at"] = finished_at.isoformat()
+        run_metrics["elapsed_seconds"] = round(time.perf_counter() - started_perf, 2)
+        if not should_record_runtime_metrics():
+            return
+        summary = record_run_metrics(run_metrics)
+        print(f"\nRecorded crawl metrics in {METRICS_LOG}")
+        print(f"Error log file: {ERROR_LOG}")
+        if summary.get("average_seconds") is not None:
+            print(
+                "Historical runtime: "
+                f"avg {format_duration(summary['average_seconds'])}, "
+                f"median {format_duration(summary['median_seconds'])}, "
+                f"last {format_duration(run_metrics['elapsed_seconds'])}"
+            )
 
 
 if __name__ == "__main__":

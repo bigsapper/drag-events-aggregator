@@ -4,6 +4,7 @@
 
 # Runtime state
 .crawl_state.json
+dist/*.log
 
 # Downloaded data
 flyers/

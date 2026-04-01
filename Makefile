@@ -12,6 +12,7 @@ help:
 	@printf "  make crawl-track NAME=\"...\"   Crawl one track by name\n"
 	@printf "  make crawl-source NAME=\"...\"  Crawl one source by name\n"
 	@printf "  make process PATHS=\"...\"      Process one or more flyer paths manually\n"
+	@printf "  make crawl-metrics           Show historical crawl timing summary\n"
 	@printf "  make archive-events          Archive dist/events.json with a timestamp\n"
 	@printf "  make fresh-start             Archive events, clear flyers, reset crawl state, empty dist/events.json\n"
 
@@ -42,6 +43,9 @@ process:
 	@if [ -z "$(PATHS)" ]; then echo 'Usage: make process PATHS="path/to/flyer.jpg [more paths...]"'; exit 1; fi
 	$(PYTHON) process.py $(PATHS)
 
+crawl-metrics:
+	$(PYTHON) crawl.py --metrics
+
 archive-events:
 	@mkdir -p dist/archive
 	@if [ -f dist/events.json ]; then \
@@ -59,4 +63,4 @@ fresh-start: archive-events
 	@printf "[]\n" > dist/events.json
 	@echo "Reset complete: cleared flyers/, removed .crawl_state.json, and reinitialized dist/events.json"
 
-.PHONY: help test coverage crawl crawl-tracks crawl-sources crawl-track crawl-source process archive-events fresh-start
+.PHONY: help test coverage crawl crawl-tracks crawl-sources crawl-track crawl-source process crawl-metrics archive-events fresh-start

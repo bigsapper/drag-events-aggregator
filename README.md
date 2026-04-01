@@ -55,6 +55,9 @@ make
 # Crawl all tracks and all aggregator sources
 make crawl
 
+# Show historical runtime summary from recorded crawl metrics
+make crawl-metrics
+
 # Crawl all tracks and all aggregator sources
 python crawl.py
 
@@ -84,6 +87,8 @@ python crawl.py --source "Bracketraces.com"
 ```
 
 Crawling automatically triggers extraction and deduplication for any newly downloaded flyers.
+Each crawl run also records timing and count metrics to `dist/crawl_metrics.jsonl` and refreshes a summary snapshot in `dist/crawl_metrics_summary.json`.
+Recoverable and fatal crawl errors from live runs are appended to `dist/crawl_errors.log`.
 
 ### Process Flyers Manually
 
@@ -125,6 +130,9 @@ The full field reference and JSON Schema contract are documented in [SCHEMA.md](
 drag-events-aggregator/
 ├── dist/
 │   ├── archive/           # Timestamped backups created by make archive-events / make fresh-start
+│   ├── crawl_errors.log    # Persistent crawl error log for fetch, extraction, and run failures
+│   ├── crawl_metrics.jsonl # One JSON record per crawl run with timings and counts
+│   ├── crawl_metrics_summary.json # Rolling summary derived from crawl_metrics.jsonl
 │   ├── events.json         # Primary output — drag racing event database
 │   └── events.schema.json  # JSON Schema contract for events.json
 ├── crawl.py                # Web crawler for tracks and aggregator sources
@@ -168,5 +176,8 @@ Tests use mocked Claude API calls and temporary file system paths — no API key
 | `.venv/` | Python virtual environment |
 | `flyers/` | Downloaded flyer images (auto-deleted after successful processing) |
 | `dist/archive/` | Archived `dist/events.json` snapshots created during reset workflows |
+| `dist/crawl_errors.log` | Persistent crawl error log for troubleshooting failed runs |
+| `dist/crawl_metrics.jsonl` | Historical crawl run metrics used for runtime estimation |
+| `dist/crawl_metrics_summary.json` | Latest aggregate timing summary |
 | `events.json` | Extracted event database |
 | `.crawl_state.json` | Crawl state (seen URLs, known listings) |
