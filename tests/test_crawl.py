@@ -523,3 +523,101 @@ def test_main_sources_only(tmp_crawl_state):
          patch("crawl.save_state"), \
          patch("crawl.time.sleep"):
         crawl.main()
+
+
+def test_main_track_filter(tmp_crawl_state):
+    """--track NAME filters to matching tracks and iterates over them."""
+    tracks = [{"name": "Texas Motorplex", "url": "http://a.com"},
+              {"name": "Tulsa Raceway Park", "url": "http://b.com"}]
+    with patch.object(sys, "argv", ["crawl.py", "--track", "texas"]), \
+         patch("crawl.TRACKS_FILE") as mock_tf, \
+         patch("crawl.crawl_track", return_value=[]) as mock_ct, \
+         patch("crawl.run_extraction"), \
+         patch("crawl.save_state"), \
+         patch("crawl.time.sleep"):
+        mock_tf.read_text.return_value = json.dumps(tracks)
+        crawl.main()
+    # Only Texas Motorplex matches "texas"
+    assert mock_ct.call_count == 1
+    assert mock_ct.call_args[0][0]["name"] == "Texas Motorplex"
+
+
+def test_main_source_filter(tmp_crawl_state):
+    """--source NAME filters to matching sources and iterates over them."""
+    sources = [{"name": "Bracketraces.com", "strategy": "bracketraces", "url": "http://a.com", "event_pages": []},
+               {"name": "RacingJunk Events", "strategy": "racingjunk", "url": "http://b.com", "drag_racing_url": "http://b.com/drag"}]
+    with patch.object(sys, "argv", ["crawl.py", "--source", "bracketraces"]), \
+         patch("crawl.SOURCES_FILE") as mock_sf, \
+         patch("crawl.crawl_source", return_value=([], [])) as mock_cs, \
+         patch("crawl.run_extraction"), \
+         patch("crawl.save_state"), \
+         patch("crawl.time.sleep"):
+        mock_sf.read_text.return_value = json.dumps(sources)
+        crawl.main()
+    assert mock_cs.call_count == 1
+    assert mock_cs.call_args[0][0]["name"] == "Bracketraces.com"
+
+
+def test_main_iterates_tracks_and_saves_state(tmp_crawl_state):
+    """Crawling multiple tracks calls save_state and sleep after each one."""
+    tracks = [{"name": "Track A", "url": "http://a.com"},
+              {"name": "Track B", "url": "http://b.com"}]
+    with patch.object(sys, "argv", ["crawl.py", "--tracks"]), \
+         patch("crawl.TRACKS_FILE") as mock_tf, \
+         patch("crawl.crawl_track", return_value=[]) as mock_ct, \
+         patch("crawl.run_extraction"), \
+         patch("crawl.save_state") as mock_ss, \
+         patch("crawl.time.sleep") as mock_sleep:
+        mock_tf.read_text.return_value = json.dumps(tracks)
+        crawl.main()
+    assert mock_ct.call_count == 2
+    assert mock_ss.call_count == 2
+    assert mock_sleep.call_count == 2
+
+
+def test_main_iterates_sources_and_saves_state(tmp_crawl_state):
+    """Crawling multiple sources calls save_state and sleep after each one."""
+    sources = [
+        {"name": "Source A", "strategy": "bracketraces", "url": "http://a.com", "event_pages": []},
+        {"name": "Source B", "strategy": "bracketraces", "url": "http://b.com", "event_pages": []},
+    ]
+    with patch.object(sys, "argv", ["crawl.py", "--sources"]), \
+         patch("crawl.SOURCES_FILE") as mock_sf, \
+         patch("crawl.crawl_source", return_value=([], [])) as mock_cs, \
+         patch("crawl.run_extraction"), \
+         patch("crawl.save_state") as mock_ss, \
+         patch("crawl.time.sleep") as mock_sleep:
+        mock_sf.read_text.return_value = json.dumps(sources)
+        crawl.main()
+    assert mock_cs.call_count == 2
+    assert mock_ss.call_count == 2
+    assert mock_sleep.call_count == 2
+
+
+# ── Previously uncovered edge cases ──────────────────────────────────────────
+
+def test_get_image_links_invalid_dimension_attribute():
+    """width/height attributes with non-numeric values should not raise."""
+    html = '<img src="flyer.jpg" width="auto" height="auto">'
+    links = crawl.get_image_links(_soup(html), "http://track.com")
+    assert any("flyer.jpg" in u for u in links)
+
+
+def test_crawl_track_returns_empty_when_homepage_unreachable():
+    """If fetch_page returns None for the homepage, crawl_track returns []."""
+    state = {"seen_urls": []}
+    with patch("crawl.fetch_page", return_value=None):
+        result = crawl.crawl_track({"name": "Dead Track", "url": "http://dead.com"}, state)
+    assert result == []
+
+
+def test_crawl_racingjunk_breaks_on_fetch_none():
+    """If fetch_page returns None mid-pagination, the loop stops cleanly."""
+    state = {"seen_urls": [], "racingjunk_events": []}
+    with patch("crawl.fetch_page", return_value=None), \
+         patch("crawl.time.sleep"):
+        result = crawl.crawl_racingjunk(
+            {"url": "http://rj.com", "drag_racing_url": "http://rj.com/drag"},
+            state,
+        )
+    assert result == []
