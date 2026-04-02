@@ -52,6 +52,18 @@ You can list the available project shortcuts with:
 make
 ```
 
+The single additive full workflow is:
+
+```bash
+make run
+```
+
+To run tests:
+
+```bash
+make test
+```
+
 ## Operations
 
 Operational commands and processing workflows live in [docs/OPERATIONS.md](docs/OPERATIONS.md).

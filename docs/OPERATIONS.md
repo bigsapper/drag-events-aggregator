@@ -41,38 +41,14 @@ Resolution order is:
 ## Crawl + Extract
 
 ```bash
-# Crawl all tracks and all aggregator sources
-make crawl
-
 # Show historical runtime summary from recorded crawl metrics
-make crawl-metrics
+make metrics
 
-# Crawl all tracks and all aggregator sources
+# Full workflow: sync Drive flyers, run enabled live crawl sources, then process flyers/
+make run
+
+# Run the enabled live crawl sources directly
 PYTHONPATH=src python -m drag_events.crawl
-
-# Crawl track websites only
-make crawl-tracks
-
-# Crawl track websites only
-PYTHONPATH=src python -m drag_events.crawl --tracks
-
-# Crawl aggregator sources only
-make crawl-sources
-
-# Crawl aggregator sources only
-PYTHONPATH=src python -m drag_events.crawl --sources
-
-# Crawl a specific track by name
-make crawl-track NAME="Texas Motorplex"
-
-# Crawl a specific track by name
-PYTHONPATH=src python -m drag_events.crawl --track "Texas Motorplex"
-
-# Crawl a specific aggregator source by name
-make crawl-source NAME="Bracketraces.com"
-
-# Crawl a specific aggregator source by name
-PYTHONPATH=src python -m drag_events.crawl --source "Bracketraces.com"
 ```
 
 Crawling automatically triggers extraction and deduplication for any newly downloaded flyers.
@@ -84,16 +60,12 @@ Recoverable and fatal crawl errors from live runs are appended to `runtime/traci
 
 ```bash
 # Sync staged flyer images from Google Drive into flyers/
-make sync-flyers
+PYTHONPATH=src python -m drag_events.flyer_sync
 
-# Sync staged flyer images, then process the flyers/ staging directory
-make sync-flyers
-make process PATHS="flyers"
+# Process the flyers/ staging directory
+PYTHONPATH=src python -m drag_events.process flyers
 
 # Process one or more flyer paths manually
-make process PATHS="path/to/flyer.jpg"
-
-# Process a single flyer image
 PYTHONPATH=src python -m drag_events.process path/to/flyer.jpg
 
 # Process all images in a directory
@@ -106,14 +78,11 @@ PYTHONPATH=src python -m drag_events.process flyer1.jpg flyer2.png
 ## Reset Workflow
 
 ```bash
-# Archive the current dist/events.json without resetting anything else
-make archive-events
-
 # Archive dist/events.json, clear flyers/, reinitialize crawl state, and reinitialize dist/events.json
-make fresh-start
+make reset
 ```
 
-`make fresh-start` creates timestamped backups in `dist/archive/` using the pattern `events-YYYYMMDD-HHMMSS.json`.
+`make reset` creates timestamped backups in `dist/archive/` using the pattern `events-YYYYMMDD-HHMMSS.json`.
 It also clears `runtime/state/flyer_sync_state.json`, so Google Drive-staged flyers become eligible for download again.
 
 ## Development
@@ -121,7 +90,6 @@ It also clears `runtime/state/flyer_sync_state.json`, so Google Drive-staged fly
 ```bash
 pip install -r requirements-dev.txt
 make test
-make coverage
 pytest
 ```
 
@@ -130,15 +98,15 @@ Tests use mocked Claude API calls and temporary file system paths, so no API key
 Logging uses the Python `logging` module and defaults to `INFO` level output. You can override the verbosity with `DRAG_EVENTS_LOG_LEVEL`, for example:
 
 ```bash
-DRAG_EVENTS_LOG_LEVEL=DEBUG make crawl
+DRAG_EVENTS_LOG_LEVEL=DEBUG make run
 ```
 
 Persistent application logging is off by default. To enable it, set `DRAG_EVENTS_LOG_TO_FILE=1`.
 The default file path is `runtime/tracing/drag_events.log`, and you can override it with `DRAG_EVENTS_LOG_FILE`.
 
 ```bash
-DRAG_EVENTS_LOG_TO_FILE=1 make crawl
-DRAG_EVENTS_LOG_TO_FILE=1 DRAG_EVENTS_LOG_FILE=runtime/tracing/custom.log make crawl
+DRAG_EVENTS_LOG_TO_FILE=1 make run
+DRAG_EVENTS_LOG_TO_FILE=1 DRAG_EVENTS_LOG_FILE=runtime/tracing/custom.log make run
 ```
 
 ## Test Flyers
