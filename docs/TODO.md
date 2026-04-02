@@ -10,8 +10,17 @@ Aggregator crawl strategies have already been extracted into dedicated modules u
 requires modifying `crawl.py` to import it and add it to `STRATEGY_MAP`.
 
 - [ ] Add dynamic strategy registration/loading so new aggregator strategies can be added without editing `crawl.py`
-- [ ] Define and document the manual flyer intake workflow:
-  searching for flyers and downloading them currently happens outside this project, so the repo needs a clear operator process for sourcing flyer files externally, staging them in `flyers/`, and then running extraction/deduplication against those local files
+- [ ] Improve the manual flyer intake workflow:
+  flyer sourcing still happens outside this project, but staged intake now syncs from the configured Google Drive folder into `flyers/` for local processing. The remaining work is to refine the operator process around that upstream sourcing workflow.
+
+## Production Follow-Up
+
+- [ ] Detect actual image MIME type from file contents before sending images to Claude instead of trusting the file extension
+- [ ] Downscale or recompress oversized images before Claude submission so images over the 5 MB limit do not fail extraction
+- [ ] Tighten generic image-crawl filtering so logos, sponsor graphics, maps, and other non-flyer assets are less likely to enter the extraction queue
+- [ ] Tighten text-listing filtering so site chrome, navigation labels, and editorial/news content are not treated as event listings
+- [ ] Review and improve event matching/merge logic to reduce false merges between loosely related records
+- [ ] Investigate and fix the text-listing failure seen during production crawl: `'str' object has no attribute 'get'`
 
 ## Data Quality
 

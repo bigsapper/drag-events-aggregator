@@ -4,6 +4,7 @@
 
 | File | Purpose |
 |---|---|
+| `src/drag_events/config/flyer_sources.json` | Google Drive folder used for staged manual flyer intake |
 | `src/drag_events/config/tracks.json` | Individual track websites to crawl (generic image scraper) |
 | `src/drag_events/config/sources.json` | Aggregator sites with custom scraping strategies (RacingJunk, Bracketraces, RSS, etc.) |
 | `src/drag_events/config/track_aliases.json` | Alternate track names mapped to canonical names for deduplication and normalization |
@@ -82,6 +83,13 @@ Recoverable and fatal crawl errors from live runs are appended to `runtime/traci
 ## Manual Processing
 
 ```bash
+# Sync staged flyer images from Google Drive into flyers/
+make sync-flyers
+
+# Sync staged flyer images, then process the flyers/ staging directory
+make sync-flyers
+make process PATHS="flyers"
+
 # Process one or more flyer paths manually
 make process PATHS="path/to/flyer.jpg"
 
@@ -106,6 +114,7 @@ make fresh-start
 ```
 
 `make fresh-start` creates timestamped backups in `dist/archive/` using the pattern `events-YYYYMMDD-HHMMSS.json`.
+It also clears `runtime/state/flyer_sync_state.json`, so Google Drive-staged flyers become eligible for download again.
 
 ## Development
 
@@ -141,10 +150,11 @@ DRAG_EVENTS_LOG_TO_FILE=1 DRAG_EVENTS_LOG_FILE=runtime/tracing/custom.log make c
 | File/Dir | Purpose |
 |---|---|
 | `.venv/` | Python virtual environment |
-| `flyers/` | Downloaded flyer images (auto-deleted after successful processing) |
+| `flyers/` | Temporary flyer staging area for crawled images and Google Drive-synced manual intake (auto-deleted after successful processing) |
 | `dist/archive/` | Archived `dist/events.json` snapshots created during reset workflows |
 | `runtime/` | Operational state and telemetry for crawls |
 | `runtime/state/crawl_state.json` | Crawl state (seen URLs, known listings); checked in and resettable |
+| `runtime/state/flyer_sync_state.json` | Google Drive flyer sync state (already staged file ids); checked in and resettable |
 | `runtime/tracing/drag_events.log` | Optional persistent application log when `DRAG_EVENTS_LOG_TO_FILE=1` is enabled |
 | `runtime/tracing/crawl_errors.log` | Persistent crawl error log for troubleshooting failed runs |
 | `runtime/tracing/crawl_metrics.jsonl` | Historical crawl run metrics used for runtime estimation |

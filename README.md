@@ -4,7 +4,7 @@ Crawls drag racing track websites and aggregator sources for event flyers, extra
 
 ## How It Works
 
-1. **Crawl** — scrapes track websites and aggregator sources for event flyer images and text listings
+1. **Crawl / Sync** — scrapes track websites and aggregator sources for event flyer images and text listings, and can stage manual flyer intake from Google Drive
 2. **Extract** — sends flyer images to Claude vision (Sonnet) or text listings to Claude (Haiku) to extract structured event data
 3. **Dedup** — uses perceptual hashing to detect duplicate images and track+date matching to merge repeat flyers for the same event
 4. **Store** — writes results to `dist/events.json`
@@ -76,7 +76,8 @@ drag-events-aggregator/
 │   └── TODO.md            # Project backlog and productionization notes
 ├── runtime/
 │   ├── state/
-│   │   └── crawl_state.json    # Crawl state (seen URLs, known listings)
+│   │   ├── crawl_state.json    # Crawl state (seen URLs, known listings)
+│   │   └── flyer_sync_state.json # Staged Google Drive flyer ids already downloaded
 │   └── tracing/
 │       ├── crawl_errors.log        # Persistent crawl error log for fetch, extraction, and run failures
 │       ├── crawl_metrics.jsonl     # One JSON record per crawl run with timings and counts
@@ -84,11 +85,13 @@ drag-events-aggregator/
 ├── src/
 │   └── drag_events/
 │       ├── config/
+│       │   ├── flyer_sources.json # Google Drive folder used for staged manual flyer intake
 │       │   ├── track_aliases.json # Track alias normalization data
 │       │   ├── tracks.json        # Track website definitions
 │       │   └── sources.json       # Aggregator source definitions
 │       ├── crawl.py            # Web crawler for tracks and aggregator sources
 │       ├── extract.py          # Claude vision extraction for flyer images
+│       ├── flyer_sync.py       # Google Drive staging sync into flyers/
 │       ├── extract_text.py     # Claude text extraction for text-based listings
 │       ├── dedup.py            # Perceptual hash and event-level deduplication
 │       ├── process.py          # Orchestrates extraction + dedup for flyer files

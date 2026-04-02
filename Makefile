@@ -12,6 +12,7 @@ help:
 	@printf "  make crawl-sources           Crawl aggregator sources only\n"
 	@printf "  make crawl-track NAME=\"...\"   Crawl one track by name\n"
 	@printf "  make crawl-source NAME=\"...\"  Crawl one source by name\n"
+	@printf "  make sync-flyers             Download staged flyer images from the configured Google Drive folder\n"
 	@printf "  make process PATHS=\"...\"      Process one or more flyer paths manually\n"
 	@printf "  make crawl-metrics           Show historical crawl timing summary\n"
 	@printf "  make archive-events          Archive dist/events.json with a timestamp\n"
@@ -47,6 +48,9 @@ crawl-source:
 	@if [ -z "$(NAME)" ]; then echo 'Usage: make crawl-source NAME="Bracketraces.com"'; exit 1; fi
 	$(PYTHONPATH_RUN) $(PYTHON) -m drag_events.crawl --source "$(NAME)"
 
+sync-flyers:
+	$(PYTHONPATH_RUN) $(PYTHON) -m drag_events.flyer_sync
+
 process:
 	@if [ -z "$(PATHS)" ]; then echo 'Usage: make process PATHS="path/to/flyer.jpg [more paths...]"'; exit 1; fi
 	$(PYTHONPATH_RUN) $(PYTHON) -m drag_events.process $(PATHS)
@@ -67,8 +71,9 @@ archive-events:
 fresh-start: archive-events
 	@mkdir -p flyers dist runtime runtime/state runtime/tracing
 	@printf '{\n  "seen_urls": [],\n  "racingjunk_events": [],\n  "myracepass_events": [],\n  "tmccc_events": []\n}\n' > runtime/state/crawl_state.json
+	@printf '{\n  "downloaded_drive_file_ids": []\n}\n' > runtime/state/flyer_sync_state.json
 	@find flyers -type f -delete
 	@printf "[]\n" > dist/events.json
-	@echo "Reset complete: cleared flyers/, reinitialized runtime/state/crawl_state.json, and reinitialized dist/events.json"
+	@echo "Reset complete: cleared flyers/, reinitialized runtime/state/*.json, and reinitialized dist/events.json"
 
-.PHONY: help test coverage crawl crawl-tracks crawl-sources crawl-track crawl-source process crawl-metrics archive-events fresh-start
+.PHONY: help test coverage crawl crawl-tracks crawl-sources crawl-track crawl-source sync-flyers process crawl-metrics archive-events fresh-start

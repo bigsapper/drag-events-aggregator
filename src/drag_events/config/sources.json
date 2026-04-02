@@ -3,6 +3,7 @@
     "name": "Bracketraces.com",
     "url": "https://www.bracketraces.com",
     "strategy": "bracketraces",
+    "enabled": false,
     "notes": "Individual event pages contain actual flyer images (.webp). No central listing — known event page paths listed below.",
     "event_pages": [
       "/event-spring-fling-vegas.php",
@@ -16,6 +17,7 @@
     "name": "RacingJunk Events",
     "url": "https://www.racingjunk.com/events/all-types",
     "strategy": "racingjunk",
+    "enabled": false,
     "notes": "Text-only event listings, numbered pagination (~20/page). Filter by drag racing type. No flyer images — yields structured text data directly.",
     "drag_racing_url": "https://www.racingjunk.com/events/Races-Drag-Racing"
   },
@@ -23,6 +25,7 @@
     "name": "MyRacePass",
     "url": "https://www.myracepass.com/events/today",
     "strategy": "myracepass",
+    "enabled": false,
     "notes": "REST API available at api.myracepass.com/v2/ but requires API key. HTML pages are publicly crawlable. Text data only, no flyers.",
     "api_url": "https://api.myracepass.com/v2/",
     "api_key_required": true
@@ -31,12 +34,14 @@
     "name": "TMCCC",
     "url": "https://tmccc.org/events",
     "strategy": "tmccc",
+    "enabled": true,
     "notes": "GoDaddy site builder calendar. Events use data-aid attributes for reliable scraping. Static fetch only captures initially visible events — JS-loaded 'More Events' are not retrieved."
   },
   {
     "name": "Dragzine RSS",
     "url": "https://www.dragzine.com/feed/",
     "strategy": "rss",
+    "enabled": false,
     "notes": "WordPress RSS feed. Covers event news and race coverage, not upcoming event calendars. Useful for discovering events after the fact."
   }
 ]
