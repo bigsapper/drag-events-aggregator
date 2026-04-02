@@ -58,6 +58,7 @@ from .crawl_runtime import (
     summarize_metrics as _summarize_metrics,
 )
 from .dedup import find_same_event, merge_events, track_slug
+from .event_filters import is_in_scope_event, is_in_scope_listing, is_past_event
 from .extract_text import extract_from_text
 from .logging_utils import get_logger
 from .retry_utils import execute_with_retries, get_retry_telemetry, reset_retry_telemetry
@@ -383,13 +384,14 @@ def run_extraction(downloaded: list[Path], text_listings: list[dict]) -> dict:
             "new": 0,
             "merged": 0,
             "duplicate": 0,
+            "skipped": 0,
             "error": 0,
             "total_events": 0,
             "retries": get_retry_telemetry().get("claude", {}),
         }
 
     events = process.load_events()
-    counts = {"new": 0, "merged": 0, "duplicate": 0, "error": 0}
+    counts = {"new": 0, "merged": 0, "duplicate": 0, "skipped": 0, "error": 0}
 
     # Image flyers → Claude vision
     if downloaded:
@@ -399,7 +401,7 @@ def run_extraction(downloaded: list[Path], text_listings: list[dict]) -> dict:
         try:
             outcome, event = process.process_flyer(str(path), events)
             counts[outcome] += 1
-            label = {"new": "NEW", "merged": "UPDATED", "duplicate": "SKIPPED"}[outcome]
+            label = {"new": "NEW", "merged": "UPDATED", "duplicate": "SKIPPED", "skipped": "SKIPPED"}[outcome]
             LOGGER.info(f"  [{label}] {event.get('title', '?')} — {event.get('track', {}).get('name', '?')}")
             if "test-flyers" not in path.parts:
                 path.unlink()
@@ -415,7 +417,22 @@ def run_extraction(downloaded: list[Path], text_listings: list[dict]) -> dict:
         title = listing.get("title", "?")
         LOGGER.info(f"\nParsing: {title}")
         try:
+            if not is_in_scope_listing(listing):
+                counts["skipped"] += 1
+                LOGGER.info(f"  [SKIPPED] {title} — out of scope")
+                continue
+
             extracted = extract_from_text(listing)
+
+            if not is_in_scope_event(extracted):
+                counts["skipped"] += 1
+                LOGGER.info(f"  [SKIPPED] {title} — out of scope")
+                continue
+
+            if is_past_event(extracted):
+                counts["skipped"] += 1
+                LOGGER.info(f"  [SKIPPED] {title} — past event")
+                continue
 
             # Check for same event already in DB
             same = find_same_event(extracted, events)
@@ -459,7 +476,10 @@ def run_extraction(downloaded: list[Path], text_listings: list[dict]) -> dict:
 
     process.save_events(events)
     LOGGER.info(f"\n{len(events)} total events in database.")
-    LOGGER.info(f"  {counts['new']} new  |  {counts['merged']} updated  |  {counts['duplicate']} duplicate  |  {counts['error']} errors")
+    LOGGER.info(
+        f"  {counts['new']} new  |  {counts['merged']} updated  |  {counts['duplicate']} duplicate  |  "
+        f"{counts['skipped']} skipped  |  {counts['error']} errors"
+    )
     return {
         "elapsed_seconds": round(time.perf_counter() - start, 2),
         "image_flyers": len(downloaded),
@@ -467,6 +487,7 @@ def run_extraction(downloaded: list[Path], text_listings: list[dict]) -> dict:
         "new": counts["new"],
         "merged": counts["merged"],
         "duplicate": counts["duplicate"],
+        "skipped": counts["skipped"],
         "error": counts["error"],
         "total_events": len(events),
         "retries": get_retry_telemetry().get("claude", {}),

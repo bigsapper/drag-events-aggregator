@@ -1,0 +1,1450 @@
+[
+  {
+    "id": "91f510a7-fbf3-4472-86c1-f80527c31e01",
+    "title": "Race #1 Xtreme Raceway Park sponsored by White Knight Racing",
+    "event_type": "bracket",
+    "track": {
+      "id": "xtreme",
+      "name": "Xtreme Raceway Park",
+      "city": null,
+      "state": null
+    },
+    "dates": {
+      "start": "2026-03-22"
+    },
+    "times": {
+      "gates_open": "09:00",
+      "race_start": "09:00"
+    },
+    "confidence": 0.6,
+    "notes": "Sponsored by White Knight Racing. Gates open at 9am, event runs until 5pm. Source: https://tmccc.org/events",
+    "unclear_fields": [
+      "city",
+      "state",
+      "event_type"
+    ],
+    "flyers": [
+      {
+        "file": "https://tmccc.org/events",
+        "phash": null,
+        "processed_at": "2026-04-02T03:40:46.556023+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T03:40:46.556034+00:00",
+    "updated_at": "2026-04-02T03:40:46.556036+00:00"
+  },
+  {
+    "id": "bf3397d6-07a7-4b9a-9b92-f7dbff9f14df",
+    "title": "Race #2 Thunder Valley Raceway Park",
+    "event_type": "bracket",
+    "track": {
+      "id": "thunder-valley",
+      "name": "Thunder Valley Raceway Park",
+      "city": null,
+      "state": null
+    },
+    "dates": {
+      "start": "2026-04-12"
+    },
+    "times": {
+      "race_start": "08:00"
+    },
+    "confidence": 0.65,
+    "notes": "Event duration appears to span 8am-4pm. Location text could not be parsed for city/state - only track name available. Source: https://tmccc.org/events",
+    "unclear_fields": [
+      "city",
+      "state",
+      "location_text_interpretation"
+    ],
+    "flyers": [
+      {
+        "file": "https://tmccc.org/events",
+        "phash": null,
+        "processed_at": "2026-04-02T03:40:48.633142+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T03:40:48.633154+00:00",
+    "updated_at": "2026-04-02T03:40:48.633157+00:00"
+  },
+  {
+    "id": "2aa281fb-a03b-49fa-b22a-cfbade8e8ac2",
+    "title": "Race #3 Little River Dragway",
+    "event_type": "points_race",
+    "track": {
+      "id": "little-river-dragway",
+      "name": "Little River Dragway",
+      "city": null,
+      "state": null
+    },
+    "dates": {
+      "start": "2026-04-25"
+    },
+    "times": {
+      "race_start": "15:00"
+    },
+    "confidence": 0.6,
+    "unclear_fields": [
+      "location_text",
+      "gates_open_or_end_time"
+    ],
+    "notes": "Location appears to be missing city/state information. Time text shows '3pm -' suggesting race start at 3pm, but '11pm' appears to be unclear - may indicate late finish time or data entry error. Event appears to be part of a racing series (TMCCC based on source URL).",
+    "series": "TMCCC",
+    "flyers": [
+      {
+        "file": "https://tmccc.org/events",
+        "phash": null,
+        "processed_at": "2026-04-02T03:40:51.132113+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T03:40:51.132128+00:00",
+    "updated_at": "2026-04-02T03:40:51.132130+00:00"
+  },
+  {
+    "id": "b4cefe1c-15e9-434e-9951-31c87647b8cb",
+    "title": "Race #4 Wichita Falls Raceway Park",
+    "event_type": "bracket",
+    "track": {
+      "id": "wichita-falls-tx",
+      "name": "Wichita Falls Raceway Park",
+      "city": "Wichita Falls",
+      "state": "TX"
+    },
+    "dates": {
+      "start": "2026-05-10"
+    },
+    "times": {
+      "gates_open": "08:00",
+      "race_start": "16:00"
+    },
+    "series": "TMCCC",
+    "confidence": 0.75,
+    "unclear_fields": [
+      "event_type",
+      "location_text_interpretation"
+    ],
+    "notes": "Event appears to be part of TMCCC series based on source URL. Location text layout was ambiguous - interpreted 4pm as race end time rather than location detail. Event type inferred as bracket racing based on generic race numbering format typical of local bracket series.",
+    "flyers": [
+      {
+        "file": "https://tmccc.org/events",
+        "phash": null,
+        "processed_at": "2026-04-02T03:40:53.705302+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T03:40:53.705313+00:00",
+    "updated_at": "2026-04-02T03:40:53.705316+00:00"
+  },
+  {
+    "id": "3f3200c0-de02-47fd-bb17-cfda1cff3eaa",
+    "title": "Race #5 Texas Motorplex",
+    "event_type": "unknown",
+    "track": {
+      "id": "texas-motorplex",
+      "name": "Texas Motorplex",
+      "city": null,
+      "state": null
+    },
+    "dates": {
+      "start": "2026-05-31"
+    },
+    "times": {
+      "gates_open": "08:00"
+    },
+    "confidence": 0.5,
+    "unclear_fields": [
+      "location_text (appears to contain time, not location)",
+      "event_type (cannot infer from title)",
+      "city and state for track"
+    ],
+    "notes": "Time range appears malformed: '8am -' with '4pm' in location_text field. Gates open time inferred as 08:00. Actual track location (city/state) could not be reliably extracted. May need to validate the original source data structure.\"",
+    "flyers": [
+      {
+        "file": "https://tmccc.org/events",
+        "phash": null,
+        "processed_at": "2026-04-02T03:40:56.347506+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T03:40:56.347517+00:00",
+    "updated_at": "2026-04-02T03:40:56.347519+00:00"
+  },
+  {
+    "id": "2cbf4615-d7fc-44ba-88a6-d27a2cece79d",
+    "title": "Race #6 Thunder Valley Raceway Park",
+    "event_type": "points_race",
+    "track": {
+      "id": "thunder-valley",
+      "name": "Thunder Valley Raceway Park",
+      "city": null,
+      "state": null
+    },
+    "dates": {
+      "start": "2026-06-07"
+    },
+    "times": {
+      "gates_open": "09:00",
+      "race_start": "09:00"
+    },
+    "contact": {
+      "website": "https://tmccc.org/events"
+    },
+    "confidence": 0.65,
+    "unclear_fields": [
+      "location_text appears to contain time info instead of city/state",
+      "time_text and location_text seem transposed or malformed"
+    ],
+    "notes": "Data quality issue: location_text contains \"4pm\" which appears to be end time, not location. City and state could not be extracted from provided location text. Time range appears to be 9am-4pm based on available fields.",
+    "flyers": [
+      {
+        "file": "https://tmccc.org/events",
+        "phash": null,
+        "processed_at": "2026-04-02T03:40:58.723504+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T03:40:58.723515+00:00",
+    "updated_at": "2026-04-02T03:40:58.723517+00:00"
+  },
+  {
+    "id": "1aa0bf91-07ce-4549-ac91-851d039daa38",
+    "title": "Race #7 Xtreme Raceway Park",
+    "event_type": "bracket",
+    "track": {
+      "id": "xtreme",
+      "name": "Xtreme Raceway Park",
+      "city": null,
+      "state": null
+    },
+    "dates": {
+      "start": "2026-06-28"
+    },
+    "times": {
+      "gates_open": "09:00",
+      "race_start": "16:00"
+    },
+    "confidence": 0.65,
+    "unclear_fields": [
+      "location_text",
+      "track.city",
+      "track.state"
+    ],
+    "notes": "Location text appears to be incomplete (shows '4pm' in location field). Event appears to be part of TMCCC series based on source URL. City and state could not be determined from provided text.",
+    "flyers": [
+      {
+        "file": "https://tmccc.org/events",
+        "phash": null,
+        "processed_at": "2026-04-02T03:41:00.974934+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T03:41:00.974949+00:00",
+    "updated_at": "2026-04-02T03:41:00.974953+00:00"
+  },
+  {
+    "id": "abf1fdb7-2efe-4891-98ca-fa0921f4527b",
+    "title": "Race #8 Xtreme Raceway Park",
+    "event_type": "points_race",
+    "track": {
+      "id": "xtreme",
+      "name": "Xtreme Raceway Park",
+      "city": null,
+      "state": null
+    },
+    "dates": {
+      "start": "2026-08-30"
+    },
+    "times": {
+      "gates_open": "09:00",
+      "race_start": "16:00"
+    },
+    "series": "TMCCC",
+    "confidence": 0.65,
+    "unclear_fields": [
+      "track.city",
+      "track.state",
+      "location_text_format"
+    ],
+    "notes": "Location data appears malformed - \"4pm\" appears in location_text field but is actually race end time. Source: tmccc.org suggests TMCCC sanctioning body.",
+    "flyers": [
+      {
+        "file": "https://tmccc.org/events",
+        "phash": null,
+        "processed_at": "2026-04-02T03:41:03.537098+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T03:41:03.537108+00:00",
+    "updated_at": "2026-04-02T03:41:03.537111+00:00"
+  },
+  {
+    "id": "49c50e66-c473-4aa2-b3d4-dfa5b3336cb2",
+    "title": "Race #9 Xtreme Raceway Park",
+    "event_type": "bracket",
+    "track": {
+      "id": "xtreme",
+      "name": "Xtreme Raceway Park",
+      "city": null,
+      "state": null
+    },
+    "dates": {
+      "start": "2026-09-13"
+    },
+    "times": {
+      "gates_open": "09:00",
+      "race_start": "16:00"
+    },
+    "confidence": 0.65,
+    "unclear_fields": [
+      "location_text - no city/state found",
+      "event_type - inferred as bracket racing based on 'Race #9' nomenclature, but could be points race or other series event"
+    ],
+    "notes": "Appears to be part of a series (Race #9) based on TMCCC organization (Tucson Mountain Car Club). Time text parsing shows gates open at 9am with event ending at 4pm, though race start time not explicitly specified.",
+    "flyers": [
+      {
+        "file": "https://tmccc.org/events",
+        "phash": null,
+        "processed_at": "2026-04-02T03:41:05.993059+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T03:41:05.993069+00:00",
+    "updated_at": "2026-04-02T03:41:05.993071+00:00"
+  },
+  {
+    "id": "a7bd9947-fcac-4d3b-a23e-573e0fdf7c7a",
+    "title": "Race #10 Concho Valley Dragway",
+    "event_type": "points_race",
+    "track": {
+      "id": "concho-valley-dragway",
+      "name": "Concho Valley Dragway",
+      "city": null,
+      "state": null
+    },
+    "dates": {
+      "start": "2026-09-19"
+    },
+    "times": {
+      "race_start": "15:00"
+    },
+    "confidence": 0.65,
+    "unclear_fields": [
+      "location_text",
+      "contact_information"
+    ],
+    "notes": "Source: https://tmccc.org/events. Location text appears to contain end time (11pm) rather than city/state. Track city/state not provided in source material.",
+    "flyers": [
+      {
+        "file": "https://tmccc.org/events",
+        "phash": null,
+        "processed_at": "2026-04-02T03:41:08.451384+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T03:41:08.451395+00:00",
+    "updated_at": "2026-04-02T03:41:08.451398+00:00"
+  },
+  {
+    "id": "4628c489-8954-49f9-b2ce-08ed28bda4b9",
+    "title": "Race #11 Little River Dragway",
+    "event_type": "points_race",
+    "track": {
+      "id": "little-river-dragway",
+      "name": "Little River Dragway",
+      "city": null,
+      "state": null
+    },
+    "dates": {
+      "start": "2026-10-11"
+    },
+    "times": {
+      "gates_open": "08:00",
+      "race_start": "16:00"
+    },
+    "confidence": 0.65,
+    "unclear_fields": [
+      "location_text_insufficient",
+      "city_state_not_provided"
+    ],
+    "notes": "Location text appears malformed - shows '4pm' in location field instead of city/state. Time range interpreted as 8am gates open to 4pm event end. Date marked as changed on original flyer. Event appears to be part of TMCCC series based on source URL.",
+    "flyers": [
+      {
+        "file": "https://tmccc.org/events",
+        "phash": null,
+        "processed_at": "2026-04-02T03:41:10.950089+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T03:41:10.950103+00:00",
+    "updated_at": "2026-04-02T03:41:10.950107+00:00"
+  },
+  {
+    "id": "a762a9da-e567-416a-a436-9f6b6b31798e",
+    "title": "Race #12 Thunder Valley Raceway Park",
+    "event_type": "bracket",
+    "track": {
+      "id": "thunder-valley",
+      "name": "Thunder Valley Raceway Park",
+      "city": null,
+      "state": null
+    },
+    "dates": {
+      "start": "2026-10-24"
+    },
+    "times": {
+      "race_start": "15:00"
+    },
+    "confidence": 0.6,
+    "unclear_fields": [
+      "location_text_appears_invalid",
+      "times_unclear",
+      "city_and_state_not_provided"
+    ],
+    "notes": "The location_text (11pm) appears to be misaligned with the time_text (3pm -). Unable to extract city/state from provided location data. Event source: tmccc.org",
+    "flyers": [
+      {
+        "file": "https://tmccc.org/events",
+        "phash": null,
+        "processed_at": "2026-04-02T03:41:12.840796+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T03:41:12.840811+00:00",
+    "updated_at": "2026-04-02T03:41:12.840815+00:00"
+  },
+  {
+    "id": "e47b4610-8b39-44ed-b11d-dcb7d8bb8397",
+    "title": "Race #13 Xtreme Raceway Park",
+    "event_type": "bracket",
+    "track": {
+      "id": "xtreme",
+      "name": "Xtreme Raceway Park",
+      "city": null,
+      "state": null
+    },
+    "dates": {
+      "start": "2026-11-08"
+    },
+    "times": {
+      "gates_open": "09:00",
+      "race_start": "09:00"
+    },
+    "confidence": 0.65,
+    "unclear_fields": [
+      "city",
+      "state",
+      "location_text_interpretation"
+    ],
+    "notes": "Location text appears malformed - '6pm' listed under location rather than being a time. Source: tmccc.org (likely Texas Mountain Cordova Corvette Club or similar Texas-based organization). Event appears to be part of a points series or club bracket racing event.",
+    "flyers": [
+      {
+        "file": "https://tmccc.org/events",
+        "phash": null,
+        "processed_at": "2026-04-02T03:41:14.926277+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T03:41:14.926288+00:00",
+    "updated_at": "2026-04-02T03:41:14.926290+00:00"
+  },
+  {
+    "id": "68808066-3881-4585-bea2-eae2eea75ca8",
+    "title": "2026 TMCCC Banquet",
+    "event_type": "unknown",
+    "track": {
+      "id": "unknown",
+      "name": "<UNKNOWN>",
+      "city": null,
+      "state": null
+    },
+    "dates": {
+      "start": "2026-12-05"
+    },
+    "times": {
+      "gates_open": "18:00"
+    },
+    "confidence": 0.3,
+    "unclear_fields": [
+      "event_type",
+      "track",
+      "location_text"
+    ],
+    "notes": "This appears to be a banquet event rather than a traditional drag racing event. Time text appears malformed (6pm - 10pm split across time and location fields). Location information not provided - only TMCCC website source given.",
+    "flyers": [
+      {
+        "file": "https://tmccc.org/events",
+        "phash": null,
+        "processed_at": "2026-04-02T03:41:17.052356+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T03:41:17.052367+00:00",
+    "updated_at": "2026-04-02T03:41:17.052370+00:00"
+  },
+  {
+    "id": "09e03443-3ce2-4594-aa67-705c241746a4",
+    "title": "Mega Bucks 2026 presented by Oakley Motorsports Competition Engines",
+    "event_type": "bracket",
+    "track": {
+      "id": "us-60-dragway-ky",
+      "name": "US 60 Dragway",
+      "city": "Hardinsburg",
+      "state": "KY"
+    },
+    "dates": {
+      "start": "2026-05-29",
+      "end": "2026-05-31"
+    },
+    "series": "Oakley Motorsports Competition Engines",
+    "classes": [
+      "Super Pro / Bracket (Friday $20,000 to Win)",
+      "Super Pro / Bracket (Saturday $20,000 to Win)",
+      "Super Pro / Bracket (Sunday $10,000 to Win)",
+      "Junior Dragsters (Saturday & Sunday only, $500 to Win)",
+      "Mega Bucks Brawl (Early Bird Thursday 5/28, $5,000 to Win)",
+      "Oakley Elite 8 (Saturday Night 8-Car Shootout)"
+    ],
+    "fees": {
+      "entry": "Single Weekend Entry (Fri-Sat-Sun): $699 | Double Weekend Entry (Fri-Sat-Sun): $1,200 | Mega Bucks Brawl: $100 Entry / $50 Buy Back | Junior Dragsters: $100 Sat/Sun Entry, $65 Single Day Entry / $20 Buy Back | Fri/Sat Main: $150 Re-Entry | Sunday: $100 Re-Entry",
+      "spectator": "Thursday-Sunday $75 | Friday-Sunday $60 | $20/Day | Kids 12 & Under FREE"
+    },
+    "times": {
+      "gates_open": "08:00",
+      "registration_opens": "09:00",
+      "race_start": "08:00"
+    },
+    "contact": {
+      "phone": "(270)859-4100",
+      "website": "www.us60dragracing.com"
+    },
+    "flyers": [
+      {
+        "file": "622345643_1762760838498481_5443507387812239288_n.jpg",
+        "phash": "c0ab1b1a5f3f2968",
+        "processed_at": "2026-04-02T03:42:35.616530+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T03:42:35.616722+00:00",
+    "updated_at": "2026-04-02T03:42:35.616727+00:00"
+  },
+  {
+    "id": "53274cd5-3494-4222-8063-d4ea768cdb64",
+    "title": "Inaugural Memorial Day Coal Rush Twenties",
+    "event_type": "bracket",
+    "track": {
+      "id": "ellis-57-il",
+      "name": "Ellis 57 Dragstrip",
+      "city": "Benton",
+      "state": "IL"
+    },
+    "dates": {
+      "start": "2026-05-22",
+      "end": "2026-05-24"
+    },
+    "series": "Wasting Fuel Promotions",
+    "classes": [
+      "Super Pro / Pro (Box)",
+      "No Box",
+      "Junior Dragsters"
+    ],
+    "fees": {
+      "entry": "$575 Weekend Single / $1,050 Weekend Double. Pre-entry: $100 due, pay $475 at the gate. 300 entry cap, 32 No Box max. Junior Dragsters: $300 Weekend Entry (16 entries max). Re-entry: $100 (Friday), $150 (Sat/Sun), $20 (Jr. Dragsters). $150 Single Day Entry (Friday). Crew: $40 Weekend / $15 daily; 1 free crew per racer.",
+      "spectator": null
+    },
+    "times": {
+      "gates_open": "07:30",
+      "registration_opens": null,
+      "race_start": "08:30"
+    },
+    "contact": {
+      "phone": "Jesse Fritts: 217-294-3246 / Adam Jakupcak: 815-822-2493",
+      "website": "wastingfuelpromotions.com",
+      "email": null
+    },
+    "notes": "PRESENTED BY: VP Racing Fuels. Address: 6112 Hill City Road, Benton IL 62812. ALL MONEY IS GUARANTEED. Pre-entry opens March 25.\n\nFRIDAY ($5,000 to win): $1,000 r/u | $300 semis | $200 1/4s | $100 1/8s | $500 No Box Bonus | $150 single day entry | $100 re-entry.\n\nSAT/SUN \u2014 FuelTech / FAB Machining ($20,000 to win): $5,000 r/u | $1,000 semis | $500 1/4s | $100 round money starting Round 3 win | $150 re-entry | $1,000 No Box Bonus. *If over 15 cars in No Box, pay increases to $2,000 to win / $500 to R/U for Sat/Sun.\n\nJUNIOR DRAGSTERS \u2014 FuelTech ($1,000 to win): $200 r/u | $50 semi | $20 re-entry | $300 weekend entry | Only 16 entries! Contested Fri\u2013Sun.\n\nSCHEDULE:\n- Thursday: Track-operated Test & Tune.\n- Friday: Gates Open 7:30am | TT 8:30am | Elims to Follow | Second TT after E3.\n- Saturday: Gates Open 7:30am | 8:30am New Entry TT | Junior TT after box re-entry | Nick Agresta Wheelie Contest after elims completed.\n- Sunday: Gates Open 7:30am | 8:30am New Entry TT | Junior TT after box re-entry.\n\nSPECIAL RULES: No Box can only enter No Box ONCE. Double MUST be in Box. Nick Agresta \"Do a Wheelie\" Contest on Saturday Night.",
+    "confidence": 0.97,
+    "unclear_fields": [
+      "registration_opens"
+    ],
+    "flyers": [
+      {
+        "file": "632584573_1778183146956250_3680264009272569145_n.jpg",
+        "phash": "d1abebe541436465",
+        "processed_at": "2026-04-02T03:42:57.739909+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T03:42:57.740079+00:00",
+    "updated_at": "2026-04-02T03:42:57.740084+00:00"
+  },
+  {
+    "id": "c99503fd-257f-45d7-9330-95a85d931df7",
+    "title": "2nd Annual Beacon Doorcar Battle",
+    "event_type": "bracket",
+    "track": {
+      "id": "beacon-dragway-ky",
+      "name": "Beacon Dragway",
+      "city": "Paducah",
+      "state": "KY"
+    },
+    "dates": {
+      "start": "2026-06-04",
+      "end": "2026-06-07"
+    },
+    "classes": [
+      "Door Car (Main Event)",
+      "Jr Dragster",
+      "64-Car Shootout",
+      "Gamblers Race (Thursday Warmup)",
+      "Test N Tune (Thursday)",
+      "Pit Vehicle Race (Friday Night)"
+    ],
+    "fees": {
+      "entry": "Thursday Test N Tune: $50 | Thursday Warmup Entry: $80, Buyback $50 (1st Rnd Only) | Fri/Sat/Sun 1-Day Entry: $150, Re-Entry $100 | Weekend Single Entry: $375 | Weekend Double Entry: $575 | Jr Dragster Entry: $45, Buyback $25 (1st Only) | 64-Car Shootout Entry: $150 | Bottom Bulb Bonus: $500 (Fri/Sat/Sun, ran separate)",
+      "spectator": "$20/Day or $50/Weekend | Kids 12 & Under FREE"
+    },
+    "times": {
+      "gates_open": "10:00",
+      "registration_opens": null,
+      "race_start": "19:15"
+    },
+    "contact": {
+      "phone": "615-389-8044",
+      "email": "ryanfrye16@yahoo.com",
+      "website": null
+    },
+    "series": null,
+    "flyers": [
+      {
+        "file": "634804686_1778184443622787_2978564948269638418_n.jpg",
+        "phash": "941b310f8ff06a73",
+        "processed_at": "2026-04-02T03:43:22.703476+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T03:43:22.703598+00:00",
+    "updated_at": "2026-04-02T03:43:22.703601+00:00"
+  },
+  {
+    "id": "61ebf4d5-a235-41e2-afd9-f66ce95af0a9",
+    "title": "Erson Cams Midwest Bracketfest Powered by Fuel Factory",
+    "event_type": "bracket",
+    "series": "GallStar Bracket Races",
+    "track": {
+      "id": "eddyville-ia",
+      "name": "Eddyville Raceway Park",
+      "city": "Oskaloosa",
+      "state": "IA"
+    },
+    "dates": {
+      "start": "2026-05-01",
+      "end": "2026-05-03"
+    },
+    "classes": [
+      "Back Tire Race (Rick Livingston Sr. Memorial)",
+      "Jr. Dragster Shoutout",
+      "No Box Bonus",
+      "All Run Class"
+    ],
+    "fees": {
+      "entry": "Back Tire Race: $50 (includes one time hit); Jr. Dragster Single Day: $50 (All Run Class, no entry cap); Main Event Single Day Pre-Entry: $135 (gate available single day: $165); Test & Tune: $40; Re-Entry: $75; Spectators/Crew: $15/day or $30/weekend (kids 12 & under free)",
+      "spectator": "$15/day or $30/weekend (kids 12 & under free)"
+    },
+    "times": {
+      "gates_open": "13:00",
+      "registration_opens": "08:00",
+      "race_start": "08:00"
+    },
+    "contact": {
+      "phone": "605-933-1698",
+      "email": "tom@gallstartv.com",
+      "website": "gallstartv.com/bracketraces"
+    },
+    "flyers": [
+      {
+        "file": "640052970_1785577219550176_526734645165398999_n.jpg",
+        "phash": "c5ef875611543cb8",
+        "processed_at": "2026-04-02T03:43:49.655788+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T03:43:49.655964+00:00",
+    "updated_at": "2026-04-02T03:43:49.655971+00:00"
+  },
+  {
+    "id": "469d8b73-3bff-4eb3-abc7-0764c6937e3c",
+    "title": "2nd Annual Beacon Bottom Bulb BOGO Bash",
+    "event_type": "bracket",
+    "track": {
+      "id": "beacon-dragway-ky",
+      "name": "Beacon Dragway",
+      "city": "Paducah",
+      "state": "KY"
+    },
+    "dates": {
+      "start": "2026-06-19",
+      "end": "2026-06-21"
+    },
+    "times": {
+      "gates_open": "10:00",
+      "registration_opens": "09:00",
+      "race_start": "19:15"
+    },
+    "classes": [
+      "Gamblers",
+      "Test N Tune",
+      "Main Event (Saturday $10,000 to Win)",
+      "Main Event (Sunday $10,000 to Win)"
+    ],
+    "fees": {
+      "entry": "2-Race BOGO: $300 (Buy 1 Get 1 Free); $50 to Register / Remaining $250 at Gate. Main Event Re-Entry: $100 (1st Round Only). Gamblers Entry: $100. Test N Tune: $50 (TNT Fee Waived w/Gamblers Entry). Gate Entries (if not sold out by June 1): $350.",
+      "spectator": "$15/Day or $40/Weekend; Kids 12 & Under FREE"
+    },
+    "contact": {
+      "phone": "615-389-8044",
+      "email": "ryanfrye16@yahoo.com",
+      "website": "www.BEACONDRAGWAY.com"
+    },
+    "series": null,
+    "flyers": [
+      {
+        "file": "640513245_1790376169070281_8174838114260918635_n.jpg",
+        "phash": "943d315395f04e6d",
+        "processed_at": "2026-04-02T03:44:14.218724+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T03:44:14.218942+00:00",
+    "updated_at": "2026-04-02T03:44:14.218948+00:00"
+  },
+  {
+    "id": "c2e3db25-7c41-4314-afe6-37a18bb77739",
+    "title": "Get M 125 Twin 10's - Cotton Co. Promotions",
+    "event_type": "bracket",
+    "track": {
+      "id": "thunder-valley-ok",
+      "name": "Thunder Valley Raceway Park",
+      "city": "Noble",
+      "state": "OK"
+    },
+    "dates": {
+      "start": "2026-06-12",
+      "end": "2026-06-14"
+    },
+    "series": "Cotton Co. Promotions",
+    "fees": {
+      "entry": "$349 BOGO (Buy One Get One) for Saturday & Sunday mains; $75 entry Friday Gamblers; $45 buyback Friday; $100 buyback Sat/Sun; $250 entry 32 Car Shootout (Sat Night); $200 due at pre-entry, $149 balance due at facility; Gate entries (if not sold out) $449",
+      "spectator": null
+    },
+    "times": {
+      "gates_open": "08:00",
+      "registration_opens": "10:00",
+      "race_start": "16:00"
+    },
+    "classes": [
+      "Friday Gamblers",
+      "Saturday Main ($10,000 to win)",
+      "Sunday Main ($10,000 to win)",
+      "32 Car Shootout ($5,000 to win)",
+      "Bottom Bulb Elite 25"
+    ],
+    "contact": {
+      "website": "www.raceccrp.com",
+      "phone": null,
+      "email": null
+    },
+    "notes": "ONLY 125 PRE-ENTRIES SOLD \u2014 EVERY ENTRY IS DOUBLED. 4 shots at $10,000 for only $349. Sponsors: McLarren Electric, Laris Motorsports Insurance / Hydration Station, Sunset Performance Engines, Cook Motor Co. (Wichita Falls TX), EFT (Kingston OK). SCHEDULE \u2014 Thursday: Parking 4:00PM\u201310:00PM. Friday: Gates Open 8:00AM, Registration 10:00AM, Test & Tune ($40) 1:00PM, R1 Gamblers 4:00PM. Saturday: Gates Open 8:00AM, Time Run 9:00AM, R1 Eliminations to follow. Sunday: Gates Open 7:00AM, RFC Service 8:00AM, R1 Eliminations 9:00AM. CREW FEES: $15/day or $40 weekend; Children Under 10 FREE. Friday Gamblers payouts: Winner $2,000, Runner-Up $1,000, Semi-Finals $400, 1/4 Finals $200; Double entries allowed. Saturday/Sunday Main payouts (each): Winner $10,000, Runner-Up $2,250, Semi-Finals $500, 1/4 Finals $250, 5th Rd Win $150, 4th Rd Win $100, 3rd Rd Win $50. **Round money does NOT compound.** 32 Car Shootout (Sat Night): $250 entry, 1000-to-1 format, $5,000 to win. Bottom Bulb Elite 25 (Kingston, OK \u2014 EFT): Only 25 BOGO entries sold; $1,500 bonus Sat & Sun; Bottom Bulb winner joins next round with Top Bulb earning round money. Registration opens March 1, 2026. New Porta-Tree Timing Systems. Rules include: 1/8 mile, ladder at 16 cars or less, 8.00 and faster in SP, no deep staging, no gold cards, no refunds, 3.5% fee on credit card charges.",
+    "confidence": 0.97,
+    "unclear_fields": [],
+    "flyers": [
+      {
+        "file": "641290726_1790374705737094_7921227523330546735_n.jpg",
+        "phash": "a4632b73939d98e8",
+        "processed_at": "2026-04-02T03:44:37.766307+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T03:44:37.766439+00:00",
+    "updated_at": "2026-04-02T03:44:37.766443+00:00"
+  },
+  {
+    "id": "5797e0e5-96ec-4735-8939-427a67d90552",
+    "title": "Twin Fifties $50K & $50K presented by Vintage",
+    "event_type": "bracket",
+    "track": {
+      "id": "world-wide-technology-il",
+      "name": "World Wide Technology Raceway",
+      "city": "Madison",
+      "state": "IL"
+    },
+    "dates": {
+      "start": "2026-05-07",
+      "end": "2026-05-09"
+    },
+    "series": "Ultratech Championship Points Series (Race #1) / JD Promotions",
+    "classes": [
+      "Top Bulb (Box)",
+      "No Box",
+      "Door Car",
+      "Dragster",
+      "Jr Dragster"
+    ],
+    "fees": {
+      "entry": "Weekend Entry Fri+Sat: $699 | No Box Friday Bonus: $2,500 | No Box Saturday Bonus: $2,500 | Re-Entry: $250 (1st Round Only) | Single Day Entry: $400 | Wednesday 64 Car Shootout Entry: $500 | Thursday Warm Up Entry: $250 / Re-Entry: $100 | Jr Dragster Weekend Entry: $100 / Re-Entry: $20",
+      "spectator": null
+    },
+    "times": {
+      "gates_open": "24:00",
+      "race_start": "08:00",
+      "registration_opens": "08:00"
+    },
+    "contact": {
+      "phone": "Tyler Bohannan: 502-417-0008 | Brian Whitworth: 502-715-1778",
+      "email": null,
+      "website": null
+    },
+    "flyers": [
+      {
+        "file": "641323070_1790375189070379_7552399918692189775_n.jpg",
+        "phash": "d571bf2aa107b01e",
+        "processed_at": "2026-04-02T03:45:01.335451+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T03:45:01.335586+00:00",
+    "updated_at": "2026-04-02T03:45:01.335590+00:00"
+  },
+  {
+    "id": "749c6950-23b8-42f8-80d3-4c86219ce012",
+    "title": "The Michigrander - Triple 20 Granders",
+    "event_type": "bracket",
+    "track": {
+      "id": "us-131-mi",
+      "name": "US 131 Motorsports Park",
+      "city": "Martin",
+      "state": "MI"
+    },
+    "dates": {
+      "start": "2026-06-18",
+      "end": "2026-06-21"
+    },
+    "classes": [
+      "Top Bulb",
+      "No-Box",
+      "Jr Dragster",
+      "Doorcar",
+      "Dragster"
+    ],
+    "series": "US 131 Motorsports Park Local Series",
+    "fees": {
+      "entry": "Thu Bracket Test & Tune: $35 | Thu Warmup: $100 (Re-Entry 1st Rnd Only: $60) | Fri/Sat/Sun Weekend Pre-Entry: $525 ($125 deposit, $400 due at gate) | Week of Event (if not pre-sold out): $690 or $230/Daily | Jr Dragster Weekend Entry: $150 (Buyback 1st Rnd Only: $30), Week of Event: $180 or $60/Daily | Saturday Night Shootout (Michigan vs The World): $250",
+      "spectator": "4-Day Pass: $50 | 3-Day Pass: $45 | 2-Day Pass: $30 | Single Day: $15 | Children ages 6-12: $5 each day | Racers not testing Thursday: $10"
+    },
+    "times": {
+      "gates_open": null,
+      "registration_opens": "10:00",
+      "race_start": "14:00"
+    },
+    "contact": {
+      "phone": "269-672-7800",
+      "website": "www.us131msp.com",
+      "email": null
+    },
+    "flyers": [
+      {
+        "file": "643394962_1790374992403732_3658435242929395310_n.jpg",
+        "phash": "848705fa2a797d47",
+        "processed_at": "2026-04-02T03:45:25.591074+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T03:45:25.591194+00:00",
+    "updated_at": "2026-04-02T03:45:25.591198+00:00"
+  },
+  {
+    "id": "902f305a-2623-4f39-8ed8-338ae5d82a7c",
+    "title": "6th Annual Coastal Clash",
+    "event_type": "bracket",
+    "track": {
+      "id": "us-13-dragway-de",
+      "name": "US 13 Dragway",
+      "city": "Delmar",
+      "state": "DE"
+    },
+    "dates": {
+      "start": "2026-04-10",
+      "end": "2026-04-12"
+    },
+    "series": "FRBR Promotions",
+    "classes": [
+      "Top Bulb",
+      "No-Box",
+      "Jr Dragster",
+      "All Run Gamblers",
+      "Junior Dragster Gamblers",
+      "Top Doorcar",
+      "Top Dragster",
+      "Top Door Doubles",
+      "Top Dragster Doubles"
+    ],
+    "times": {
+      "gates_open": "09:00",
+      "race_start": "17:00",
+      "registration_opens": "11:00"
+    },
+    "fees": {
+      "entry": "Top Bulb: Weekend $300 / Single-Day $170 / Re-Entry $100 (1st Rnd Only); No-Box: Weekend $180 / Single-Day $110 / Re-Entry $60 (1st Rnd Only); Jr Dragster: Weekend $130 / Single-Day $80 / Re-Entry $30 (1st Rnd Only); Friday Test N' Tune: $40 ($20 Rebate w/ Gamblers Entry); Friday Night Gamblers (All Run): $80 (75 car min for full payouts); Jr Dragster Gamblers: $50; Crew: $15/Daily, Kids 12 & Under FREE",
+      "spectator": null
+    },
+    "contact": {
+      "email": "Andy.Anderson@LeverageRacing.gmail.com",
+      "phone": null,
+      "website": null
+    },
+    "flyers": [
+      {
+        "file": "645211378_1795276198580278_1570421750318061004_n.jpg",
+        "phash": "fb1f8e788464a44e",
+        "processed_at": "2026-04-02T03:45:49.757063+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T03:45:49.757210+00:00",
+    "updated_at": "2026-04-02T03:45:49.757214+00:00"
+  },
+  {
+    "id": "118f56a8-d8e6-4766-9b5d-e87806383d43",
+    "title": "BTE King of the Coast - Event #2",
+    "event_type": "points_race",
+    "series": "King of the Coast (KOC) Bracket Series - presented by McMurtry Race Eagles",
+    "track": {
+      "id": "gulfport-dragway-ms",
+      "name": "Gulfport Dragway",
+      "city": "Gulfport",
+      "state": "MS"
+    },
+    "dates": {
+      "start": "2026-04-24",
+      "end": "2026-04-26"
+    },
+    "times": {
+      "gates_open": "16:00",
+      "race_start": "10:00",
+      "registration_opens": null
+    },
+    "classes": [
+      "Electronics (Doorslammers & Dragsters)",
+      "Footbrake",
+      "Super Quick 16 (8 Quickest Doorcars & 8 Quickest Dragsters)",
+      "Junior Dragsters Ages 6-12",
+      "Junior Dragsters Ages 6-12 (Class)",
+      "Junior Dragsters Ages 12-17",
+      "Sportsman"
+    ],
+    "fees": {
+      "entry": "Electronics: Sat-Sun Weekend $200, Sat Only $120, Sun Only $120; Footbrake: Sat-Sun Weekend $150, Sat Only $90, Sun Only $90; Junior Dragsters: $75/Race + BuyBacks; Sportsman: FREE w/ $20 Spectator Pass Each Day; Test n' Tune: $30; Wild Cards: $10 each, 2 for $20, 3 for $25",
+      "spectator": "Friday Attendance $10 | 1 Race Attendance $20 | Weekend Complete Event Pass $40 | Kids 8 & Under FREE | All Spectators after 12 Noon Sat & Sun: $20 per Car Load or $15 per person"
+    },
+    "contact": {
+      "phone": "228-863-4408",
+      "website": "www.gulfportdragway.com",
+      "email": null
+    },
+    "flyers": [
+      {
+        "file": "652334732_1807280710713160_60223816796467246_n.jpg",
+        "phash": "feb9d98a69ce0160",
+        "processed_at": "2026-04-02T03:46:14.845942+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T03:46:14.846070+00:00",
+    "updated_at": "2026-04-02T03:46:14.846073+00:00"
+  },
+  {
+    "id": "f50f8f65-ec39-4205-b21e-84a3c26a1267",
+    "title": "Laris Motorsports Insurance $75K Presented by Vintage - TB Promotions",
+    "event_type": "bracket",
+    "track": {
+      "id": "dar-oh",
+      "name": "Dar\u0430\u043d\u0430 Raceway",
+      "city": "Hebron",
+      "state": "OH"
+    },
+    "dates": {
+      "start": "2026-05-28",
+      "end": "2026-05-31"
+    },
+    "series": "Ultratech Race Fab Championship Points Series - Race #2",
+    "fees": {
+      "entry": "$199 Pre-Entry (opens 12 Noon March 26) | $250 Single Day (Fri or Sun) | $450 Single Day (Sat) | $300 Re-Entry (Sat) | $150 Re-Entry (Fri/Sun) | $749 Fri-Sun Entry (425 cap) | $100 Weekend Day (Jr Dragster)"
+    },
+    "classes": [
+      "Complete Roller (Thursday Warm Up)",
+      "Fuel Factory Friday $25K",
+      "United Garage Door Saturday $75K",
+      "Moser Engineering Sunday $25K",
+      "Jr Dragster (Roblox Bracket Racing Online Drag Racing Jr Dragster Shootout)"
+    ],
+    "times": {
+      "gates_open": "12:00",
+      "registration_opens": "08:00",
+      "race_start": "09:00"
+    },
+    "contact": {
+      "phone": "Tyler Bohannon 502-417-0008 | Brian Whitworth 502-715-1778",
+      "website": "RaceDerbyCity.com"
+    },
+    "flyers": [
+      {
+        "file": "652620581_1809987980442433_6827778053001504361_n.jpg",
+        "phash": "f1b4d0b65a96e072",
+        "processed_at": "2026-04-02T03:46:35.384314+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T03:46:35.384560+00:00",
+    "updated_at": "2026-04-02T03:46:35.384569+00:00"
+  },
+  {
+    "id": "cf43d146-2fc8-4741-bbc0-92d338e41466",
+    "title": "RBZ Triple 10s Championship Chase Presented by Renegade Race and Performance Fuel - Event 1 (Beacon Dragway)",
+    "event_type": "points_race",
+    "track": {
+      "id": "beacon-dragway-ky",
+      "name": "Beacon Dragway",
+      "city": "Paducah",
+      "state": "KY"
+    },
+    "dates": {
+      "start": "2026-04-10",
+      "end": "2026-04-12"
+    },
+    "series": "RBZ Triple 10s Championship Chase",
+    "fees": {
+      "entry": "$165 per Day / $450 Weekend Entry; Buy Back: $80 (1st Round Only); Points Fund Entry: FREE"
+    },
+    "times": {
+      "gates_open": "18:00",
+      "race_start": "11:00"
+    },
+    "classes": [
+      "Super Pro / Bracket"
+    ],
+    "contact": {
+      "website": null,
+      "phone": null,
+      "email": null
+    },
+    "notes": "3-day bracket event (Fri/Sat/Sun). Each day: Winner $10,000 | Runner-Up $2,000 | Semi $700 | 1/4s $300 | 1/8s $100 | 1/16s $50. Entry $165/day or $450 weekend. Buy Back $80 (1st round only). Points Fund: 1st $4,000 | 2nd $2,000 | 3rd $1,000 | 4th $800 | 5th $600 | 6th $500 | 7th $400 | 8th $300 | 9th $200 | 10th $200. Points system: 20 pts to enter, 10 pts per round win, 2 bonus pts for a win, 1 bonus pt for a runner-up. Schedule: Thursday gates open 6pm (early parking); Friday time run 11am, eliminations to follow; Saturday time run 10am (time permitting), eliminations to follow; Sunday 11am new time runs only, eliminations to follow. Address: 4460 Shemwell Ln, Paducah, KY 42003. Sponsors: Laris Motorsports Insurance, Strange Engineering, Brodix Cylinder Heads, Holley, K&R Performance, Moroso, East Coast Auto Electric, Advanced Design Carburetion, Hoosier, Jesel, Wiseco, PortaTree.",
+    "confidence": 0.97,
+    "unclear_fields": [],
+    "flyers": [
+      {
+        "file": "652908766_1809987973775767_1470389403452704759_n.jpg",
+        "phash": "91fc2c05ebc55a6a",
+        "processed_at": "2026-04-02T03:46:53.349314+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T03:46:53.349470+00:00",
+    "updated_at": "2026-04-02T03:46:53.349474+00:00"
+  },
+  {
+    "id": "fd8a6dc1-4265-45ae-b6d1-edf065fb216d",
+    "title": "SpringFast Bracket Nationals",
+    "event_type": "bracket",
+    "series": "Staging Light",
+    "track": {
+      "id": "edgewater-sports-oh",
+      "name": "Edgewater Sports Park",
+      "city": "Cleves",
+      "state": "OH"
+    },
+    "dates": {
+      "start": "2026-04-17",
+      "end": "2026-04-19"
+    },
+    "classes": [
+      "Top E.T.",
+      "No-Box",
+      "Jr. Dragster"
+    ],
+    "times": {
+      "gates_open": "08:00",
+      "registration_opens": "08:00",
+      "race_start": "10:00"
+    },
+    "fees": {
+      "entry": "Top E.T. Single-Day: Fri $100, Sat $150, Sun $100 | Top E.T. Weekend Entry: $300 (Fri-Sat-Sun) or Single 10K + Double in 1 $5K | Re-Entry (1st Rnd Only): Fri $50, Sat $100, Sun $50 | No-Box Single-Day: $80/day | No-Box Re-Entry (1st Rnd Only): $50 | No-Box Weekend Entry: $195 (Fri-Sat-Sun or Single Day + Double 1 Day) | Fri & Sat Night Gamblers Entry: $100 | Jr. Dragster Entry: $50 per race | Jr. Dragster Buyback (1st Rnd Only): $30 | Thursday Test n' Tune Entry: $35",
+      "spectator": "Adults $15/day | Kids 10 & Under FREE"
+    },
+    "contact": {
+      "website": "www.staginglight.com",
+      "email": "staginglight@gmail.com"
+    },
+    "flyers": [
+      {
+        "file": "655729662_1817178363056728_5307457848687513493_n.jpg",
+        "phash": "9beee49a64a691a4",
+        "processed_at": "2026-04-02T03:47:15.264637+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T03:47:15.264813+00:00",
+    "updated_at": "2026-04-02T03:47:15.264817+00:00"
+  },
+  {
+    "id": "be929ce7-72ba-41e8-ac5e-760275346b08",
+    "title": "N/T Street Car - Rise of the Beasts",
+    "event_type": "no_prep",
+    "track": {
+      "id": "texas-motorplex-tx",
+      "name": "Texas Motorplex",
+      "city": "Ennis",
+      "state": "TX"
+    },
+    "dates": {
+      "start": "2025-04-16",
+      "end": "2025-04-18"
+    },
+    "series": "Sailorman Promotions",
+    "notes": "Event promoted as \"Save the Date.\" Featured Classes and Kids Classes are listed separately on the flyer. Full Size Truck Fighter notes \"Class trucks welcome.\" Promoter is Sailorman Promotions. Venue signage visible: TicketSmarter sponsorship banners on tower.",
+    "confidence": 0.95,
+    "unclear_fields": [
+      "event_type",
+      "dates_year"
+    ],
+    "flyers": [
+      {
+        "file": "656674267_17863347108612616_5871055773455215669_n.jpg",
+        "phash": "90f30f2d745b6b24",
+        "processed_at": "2026-04-02T03:47:22.231526+00:00"
+      },
+      {
+        "file": "sailorman-tx-mtplx.jpg",
+        "phash": "91c43d62cb97366c",
+        "processed_at": "2026-04-02T03:48:05.849823+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T03:47:22.231700+00:00",
+    "updated_at": "2026-04-02T03:48:05.850016+00:00",
+    "times": {
+      "gates_open": null,
+      "registration_opens": null,
+      "race_start": null
+    },
+    "fees": {
+      "entry": null,
+      "spectator": null
+    },
+    "contact": {
+      "phone": null,
+      "email": null,
+      "website": null
+    },
+    "classes": [
+      "4 Horseman",
+      "All Out Daily",
+      "Anything on 28s",
+      "Coaches JV 4.9",
+      "Full Size Truck Fighter (Class trucks welcome)",
+      "Kids JRs",
+      "Kids Powerwheels",
+      "N/T 1 P/A F/B O/D",
+      "N/T Overdrive Extreme",
+      "Nitro Dave - Clash of the Titans",
+      "Quick Draw 5.5",
+      "Street Style",
+      "Truck 7.5"
+    ]
+  },
+  {
+    "id": "9915d3a0-cff9-4efe-92f2-b3d982c6f157",
+    "title": "Funny Car Chaos Classic",
+    "event_type": "specialty",
+    "track": {
+      "id": "texas-motorplex-tx",
+      "name": "Texas Motorplex",
+      "city": "Ennis",
+      "state": "TX"
+    },
+    "dates": {
+      "start": "2025-04-09",
+      "end": "2025-04-11"
+    },
+    "classes": [
+      "Funny Car",
+      "Nitro Chaos",
+      "Dirty South Gassers",
+      "TDRA"
+    ],
+    "times": {
+      "gates_open": null,
+      "registration_opens": null,
+      "race_start": "14:00"
+    },
+    "fees": {
+      "entry": null,
+      "spectator": "Kids 12 & Under Free"
+    },
+    "series": "Funny Car Chaos",
+    "contact": {
+      "email": "info@texasmotorplex.com",
+      "website": "texasmotorplex.com"
+    },
+    "notes": "Multi-day event schedule: Thursday April 9 - Testing 10 AM to 5 PM; Friday April 10 - Pro Qualifying 2 PM & 7 PM; Saturday April 11 - Racing All Day, Main Event at 2 PM. \"It's a Chaos Double Down!\" Live streaming on FloRacing. Sponsors include Nitro Chaos, Spell Paving, Vertex Roofing & General Contractors, DMP Awnings. Tickets on sale now.",
+    "confidence": 0.97,
+    "unclear_fields": [
+      "track_city",
+      "entry_fee"
+    ],
+    "flyers": [
+      {
+        "file": "662727075_1581067820687655_8792646353182662220_n.jpg",
+        "phash": "858d1b7ae145ad39",
+        "processed_at": "2026-04-02T03:47:32.673709+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T03:47:32.673878+00:00",
+    "updated_at": "2026-04-02T03:47:32.673881+00:00"
+  },
+  {
+    "id": "2c9b3a56-3e56-4c42-ab60-dca77df9f167",
+    "title": "NHRA South Central Division D4 Good Guy Challenge - Amarillo Dragway",
+    "event_type": "points_race",
+    "track": {
+      "id": "amarillo-dragway-tx",
+      "name": "Amarillo Dragway",
+      "city": "Amarillo",
+      "state": "TX"
+    },
+    "dates": {
+      "start": "2025-05-16"
+    },
+    "series": "NHRA South Central Division D4 Good Guy Challenge",
+    "classes": [
+      "Super Pro",
+      "Pro Footbrake"
+    ],
+    "fees": {
+      "entry": "Free (valid NHRA membership and competition number required)"
+    },
+    "contact": {
+      "website": "nhradiv4.com"
+    },
+    "notes": "4-race series. Race #1: 5/16, Race #2: 6/7, Race #3: 7/25, Race #4: 8/29. Points earned at individual track. 17-car minimum with at least 5 rounds to qualify. Points awarded from quarterfinals onward: Winner 32pts, Runner-Up 31pts, Semi-Finalist 20pts, Quarter-Finalist 10pts. Ties decided by runoff at Summit E.T. Finals. Champions receive Hammer Award (custom leather jacket) and Champion's Wally.",
+    "confidence": 0.95,
+    "unclear_fields": [
+      "dates"
+    ],
+    "flyers": [
+      {
+        "file": "d4.jpg",
+        "phash": "9c9f71e0508b5e63",
+        "processed_at": "2026-04-02T03:47:47.623989+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T03:47:47.624204+00:00",
+    "updated_at": "2026-04-02T03:47:47.624209+00:00"
+  },
+  {
+    "id": "94f163d0-7106-4436-acb4-9b1fa7d3a706",
+    "title": "3rd Annual Pennington Bros. SuperBucks Showdown - Summer SuperBucks$",
+    "event_type": "bracket",
+    "track": {
+      "id": "xtreme-tx",
+      "name": "Xtreme Raceway Park",
+      "city": "Ferris",
+      "state": "TX"
+    },
+    "dates": {
+      "start": "2026-06-04",
+      "end": "2026-06-06"
+    },
+    "series": "Pennington Bros. SuperBucks Showdown",
+    "notes": "3rd Annual event. Two great events in 2026 - this is the Summer SuperBucks$ edition.",
+    "confidence": 0.97,
+    "unclear_fields": [
+      "classes",
+      "fees",
+      "times"
+    ],
+    "flyers": [
+      {
+        "file": "penn.jpg",
+        "phash": "85a8e842af9dbae1",
+        "processed_at": "2026-04-02T03:47:55.201604+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T03:47:55.201787+00:00",
+    "updated_at": "2026-04-02T03:47:55.201792+00:00"
+  },
+  {
+    "id": "2f40865c-7716-42aa-b278-346101e6af96",
+    "title": "Texas Ultimate Bracket Series \u2013 July 25-27, 2025",
+    "event_type": "bracket",
+    "series": "Texas Ultimate Bracket Series",
+    "track": {
+      "id": "texas-motorplex-tx",
+      "name": "Texas Motorplex",
+      "city": "Ennis",
+      "state": "TX"
+    },
+    "dates": {
+      "start": "2025-07-25",
+      "end": "2025-07-27"
+    },
+    "classes": [
+      "All Run Gamblers",
+      "7.00 Index Gamblers",
+      "Jr. Dragster Gamblers",
+      "Test N Tune",
+      "5.80 Index Gamblers",
+      "Crader Engines Super Pro (No-Box)",
+      "Jr. Street Trophy",
+      "Jr. Modified",
+      "Lopez Jr. Sportsman"
+    ],
+    "times": {
+      "gates_open": "16:00",
+      "race_start": "20:00",
+      "registration_opens": null
+    },
+    "fees": {
+      "entry": "All Run Gamblers $80 (R1 Buy Back $40); 7.00 Index Gamblers $100 (R1 Buy Back $50); Jr. Dragster Gamblers $30 (R1 Buy Back $20); Test N Tune $25 Slick Tire Only; 5.80 Index Gamblers $100 (R1 Buy Back $50); Super Pro (No-Box) $60 (R1 Buy Back $30); Jr. Street Trophy $30 (R1 Buy Back $20); Jr. Modified $40 (R1 Buy Back $25); Lopez Jr. Sportsman $30 (R1 Buy Back $25)",
+      "spectator": "$15 per day \u2013 12 and under free"
+    },
+    "contact": {
+      "phone": "817-706-8641",
+      "website": "texasmotorplex.com",
+      "email": null
+    },
+    "notes": "FRIDAY SCHEDULE: Gates Open 4PM, Test N Tune 6PM, Round 1 Race 8PM, Race 18:30PM(?). SATURDAY SCHEDULE: Gates Open 8AM, Time Run(1) 10AM, Eliminations to Follow. SUNDAY SCHEDULE: Gates Open 8AM, RFC 8:30AM, New Entry Time Run 9AM, Eliminations to Follow. *Sunday New Entry Time Run: A new entry is a driver that has not been down the track. Payouts \u2013 All Run Gamblers: Win $2,000 / Runner Up $500 / Semi $200 / 1/4s $100. 7.00 Index Gamblers: 100% Payback. Jr. Dragster Gamblers: Win $300 / Runner Up $100 / Semi $40. 5.80 Index Gamblers: 100% Payback. Super Pro No-Box (Sat & Sun): Win $1,000 / Runner Up $400 / Semi $150 / 1/4s $75. Crader Engines Super Pro (Sat & Sun): Win $3,000 / Runner Up $1,000 / Semi $350 / 1/4s $150 / 1/8s $100. Sportsman (Sat & Sun): Win $300 / Runner Up $100 / Semi $35. Jr. Street Trophy (Sat & Sun): Runner Up trophy. Jr. Modified (Sat & Sun): Win $500 / Runner Up $200 / Semi $100. Lopez Jr. Sportsman (Sat & Sun): Win $200 / Runner Up $100 / Semi $50. Live updates on the Texas Motorplex Bracket Racing Facebook Group. Contact: Ryan Gleghorn, Bracket Race Director. \"Thank You For a Great Season!\" Address: 7500 US-287, Ennis, TX 75119. TV Challenge and JDRL Challenge sponsor logos present.",
+    "confidence": 0.93,
+    "flyers": [
+      {
+        "file": "tx-mplx-2.jpg",
+        "phash": "97a62eadb386924a",
+        "processed_at": "2026-04-02T03:48:25.004632+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T03:48:25.004801+00:00",
+    "updated_at": "2026-04-02T03:48:25.004805+00:00"
+  },
+  {
+    "id": "ff1a49a0-1317-40d7-98e9-81a229b4ba99",
+    "title": "Texas Motorplex Bracket Series",
+    "event_type": "bracket",
+    "track": {
+      "id": "texas-motorplex-tx",
+      "name": "Texas Motorplex",
+      "city": null,
+      "state": "TX"
+    },
+    "dates": {
+      "start": "2025-02-27",
+      "end": "2025-03-01"
+    },
+    "contact": {
+      "website": "texasmotorplex.com"
+    },
+    "confidence": 0.97,
+    "flyers": [
+      {
+        "file": "tx-mplx-2026.2.jpg",
+        "phash": "befe51af00528d70",
+        "processed_at": "2026-04-02T03:48:36.268227+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T03:48:36.268432+00:00",
+    "updated_at": "2026-04-02T03:48:36.268436+00:00"
+  },
+  {
+    "id": "f7d16549-88ea-448c-a54b-447eafb778ad",
+    "title": "Texas Ultimate Bracket Series 2026 - Lynn Gleghorn Memorial Season Kick-Off",
+    "event_type": "bracket",
+    "series": "Texas Ultimate Bracket Series",
+    "track": {
+      "id": "texas-motorplex-tx",
+      "name": "Texas Motorplex",
+      "city": "Ennis",
+      "state": "TX"
+    },
+    "dates": {
+      "start": "2026-02-27",
+      "end": "2026-03-01"
+    },
+    "contact": {
+      "phone": "817-706-8641",
+      "website": "texasmotorplex.com"
+    },
+    "notes": "Event 1 of 4 in the 2026 Texas Ultimate Bracket Series schedule. Named the \"Lynn Gleghorn Memorial Season Kick-Off.\" Ryan Gleghorn is the Bracket Race Director. Live updates on the Texas Motorplex Bracket Racing Facebook Group. Track address: 7500 US-287, Ennis, TX 75119. More details to come soon.",
+    "unclear_fields": [
+      "classes",
+      "fees",
+      "times"
+    ],
+    "confidence": 0.95,
+    "flyers": [
+      {
+        "file": "tx-mplx-2026.jpg",
+        "phash": "d3300e4bd2392f2f",
+        "processed_at": "2026-04-02T03:48:48.623659+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T03:48:48.623802+00:00",
+    "updated_at": "2026-04-02T03:48:48.623805+00:00"
+  },
+  {
+    "id": "ea8d618e-7748-42cf-aab6-f6a408598602",
+    "title": "XRP Bracket Points Series + Friday Night Junior Gamblers Series (Feb 20-21)",
+    "event_type": "points_race",
+    "track": {
+      "id": "xtreme-tx",
+      "name": "Xtreme Raceway Park",
+      "city": "Ferris",
+      "state": "TX"
+    },
+    "dates": {
+      "start": "2026-02-20",
+      "end": "2026-02-21"
+    },
+    "series": "XRP Bracket Points Series",
+    "classes": [
+      "Bracket",
+      "Jr Dragster"
+    ],
+    "contact": {
+      "website": "www.xtremeracewaypark.com"
+    },
+    "confidence": 0.97,
+    "flyers": [
+      {
+        "file": "xrp-2026.jpg",
+        "phash": "d07e6b0d6a9c629c",
+        "processed_at": "2026-04-02T03:49:01.053209+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T03:49:01.053531+00:00",
+    "updated_at": "2026-04-02T03:49:01.053538+00:00"
+  },
+  {
+    "id": "2b2094a9-ca2b-412e-ae99-e2b61982e01f",
+    "title": "2026 Pro 1 Racing & Safety Products Xtreme Bracket Series \u2013 April 3-4 (Friday Night Under the Lights)",
+    "event_type": "bracket",
+    "series": "Xtreme Bracket Series / NHRA South Central Division D4 / NHRA 75th Anniversary / Summit Racing Equipment NHRA E.T. Series",
+    "track": {
+      "id": "xtreme-tx",
+      "name": "Xtreme Raceway Park",
+      "city": "Ferris",
+      "state": "TX"
+    },
+    "dates": {
+      "start": "2026-04-03",
+      "end": "2026-04-03"
+    },
+    "times": {
+      "gates_open": "17:00",
+      "race_start": "19:30"
+    },
+    "classes": [
+      "Xtreme Bracket Gamblers",
+      "Xtreme Jr Gamblers"
+    ],
+    "fees": {
+      "entry": "Xtreme Bracket Gamblers: $75 entry / $30 buy back ($300 on top at 40 cars); Xtreme Jr Gamblers: $40 entry / $25 buy back"
+    },
+    "contact": {
+      "website": "xtremeracewaypark.com"
+    },
+    "notes": "Friday Night Under the Lights. Open TNT at 6PM. Time Run (1) at 7:30PM. Xtreme Bracket Gamblers: $1,000 to win / RU $400 / Semi $150. $300 on top at 40 cars. Xtreme Jr Gamblers: $300 to win / RU $150 / Semi $75. All run Jr Gamblers. Address: 1800 S Interstate 45 Service Road, Ferris, Texas 75125.",
+    "confidence": 0.97,
+    "unclear_fields": [],
+    "flyers": [
+      {
+        "file": "xrp-bracket-43.jpg",
+        "phash": "81636ba6d423bcb9",
+        "processed_at": "2026-04-02T03:49:17.334863+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T03:49:17.335148+00:00",
+    "updated_at": "2026-04-02T03:49:17.335155+00:00"
+  }
+]

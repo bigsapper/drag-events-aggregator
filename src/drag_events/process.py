@@ -18,6 +18,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from .dedup import compute_phash, is_duplicate_image, find_same_event, merge_events, track_slug
+from .event_filters import is_in_scope_event, is_past_event
 from .extract import extract_event
 from .logging_utils import get_logger
 
@@ -43,6 +44,7 @@ def process_flyer(image_path: str, events: list[dict]) -> tuple[str, dict]:
       'new'       — new event added
       'merged'    — updated existing event with new flyer details
       'duplicate' — exact image already processed, skipped
+      'skipped'   — extracted but filtered out as out-of-scope or past-dated
     """
     path = Path(image_path)
     LOGGER.info("  Computing image hash...")
@@ -57,6 +59,14 @@ def process_flyer(image_path: str, events: list[dict]) -> tuple[str, dict]:
     # Layer 2: call Claude to extract event data
     LOGGER.info("  Calling Claude vision API...")
     extracted = extract_event(image_path)
+
+    if not is_in_scope_event(extracted):
+        LOGGER.info("  Out-of-scope event detected, skipping.")
+        return "skipped", extracted
+
+    if is_past_event(extracted):
+        LOGGER.info("  Past event detected, skipping.")
+        return "skipped", extracted
 
     flyer_entry = {
         "file": path.name,
@@ -122,14 +132,14 @@ def main():
     events = load_events()
     LOGGER.info(f"Loaded {len(events)} existing events.\n")
 
-    counts = {"new": 0, "merged": 0, "duplicate": 0, "error": 0}
+    counts = {"new": 0, "merged": 0, "duplicate": 0, "skipped": 0, "error": 0}
 
     for image_path in images:
         LOGGER.info(f"Processing: {image_path.name}")
         try:
             outcome, event = process_flyer(str(image_path), events)
             counts[outcome] += 1
-            label = {"new": "NEW", "merged": "UPDATED", "duplicate": "SKIPPED"}[outcome]
+            label = {"new": "NEW", "merged": "UPDATED", "duplicate": "SKIPPED", "skipped": "SKIPPED"}[outcome]
             title = event.get("title", event.get("id", "?"))
             date_start = event.get("dates", {}).get("start", "?")
             track = event.get("track", {}).get("name", "?")
@@ -145,7 +155,10 @@ def main():
 
     LOGGER.info("─" * 50)
     LOGGER.info(f"Done. {len(events)} total events in database.")
-    LOGGER.info(f"  {counts['new']} new  |  {counts['merged']} updated  |  {counts['duplicate']} duplicate  |  {counts['error']} errors")
+    LOGGER.info(
+        f"  {counts['new']} new  |  {counts['merged']} updated  |  {counts['duplicate']} duplicate  |  "
+        f"{counts['skipped']} skipped  |  {counts['error']} errors"
+    )
 
 
 if __name__ == "__main__":

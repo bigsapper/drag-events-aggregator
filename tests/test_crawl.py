@@ -1075,8 +1075,9 @@ def test_crawl_source_text_strategy_returns_in_second_slot():
 
 def test_run_extraction_noop_on_empty_input(tmp_events_file):
     with patch("drag_events.crawl.process.load_events") as mock_load:
-        crawl.run_extraction([], [])
+        result = crawl.run_extraction([], [])
     mock_load.assert_not_called()
+    assert result["skipped"] == 0
 
 
 def test_run_extraction_image_new_event(tmp_path, tmp_events_file, sample_extracted):
@@ -1134,6 +1135,51 @@ def test_run_extraction_text_error_continues(tmp_events_file, capsys):
          patch("drag_events.crawl.process.save_events"):
         crawl.run_extraction([], [listing])
     assert "ERROR" in capsys.readouterr().out
+
+
+def test_run_extraction_text_skips_out_of_scope_listing(tmp_events_file):
+    listing = {"title": "2026 TMCCC Banquet", "source_url": "http://tmccc.org/events", "source": "TMCCC"}
+    with patch("drag_events.crawl.process.load_events", return_value=[]), \
+         patch("drag_events.crawl.extract_from_text") as mock_extract, \
+         patch("drag_events.crawl.process.save_events") as mock_save:
+        result = crawl.run_extraction([], [listing])
+    mock_extract.assert_not_called()
+    mock_save.assert_called_once_with([])
+    assert result["skipped"] == 1
+
+
+def test_run_extraction_text_skips_past_event(tmp_events_file):
+    listing = {"title": "Race Day", "source_url": "http://rj.com/1", "source": "RacingJunk"}
+    extracted = {
+        "title": "Race Day",
+        "event_type": "bracket",
+        "track": {"name": "Tulsa Raceway Park", "state": "OK"},
+        "dates": {"start": "2025-06-01"},
+        "confidence": 0.8,
+    }
+    with patch("drag_events.crawl.process.load_events", return_value=[]), \
+         patch("drag_events.crawl.extract_from_text", return_value=extracted), \
+         patch("drag_events.crawl.process.save_events") as mock_save:
+        result = crawl.run_extraction([], [listing])
+    mock_save.assert_called_once_with([])
+    assert result["skipped"] == 1
+
+
+def test_run_extraction_text_skips_out_of_scope_extracted_event(tmp_events_file):
+    listing = {"title": "Race Day", "source_url": "http://tmccc.org/events", "source": "TMCCC"}
+    extracted = {
+        "title": "2026 TMCCC Banquet",
+        "event_type": "unknown",
+        "track": {"name": None, "state": None},
+        "dates": {"start": "2026-12-05"},
+        "confidence": 0.3,
+    }
+    with patch("drag_events.crawl.process.load_events", return_value=[]), \
+         patch("drag_events.crawl.extract_from_text", return_value=extracted), \
+         patch("drag_events.crawl.process.save_events") as mock_save:
+        result = crawl.run_extraction([], [listing])
+    mock_save.assert_called_once_with([])
+    assert result["skipped"] == 1
 
 
 # ── main() ────────────────────────────────────────────────────────────────────

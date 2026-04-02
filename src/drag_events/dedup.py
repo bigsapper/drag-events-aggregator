@@ -104,6 +104,34 @@ def _normalize_track_name(name: str) -> str:
     return " ".join(w for w in words if w not in stopwords).strip()
 
 
+def _normalize_title(title: str) -> str:
+    stopwords = {
+        "the", "and", "of", "at", "presented", "by", "series", "race",
+        "event", "annual", "bracket", "dragway", "raceway", "park",
+    }
+    words = [word for word in re.sub(r"[^a-z0-9]+", " ", title.lower()).split() if word not in stopwords]
+    return " ".join(words).strip()
+
+
+def _titles_compatible(event_a: dict, event_b: dict) -> bool:
+    title_a = _normalize_title(event_a.get("title", ""))
+    title_b = _normalize_title(event_b.get("title", ""))
+
+    if not title_a or not title_b:
+        return False
+
+    if title_a == title_b:
+        return True
+
+    if title_a in title_b or title_b in title_a:
+        return True
+
+    tokens_a = set(title_a.split())
+    tokens_b = set(title_b.split())
+    shared_tokens = tokens_a & tokens_b
+    return len(shared_tokens) >= 2
+
+
 def _tracks_match(event_a: dict, event_b: dict) -> bool:
     name_a = _normalize_track_name(_resolve_canonical(event_a.get("track", {}).get("name", "")))
     name_b = _normalize_track_name(_resolve_canonical(event_b.get("track", {}).get("name", "")))
@@ -135,7 +163,7 @@ def _tracks_match(event_a: dict, event_b: dict) -> bool:
 def find_same_event(new_event: dict, events: list[dict]) -> dict | None:
     """Return existing event record if new_event is the same event (different flyer)."""
     for event in events:
-        if _tracks_match(new_event, event) and _dates_overlap(new_event, event):
+        if _tracks_match(new_event, event) and _dates_overlap(new_event, event) and _titles_compatible(new_event, event):
             return event
     return None
 

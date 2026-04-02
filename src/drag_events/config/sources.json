@@ -34,7 +34,7 @@
     "name": "TMCCC",
     "url": "https://tmccc.org/events",
     "strategy": "tmccc",
-    "enabled": true,
+    "enabled": false,
     "notes": "GoDaddy site builder calendar. Events use data-aid attributes for reliable scraping. Static fetch only captures initially visible events — JS-loaded 'More Events' are not retrieved."
   },
   {

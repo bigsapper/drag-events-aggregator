@@ -272,25 +272,41 @@ def test_alias_slug_matches_canonical_slug(alias_map):
 # ── find_same_event ───────────────────────────────────────────────────────────
 
 def test_find_same_event_match(sample_events):
-    new = {"track": {"name": "Texas Motorplex", "state": "TX"}, "dates": {"start": "2026-05-10"}}
+    new = {"title": "Spring Bracket Classic", "track": {"name": "Texas Motorplex", "state": "TX"}, "dates": {"start": "2026-05-10"}}
     result = find_same_event(new, sample_events)
     assert result is not None
     assert result["id"] == "evt-001"
 
 
 def test_find_same_event_no_track_match(sample_events):
-    new = {"track": {"name": "Tulsa Raceway Park"}, "dates": {"start": "2026-05-10"}}
+    new = {"title": "Spring Bracket Classic", "track": {"name": "Tulsa Raceway Park"}, "dates": {"start": "2026-05-10"}}
     assert find_same_event(new, sample_events) is None
 
 
 def test_find_same_event_no_date_overlap(sample_events):
-    new = {"track": {"name": "Texas Motorplex", "state": "TX"}, "dates": {"start": "2026-06-01"}}
+    new = {"title": "Spring Bracket Classic", "track": {"name": "Texas Motorplex", "state": "TX"}, "dates": {"start": "2026-06-01"}}
     assert find_same_event(new, sample_events) is None
 
 
 def test_find_same_event_empty_db():
-    new = {"track": {"name": "Texas Motorplex"}, "dates": {"start": "2026-05-10"}}
+    new = {"title": "Spring Bracket Classic", "track": {"name": "Texas Motorplex"}, "dates": {"start": "2026-05-10"}}
     assert find_same_event(new, []) is None
+
+
+def test_find_same_event_requires_title_compatibility(sample_events):
+    new = {"title": "Sailorman Promotions N/T Street", "track": {"name": "Texas Motorplex", "state": "TX"}, "dates": {"start": "2026-05-10"}}
+    assert find_same_event(new, sample_events) is None
+
+
+def test_find_same_event_no_match_when_title_missing(sample_events):
+    new = {"track": {"name": "Texas Motorplex", "state": "TX"}, "dates": {"start": "2026-05-10"}}
+    assert find_same_event(new, sample_events) is None
+
+
+def test_find_same_event_matches_when_title_is_substring(sample_events):
+    new = {"title": "Spring Bracket", "track": {"name": "Texas Motorplex", "state": "TX"}, "dates": {"start": "2026-05-10"}}
+    result = find_same_event(new, sample_events)
+    assert result is not None
 
 
 # ── merge_events ──────────────────────────────────────────────────────────────

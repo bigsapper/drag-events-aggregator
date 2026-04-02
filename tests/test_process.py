@@ -127,6 +127,28 @@ def test_process_flyer_merged(tmp_path, sample_events, mock_vision_client, sampl
     assert len(sample_events[0]["flyers"]) == 2
 
 
+def test_process_flyer_skips_out_of_scope_event(tmp_path, sample_events, mock_vision_client):
+    img = make_1x1_png(tmp_path / "flyer.jpg")
+    with patch("drag_events.process.compute_phash", return_value="00000000ffffffff"), \
+         patch("drag_events.process.is_duplicate_image", return_value=None), \
+         patch("drag_events.process.extract_event", return_value={"title": "2026 TMCCC Banquet", "track": {}, "dates": {"start": "2026-12-05"}}):
+        outcome, event = process.process_flyer(str(img), sample_events)
+    assert outcome == "skipped"
+    assert event["title"] == "2026 TMCCC Banquet"
+    assert len(sample_events) == 1
+
+
+def test_process_flyer_skips_past_event(tmp_path, sample_events, mock_vision_client):
+    img = make_1x1_png(tmp_path / "flyer.jpg")
+    with patch("drag_events.process.compute_phash", return_value="00000000ffffffff"), \
+         patch("drag_events.process.is_duplicate_image", return_value=None), \
+         patch("drag_events.process.extract_event", return_value={"title": "Old Flyer", "track": {}, "dates": {"start": "2025-01-01"}}):
+        outcome, event = process.process_flyer(str(img), sample_events)
+    assert outcome == "skipped"
+    assert event["title"] == "Old Flyer"
+    assert len(sample_events) == 1
+
+
 # ── main() ────────────────────────────────────────────────────────────────────
 
 def test_main_no_args_exits(capsys):

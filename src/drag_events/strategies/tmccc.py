@@ -2,6 +2,7 @@
 
 from bs4 import BeautifulSoup
 
+from ..event_filters import is_in_scope_listing
 from ..logging_utils import get_logger
 
 LOGGER = get_logger(__name__)
@@ -21,6 +22,8 @@ def parse_tmccc_page_events_impl(html: str) -> list[dict]:
         date_text = date_block.get_text(" ", strip=True)
         title = title_tag.get_text(" ", strip=True)
         if not title or not date_text:
+            continue
+        if not is_in_scope_listing({"title": title}):
             continue
 
         time_block = card.find(attrs={"data-aid": "CALENDAR_EVENT_TIME"})
