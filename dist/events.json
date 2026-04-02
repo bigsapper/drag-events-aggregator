@@ -1,1 +1,1231 @@
-[]
+[
+  {
+    "id": "57bc97b9-f865-436d-9d4f-190b56c92a25",
+    "title": "Race #2 Thunder Valley Raceway Park",
+    "event_type": "points_race",
+    "track": {
+      "id": "thunder-valley-ok",
+      "name": "Thunder Valley Raceway Park",
+      "city": "Lexington",
+      "state": "OK"
+    },
+    "dates": {
+      "start": "2026-04-12"
+    },
+    "times": {
+      "gates_open": "08:00"
+    },
+    "classes": [
+      "Stock Muscle",
+      "Street Muscle",
+      "King Muscle",
+      "EV Muscle",
+      "Competition Muscle",
+      "Modified Muscle",
+      "Electronics",
+      "Pro Muscle",
+      "Super Pro Muscle",
+      "CA$H Bracket"
+    ],
+    "series": "TMCCC",
+    "contact": {
+      "phone": "405-413-1522",
+      "website": "https://www.thundervalleyracewaypark.com"
+    },
+    "notes": "1/4 Mile track. 4 Points 1st Round event.\n1/4 Mile\n4 Points 1st Round\nhttps://www.thundervalleyracewaypark.com",
+    "confidence": 0.95,
+    "flyers": [
+      {
+        "file": "https://tmccc.org/events",
+        "phash": null,
+        "processed_at": "2026-04-02T05:07:35.068595+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T05:07:35.068604+00:00",
+    "updated_at": "2026-04-02T05:07:35.068607+00:00"
+  },
+  {
+    "id": "1cd43162-290b-4a9a-bc1d-3f907b689a8b",
+    "title": "Race #3 Little River Dragway",
+    "event_type": "points_race",
+    "track": {
+      "id": "little-river-dragway-tx",
+      "name": "Little River Dragway",
+      "city": "Holland",
+      "state": "TX"
+    },
+    "dates": {
+      "start": "2026-04-25"
+    },
+    "times": {
+      "race_start": "15:00"
+    },
+    "series": "TMCCC",
+    "classes": [
+      "Stock Muscle",
+      "Street Muscle",
+      "King Muscle",
+      "EV Muscle",
+      "Competition Muscle",
+      "Modified Muscle",
+      "Electronics",
+      "Pro Muscle",
+      "Super Pro Muscle",
+      "CA$H Bracket"
+    ],
+    "contact": {
+      "phone": "940-613-5359",
+      "website": "https://www.wichitaracewaypark.com"
+    },
+    "notes": "4 points 1st round. Event address: 13550 State Hwy 95, Holland, TX 76534\n4 points 1st round\nhttps://www.wichitaracewaypark.com",
+    "confidence": 0.95,
+    "flyers": [
+      {
+        "file": "https://tmccc.org/events",
+        "phash": null,
+        "processed_at": "2026-04-02T05:07:37.634586+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T05:07:37.634601+00:00",
+    "updated_at": "2026-04-02T05:07:37.634605+00:00"
+  },
+  {
+    "id": "911fa952-2360-4ee1-8cf8-bb91612d5dee",
+    "title": "Race #4 Wichita Falls Raceway Park",
+    "event_type": "points_race",
+    "track": {
+      "id": "wichita-falls-tx",
+      "name": "Wichita Falls Raceway Park",
+      "city": "Iowa Park",
+      "state": "TX"
+    },
+    "dates": {
+      "start": "2026-05-10"
+    },
+    "times": {
+      "gates_open": "08:00",
+      "race_start": "08:00"
+    },
+    "classes": [
+      "Stock Muscle",
+      "Street Muscle",
+      "King Muscle",
+      "EV Muscle",
+      "Competition Muscle",
+      "Modified Muscle",
+      "Electronics",
+      "Pro Muscle",
+      "Super Pro Muscle",
+      "CA$H Bracket"
+    ],
+    "series": "TMCCC",
+    "contact": {
+      "phone": "940-613-5359",
+      "website": "https://www.wichitaracewaypark.com"
+    },
+    "notes": "4 points awarded for 1st round finish. Address: 633 FM 369, Iowa Park TX 76367\n4 points 1st round\nhttps://www.wichitaracewaypark.com",
+    "confidence": 0.95,
+    "flyers": [
+      {
+        "file": "https://tmccc.org/events",
+        "phash": null,
+        "processed_at": "2026-04-02T05:07:39.882453+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T05:07:39.882467+00:00",
+    "updated_at": "2026-04-02T05:07:39.882471+00:00"
+  },
+  {
+    "id": "bc7f9d53-34c7-4afd-a306-45cbcfc83c32",
+    "title": "Race #5 Texas Motorplex",
+    "event_type": "points_race",
+    "track": {
+      "id": "texas-motorplex-tx",
+      "name": "Texas Motorplex",
+      "city": "Ennis",
+      "state": "TX"
+    },
+    "dates": {
+      "start": "2026-05-31"
+    },
+    "times": {
+      "gates_open": "08:00",
+      "race_start": "08:00"
+    },
+    "classes": [
+      "Stock Muscle",
+      "Street Muscle",
+      "King Muscle",
+      "EV Muscle",
+      "Competition Muscle",
+      "Modified Muscle",
+      "Electronics",
+      "Pro Muscle",
+      "Super Pro Muscle",
+      "CA$H Bracket"
+    ],
+    "series": "TMCCC",
+    "contact": {
+      "phone": "972-878-2641",
+      "website": "http://www.texasmotorplex.com"
+    },
+    "notes": "1/4 Mile track\n1/4 Mile\nhttp://www.texasmotorplex.com",
+    "confidence": 0.95,
+    "flyers": [
+      {
+        "file": "https://tmccc.org/events",
+        "phash": null,
+        "processed_at": "2026-04-02T05:07:42.032611+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T05:07:42.032625+00:00",
+    "updated_at": "2026-04-02T05:07:42.032630+00:00"
+  },
+  {
+    "id": "8a629b90-ccd9-4401-81dd-94a7d89634fd",
+    "title": "Race #6 Thunder Valley Raceway Park",
+    "event_type": "points_race",
+    "track": {
+      "id": "thunder-valley-ok",
+      "name": "Thunder Valley Raceway Park",
+      "city": "Lexington",
+      "state": "OK"
+    },
+    "dates": {
+      "start": "2026-06-07"
+    },
+    "times": {
+      "gates_open": "09:00",
+      "race_start": null,
+      "registration_opens": null
+    },
+    "series": "TMCCC",
+    "classes": [
+      "Stock Muscle",
+      "Street Muscle",
+      "King Muscle",
+      "EV Muscle",
+      "Competition Muscle",
+      "Modified Muscle",
+      "Electronics",
+      "Pro Muscle",
+      "Super Pro Muscle",
+      "CA$H Bracket"
+    ],
+    "contact": {
+      "phone": "405-413-1522",
+      "website": "https://www.thundervalleyracewaypark.com",
+      "email": null
+    },
+    "notes": "1/4 Mile track. 4 points awarded for 1st round.\n1/4 Mile\n4 points 1st round\nhttps://www.thundervalleyracewaypark.com",
+    "confidence": 0.92,
+    "flyers": [
+      {
+        "file": "https://tmccc.org/events",
+        "phash": null,
+        "processed_at": "2026-04-02T05:07:44.222796+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T05:07:44.222810+00:00",
+    "updated_at": "2026-04-02T05:07:44.222815+00:00"
+  },
+  {
+    "id": "911431bb-ca19-4803-90d5-64f6785ab62c",
+    "title": "Race #7 Xtreme Raceway Park",
+    "event_type": "points_race",
+    "track": {
+      "id": "xtreme-tx",
+      "name": "Xtreme Raceway Park",
+      "city": "Ferris",
+      "state": "TX"
+    },
+    "dates": {
+      "start": "2026-06-28"
+    },
+    "times": {
+      "gates_open": "09:00",
+      "race_start": "09:00"
+    },
+    "classes": [
+      "Stock Muscle",
+      "Street Muscle",
+      "King Muscle",
+      "EV Muscle",
+      "Competition Muscle",
+      "Modified Muscle",
+      "Electronics",
+      "Pro Muscle",
+      "Super Pro Muscle",
+      "CA$H Bracket"
+    ],
+    "series": "TMCCC",
+    "contact": {
+      "phone": "972-544-3724",
+      "website": "https://www.xtremeracewaypark.com"
+    },
+    "notes": "Track location: 1800 S I45 Service road, Ferris TX 75125. Event is part of TMCCC series.\nhttps://www.xtremeracewaypark.com",
+    "confidence": 0.95,
+    "flyers": [
+      {
+        "file": "https://tmccc.org/events",
+        "phash": null,
+        "processed_at": "2026-04-02T05:07:46.542269+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T05:07:46.542286+00:00",
+    "updated_at": "2026-04-02T05:07:46.542291+00:00"
+  },
+  {
+    "id": "415bdd5b-4474-4bab-a180-02750e475aa8",
+    "title": "Race #8 Xtreme Raceway Park",
+    "event_type": "bracket",
+    "track": {
+      "id": "xtreme-tx",
+      "name": "Xtreme Raceway Park",
+      "city": "Ferris",
+      "state": "TX"
+    },
+    "dates": {
+      "start": "2026-08-30"
+    },
+    "times": {
+      "gates_open": "09:00",
+      "race_start": "09:00"
+    },
+    "series": "TMCCC",
+    "classes": [
+      "Stock Muscle",
+      "Street Muscle",
+      "King Muscle",
+      "EV Muscle",
+      "Competition Muscle",
+      "Modified Muscle",
+      "Electronics",
+      "Pro Muscle",
+      "Super Pro Muscle",
+      "CA$H Bracket"
+    ],
+    "contact": {
+      "phone": "972-544-3724",
+      "website": "https://www.xtremeracewaypark.com"
+    },
+    "confidence": 0.92,
+    "notes": "https://www.xtremeracewaypark.com",
+    "flyers": [
+      {
+        "file": "https://tmccc.org/events",
+        "phash": null,
+        "processed_at": "2026-04-02T05:07:51.696002+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T05:07:51.696011+00:00",
+    "updated_at": "2026-04-02T05:07:51.696013+00:00"
+  },
+  {
+    "id": "9c46bc76-249f-47a3-9cd2-30c06003ff45",
+    "title": "Race #9 Xtreme Raceway Park",
+    "event_type": "bracket",
+    "track": {
+      "id": "xtreme-tx",
+      "name": "Xtreme Raceway Park",
+      "city": "Ferris",
+      "state": "TX"
+    },
+    "dates": {
+      "start": "2026-09-13"
+    },
+    "times": {
+      "gates_open": "09:00",
+      "race_start": "09:00"
+    },
+    "contact": {
+      "phone": "972-544-3724",
+      "website": "https://www.xtremeracewaypark.com/"
+    },
+    "series": "TMCCC",
+    "classes": [
+      "Stock Muscle",
+      "Street Muscle",
+      "King Muscle",
+      "EV Muscle",
+      "Competition Muscle",
+      "Modified Muscle",
+      "Electronics",
+      "Pro Muscle",
+      "Super Pro Muscle",
+      "CA$H Bracket"
+    ],
+    "notes": "Does require engine diaper if running 6.50 or faster\nhttps://www.xtremeracewaypark.com/\nDOES REQUIRE ENGINE DIAPER IF RUNNING 6.50 OR FASTER",
+    "confidence": 0.92,
+    "flyers": [
+      {
+        "file": "https://tmccc.org/events",
+        "phash": null,
+        "processed_at": "2026-04-02T05:07:53.807729+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T05:07:53.807742+00:00",
+    "updated_at": "2026-04-02T05:07:53.807745+00:00"
+  },
+  {
+    "id": "6b0146c3-f703-4b82-977e-a248735aa375",
+    "title": "Race #10 Concho Valley Dragway",
+    "event_type": "points_race",
+    "track": {
+      "id": "concho-valley-dragway-tx",
+      "name": "Concho Valley Dragway",
+      "city": "San Angelo",
+      "state": "TX"
+    },
+    "dates": {
+      "start": "2026-09-19"
+    },
+    "times": {
+      "race_start": "15:00"
+    },
+    "series": "TMCCC",
+    "classes": [
+      "Stock Muscle",
+      "Street Muscle",
+      "King Muscle",
+      "EV Muscle",
+      "Competition Muscle",
+      "Modified Muscle",
+      "Electronics",
+      "Pro Muscle",
+      "Super Pro Muscle",
+      "CA$H Bracket"
+    ],
+    "contact": {
+      "phone": "325-610-6346",
+      "website": "https://tmccc.org/events"
+    },
+    "notes": "4 Points 1st round",
+    "confidence": 0.95,
+    "flyers": [
+      {
+        "file": "https://tmccc.org/events",
+        "phash": null,
+        "processed_at": "2026-04-02T05:07:55.854217+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T05:07:55.854224+00:00",
+    "updated_at": "2026-04-02T05:07:55.854227+00:00"
+  },
+  {
+    "id": "185be79b-6b3a-4620-8c48-a59e8c7c91f8",
+    "title": "Race #11 Little River Dragway",
+    "event_type": "points_race",
+    "track": {
+      "id": "little-river-dragway-tx",
+      "name": "Little River Dragway",
+      "city": "Holland",
+      "state": "TX"
+    },
+    "dates": {
+      "start": "2026-10-11"
+    },
+    "times": {
+      "gates_open": "08:00",
+      "race_start": null,
+      "registration_opens": null
+    },
+    "series": "TMCCC",
+    "classes": [
+      "Stock Muscle",
+      "Street Muscle",
+      "King Muscle",
+      "EV Muscle",
+      "Competition Muscle",
+      "Modified Muscle",
+      "Electronics",
+      "Pro Muscle",
+      "Super Pro Muscle",
+      "CA$H Bracket"
+    ],
+    "contact": {
+      "phone": "254-982-0119",
+      "website": "https://www.littleriverdragway.com",
+      "email": null
+    },
+    "notes": "4 Points 1st Round. Date change indicated on flyer.\n4 Points 1st Round\nhttps://www.littleriverdragway.com",
+    "confidence": 0.95,
+    "flyers": [
+      {
+        "file": "https://tmccc.org/events",
+        "phash": null,
+        "processed_at": "2026-04-02T05:07:58.006448+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T05:07:58.006461+00:00",
+    "updated_at": "2026-04-02T05:07:58.006465+00:00"
+  },
+  {
+    "id": "f1891348-c1fa-45a8-9610-4effff77df71",
+    "title": "Race #12  Thunder Valley Raceway Park",
+    "event_type": "points_race",
+    "track": {
+      "id": "thunder-valley-ok",
+      "name": "Thunder Valley Raceway Park",
+      "city": "Lexington",
+      "state": "OK"
+    },
+    "dates": {
+      "start": "2026-10-24"
+    },
+    "times": {
+      "gates_open": "15:00",
+      "race_start": "15:00"
+    },
+    "series": "TMCCC",
+    "classes": [
+      "Stock Muscle",
+      "Street Muscle",
+      "King Muscle",
+      "EV Muscle",
+      "Competition Muscle",
+      "Modified Muscle",
+      "Electronics",
+      "Pro Muscle",
+      "Super Pro Muscle",
+      "CA$H Bracket"
+    ],
+    "contact": {
+      "phone": "405-413-1522",
+      "website": "https://www.thundervalleyracewaypark.com"
+    },
+    "notes": "1/4 Mile track. 4 Points 1st Round event.\n1/4 Mile\n4 Points 1st Round\nhttps://www.thundervalleyracewaypark.com",
+    "confidence": 0.92,
+    "flyers": [
+      {
+        "file": "https://tmccc.org/events",
+        "phash": null,
+        "processed_at": "2026-04-02T05:08:00.258527+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T05:08:00.258537+00:00",
+    "updated_at": "2026-04-02T05:08:00.258539+00:00"
+  },
+  {
+    "id": "ba7d6741-2e39-448a-8b7a-104ab8c5e5e0",
+    "title": "Race #13 Xtreme Raceway Park",
+    "event_type": "points_race",
+    "track": {
+      "id": "xtreme-tx",
+      "name": "Xtreme Raceway Park",
+      "city": "Ferris",
+      "state": "TX"
+    },
+    "dates": {
+      "start": "2026-11-08"
+    },
+    "times": {
+      "gates_open": "09:00"
+    },
+    "classes": [
+      "Stock Muscle",
+      "Street Muscle",
+      "King Muscle",
+      "EV Muscle",
+      "Competition Muscle",
+      "Modified Muscle",
+      "Electronics",
+      "Pro Muscle",
+      "Super Pro Muscle",
+      "CA$H Bracket"
+    ],
+    "series": "TMCCC",
+    "contact": {
+      "phone": "972-544-3724",
+      "website": "https://xtremeracewaypark.com"
+    },
+    "notes": "Big dog race to follow. Track address: 1800 S I45 service rd., Ferris TX 75125\nBIG DOG RACE TO FOLLOW\nhttps://xtremeracewaypark.com",
+    "confidence": 0.85,
+    "flyers": [
+      {
+        "file": "https://tmccc.org/events",
+        "phash": null,
+        "processed_at": "2026-04-02T05:08:02.308738+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T05:08:02.308748+00:00",
+    "updated_at": "2026-04-02T05:08:02.308751+00:00"
+  },
+  {
+    "id": "ea9103e4-d54e-4e49-8b37-c3dce45abd4f",
+    "title": "Mega Bucks 2026 presented by Oakley Motorsports Competition Engines",
+    "event_type": "bracket",
+    "track": {
+      "id": "us-60-dragway-ky",
+      "name": "US 60 Dragway",
+      "city": "Hardinsburg",
+      "state": "KY"
+    },
+    "dates": {
+      "start": "2026-05-29",
+      "end": "2026-05-31"
+    },
+    "series": "Oakley Motorsports Competition Engines",
+    "classes": [
+      "Mega Bucks Brawl",
+      "Junior Dragsters",
+      "All Door Cars",
+      "All Dragsters",
+      "Double Entered Door Cars",
+      "Double Entered Dragsters"
+    ],
+    "fees": {
+      "entry": "Single Weekend Entry (Fri-Sat-Sun): $699 | Double Weekend Entry (Fri-Sat-Sun): $1,200 | Mega Bucks Brawl: $100 entry, $50 buy-back | Junior Dragsters: $100 Sat/Sun entry, $65 single day entry, $20 buy-back",
+      "spectator": "Thursday-Sunday $75 | Friday-Sunday $60 | $20/day | Kids 12 & under FREE"
+    },
+    "times": {
+      "gates_open": "07:00",
+      "race_start": "08:00",
+      "registration_opens": null
+    },
+    "contact": {
+      "website": "www.us60dragracing.com",
+      "phone": "(270)859-4100",
+      "email": null
+    },
+    "flyers": [
+      {
+        "file": "622345643_1762760838498481_5443507387812239288_n.jpg",
+        "phash": "c0ab1b1a5f3f2968",
+        "processed_at": "2026-04-02T05:08:23.926701+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T05:08:23.926997+00:00",
+    "updated_at": "2026-04-02T05:08:23.927008+00:00"
+  },
+  {
+    "id": "1dc676d2-bd0f-4856-9dcf-965b098d8fa6",
+    "title": "Inaugural Memorial Day Coal Rush Twenties",
+    "event_type": "bracket",
+    "track": {
+      "id": "ellis-57-il",
+      "name": "Ellis 57 Dragstrip",
+      "city": "Benton",
+      "state": "IL"
+    },
+    "dates": {
+      "start": "2026-05-22",
+      "end": "2026-05-24"
+    },
+    "series": "Wasting Fuel Promotions",
+    "classes": [
+      "Super Pro (No Box)",
+      "Pro (Box)",
+      "Junior Dragsters"
+    ],
+    "fees": {
+      "entry": "$575 Weekend Single / $1,050 Weekend Double. Pre-entry: $100 due, pay $475 at the gate. Junior Dragsters: $300 Weekend Entry. Re-entry: $100 (Friday), $150 (Sat/Sun), $20 (Jr. Dragster). $150 Single Day Entry (Friday). Crew: $40 Weekend / $15 daily, 1 free crew per racer.",
+      "spectator": null
+    },
+    "times": {
+      "gates_open": "07:30",
+      "registration_opens": null,
+      "race_start": "08:30"
+    },
+    "contact": {
+      "phone": "Jesse Fritts: 217-294-3246 | Adam Jakupcak: 815-822-2493",
+      "email": null,
+      "website": "wastingfuelpromotions.com"
+    },
+    "notes": "Presented by VP Racing Fuels. Track address: 6112 Hill City Road, Benton, IL 62812. ALL MONEY IS GUARANTEED. 300 entry cap, 32 No Box cap. Junior Dragsters limited to 16 entries, contested Fri\u2013Sun.\n\nPAYOUTS:\n\u2022 Friday: $5,000 to win / $1,000 r/u / $300 semis / $200 1/4s / $100 1/8s. $500 No Box Bonus. *If over 15 No Box cars, pay increases to $2,000 to win / $500 r/u for Sat/Sun.\n\u2022 Sat/Sun (FuelTech & FAB Machining): $20,000 to win / $5,000 r/u / $1,000 semis / $500 1/4s / $100 round money starting with Round 3 win. $1,000 No Box Bonus.\n\u2022 Junior Dragsters (FuelTech): $1,000 to win / $200 r/u / $50 semi.\n\nSCHEDULE:\n\u2022 Thursday: Track-operated Test & Tune.\n\u2022 Friday: Gates 7:30am, TT 8:30am, Elims to follow, Second TT after E3.\n\u2022 Saturday: Gates 7:30am, 8:30am New Entry TT, Junior TT after box re-entry, Nick Agresta Wheelie Contest after Elims.\n\u2022 Sunday: Gates 7:30am, 8:30am New Entry TT, Junior TT after box re-entry.\n\nRULES: No Box can only enter No Box once. Double MUST be in Box. Nick Agresta \"Do a Wheelie\" Contest on Saturday Night.",
+    "confidence": 0.97,
+    "unclear_fields": [
+      "registration_opens"
+    ],
+    "flyers": [
+      {
+        "file": "632584573_1778183146956250_3680264009272569145_n.jpg",
+        "phash": "d1abebe541436465",
+        "processed_at": "2026-04-02T05:08:44.851420+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T05:08:44.851510+00:00",
+    "updated_at": "2026-04-02T05:08:44.851514+00:00"
+  },
+  {
+    "id": "a5403414-4c9f-4d80-95e7-657b339cd21e",
+    "title": "2nd Annual Beacon Doorcar Battle",
+    "event_type": "bracket",
+    "track": {
+      "id": "beacon-dragway-ky",
+      "name": "Beacon Dragway",
+      "city": "Paducah",
+      "state": "KY"
+    },
+    "dates": {
+      "start": "2026-06-04",
+      "end": "2026-06-07"
+    },
+    "classes": [
+      "Door Car (Main Event)",
+      "Jr Dragster",
+      "64-Car Shootout",
+      "Gamblers"
+    ],
+    "fees": {
+      "entry": "Thursday Test n' Tune: $50 (waived w/ Gamblers Entry) | Thursday Warmup: $80 entry, $50 buyback (1st Rnd Only) | Friday/Saturday/Sunday Main Event: $150/day, Re-Entry $100 | Weekend Single Entry: $375 | Weekend Double Entry: $575 | Jr Dragster: $45 entry, $25 buyback (1st only) | 64-Car Shootout: $150 | Pit Vehicle Race: $20 (max 3), 3 for $50, BB (1st only) $10",
+      "spectator": "$20/Day or $50/Weekend; Kids 12 & Under FREE"
+    },
+    "times": {
+      "gates_open": "10:00",
+      "registration_opens": null,
+      "race_start": "19:15"
+    },
+    "contact": {
+      "phone": "615-389-8044",
+      "email": "ryanfrye16@yahoo.com",
+      "website": null
+    },
+    "series": null,
+    "flyers": [
+      {
+        "file": "634804686_1778184443622787_2978564948269638418_n.jpg",
+        "phash": "941b310f8ff06a73",
+        "processed_at": "2026-04-02T05:09:11.837643+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T05:09:11.837797+00:00",
+    "updated_at": "2026-04-02T05:09:11.837804+00:00"
+  },
+  {
+    "id": "5c957ddd-2412-4fc2-a818-398725822fdf",
+    "title": "Erson Cams Midwest Bracketfest Powered by Fuel Factory",
+    "event_type": "bracket",
+    "series": "GallStar Bracket Races",
+    "track": {
+      "id": "eddyville-ia",
+      "name": "Eddyville Raceway Park",
+      "city": "Oskaloosa",
+      "state": "IA"
+    },
+    "dates": {
+      "start": "2026-05-01",
+      "end": "2026-05-03"
+    },
+    "classes": [
+      "Back Tire Race (Rick Livingston Sr. Memorial)",
+      "Jr. Dragster Shoutout",
+      "No Box Bonus",
+      "All Run Class"
+    ],
+    "fees": {
+      "entry": "Back Tire Race: $50 (includes one time hit); Jr. Dragster Shoutout: $50/single day (all run, no entry cap); Saturday/Sunday Main: Single Day Pre-Entry $135, Gate Available Single Day $165; Test & Tune: $40; Spectators/Crew: $15/day or $30/weekend (Kids 12 & under FREE)",
+      "spectator": "$15/day or $30/weekend (Kids 12 & under FREE)"
+    },
+    "times": {
+      "gates_open": "13:00",
+      "registration_opens": "08:00",
+      "race_start": "08:00"
+    },
+    "contact": {
+      "phone": "605-933-1698",
+      "email": "tom@gallstartv.com",
+      "website": "gallstartv.com/bracketraces"
+    },
+    "flyers": [
+      {
+        "file": "640052970_1785577219550176_526734645165398999_n.jpg",
+        "phash": "c5ef875611543cb8",
+        "processed_at": "2026-04-02T05:09:36.823260+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T05:09:36.823352+00:00",
+    "updated_at": "2026-04-02T05:09:36.823355+00:00"
+  },
+  {
+    "id": "5cb9ed0f-ae2f-4c53-bf8c-cbf0bc311c41",
+    "title": "2nd Annual Beacon Bottom Bulb BOGO Bash",
+    "event_type": "bracket",
+    "track": {
+      "id": "beacon-dragway-ky",
+      "name": "Beacon Dragway",
+      "city": "Paducah",
+      "state": "KY"
+    },
+    "dates": {
+      "start": "2026-06-19",
+      "end": "2026-06-21"
+    },
+    "times": {
+      "gates_open": "10:00",
+      "registration_opens": "09:00",
+      "race_start": "19:15"
+    },
+    "fees": {
+      "entry": "2-Race BOGO $300 (Buy 1 Get 1 Free); $50 to pre-register / remaining $250 at gate. If not sold out by June 1, gate entries sold for $350. Friday Test n' Tune: $50 (waived w/ Gamblers entry). Gamblers: $100 entry (doubles allowed, no buybacks). Re-Entry: $100 (first round only).",
+      "spectator": "$15/Day or $40/Weekend; Kids 12 & Under FREE"
+    },
+    "series": null,
+    "classes": [
+      "Main Event (Saturday $10,000 to Win)",
+      "Main Event (Sunday $10,000 to Win)",
+      "Gamblers Race (Friday & Saturday Night, $5,000 to Win)",
+      "Test n' Tune"
+    ],
+    "contact": {
+      "phone": "615-389-8044",
+      "email": "ryanfrye16@yahoo.com",
+      "website": "www.BEACONDRAGWAY.com"
+    },
+    "flyers": [
+      {
+        "file": "640513245_1790376169070281_8174838114260918635_n.jpg",
+        "phash": "943d315395f04e6d",
+        "processed_at": "2026-04-02T05:10:02.424260+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T05:10:02.424382+00:00",
+    "updated_at": "2026-04-02T05:10:02.424387+00:00"
+  },
+  {
+    "id": "ec35cb61-f06f-4d29-a250-21016109850b",
+    "title": "Get M 125 Twin 10's - Cotton Co. Promotions",
+    "event_type": "bracket",
+    "track": {
+      "id": "thunder-valley-ok",
+      "name": "Thunder Valley Raceway Park",
+      "city": "Noble",
+      "state": "OK"
+    },
+    "dates": {
+      "start": "2026-06-12",
+      "end": "2026-06-14"
+    },
+    "series": "Cotton Co. Promotions",
+    "fees": {
+      "entry": "$349 BOGO (Buy One Get One) for Saturday & Sunday mains; $75 entry / $45 buyback for Friday Gamblers; $250 entry for 32 Car Shootout (Sat Night); $15/day or $40 weekend crew fee",
+      "spectator": "Children Under 10 FREE"
+    },
+    "times": {
+      "gates_open": "08:00",
+      "registration_opens": "10:00",
+      "race_start": "16:00"
+    },
+    "contact": {
+      "website": "www.raceccrp.com"
+    },
+    "classes": [
+      "Super Pro (SP)",
+      "Bottom Bulb Elite 25"
+    ],
+    "confidence": 0.95,
+    "unclear_fields": [
+      "classes"
+    ],
+    "notes": "FULL SCHEDULE \u2014 THURSDAY: Parking 4:00PM\u201310:00PM. FRIDAY: Gates Open 8:00AM, Registration 10:00AM, Test & Tune ($40) 1:00PM, R1 Gamblers 4:00PM. SATURDAY: Gates Open 8:00AM, Time Run 9:00AM, R1 Eliminations to Follow. SUNDAY: Gates Open 7:00AM, RFC Service 8:00AM, R1 Eliminations 9:00AM. | PAYOUTS \u2014 Friday Gamblers: $2,000 to win, $1,000 runner-up, $400 semi-finals, $200 quarter-finals. Double entries allowed. | Saturday & Sunday Mains (each): $10,000 to win, $2,250 runner-up, $500 semi-finals, $250 quarter-finals, $150 5th Rd win, $100 4th Rd win, $50 3rd Rd win. $100 Buyback each day. Round money does NOT compound. | 32 Car Shootout (Saturday Night): $250 entry, $5,000 to win, 1,000 runner-up. | Bottom Bulb Elite 25 (Kingston, OK \u2013 EFT sponsor): Only 25 BOGO entries sold. $1,500 bonus Sat & Sun. Bottom Bulb winner joins next round with Top Bulb earning round money. | Only 125 pre-entries sold \u2014 every entry is doubled! Registration opens March 1, 2026. All registrations at www.raceccrp.com. $200 due at pre-entry to lock in spot, $149 balance due at facility. Gate entries (if not sold out) $449. No refunds if event canceled (entries can be sold by racers). | Sponsors: McLarren Electric, Laris Motorsports Insurance / Hydration Station, Porta-Tree Timing Systems, Sunset Performance Engines, Cook Motor Co. (Wichita Falls, TX), EFT (Kingston, OK). | General rules: All races run on 1/8 mile. Ladder at 16 cars or less with best previous reaction time getting lane choice. 8.00 and faster in SP. No deep staging. RPM Limit Down Track strictly prohibited. No gold cards. No refunds. 3.5% fee on credit card charges. Checks/cash accepted.",
+    "flyers": [
+      {
+        "file": "641290726_1790374705737094_7921227523330546735_n.jpg",
+        "phash": "a4632b73939d98e8",
+        "processed_at": "2026-04-02T05:10:27.315239+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T05:10:27.315431+00:00",
+    "updated_at": "2026-04-02T05:10:27.315439+00:00"
+  },
+  {
+    "id": "f2603d3e-16e4-4b51-aaaf-24b2035029ef",
+    "title": "Laris Motorsports Insurance Twin Fifties $50K & $50K Presented by Vintage",
+    "event_type": "bracket",
+    "track": {
+      "id": "world-wide-technology-il",
+      "name": "World Wide Technology Raceway",
+      "city": "Madison",
+      "state": "IL"
+    },
+    "dates": {
+      "start": "2026-05-07",
+      "end": "2026-05-09"
+    },
+    "series": "Ultratech Championship Points Series - Race #1",
+    "classes": [
+      "Top Bulb (Door Car / Dragster)",
+      "No Box",
+      "Jr Dragster",
+      "Double Door Car",
+      "Dragster"
+    ],
+    "fees": {
+      "entry": "Weekend Entry Fri+Sat $699; Single Day Entry $400; No Box Friday Bonus $2,500 / Saturday Bonus $2,500; Jr Dragster Weekend Entry $100 (only 16 entries); Wednesday 64-Car Shootout Entry $500; Thursday Warm Up Entry $250 (Re-Entry $100); Re-Entry $250 (1st Round Only)"
+    },
+    "times": {
+      "gates_open": "00:00",
+      "registration_opens": "08:00",
+      "race_start": "08:00"
+    },
+    "contact": {
+      "phone": "502-417-0008 (Tyler Bohannon) / 502-715-1778 (Brian Whitworth)",
+      "website": null,
+      "email": null
+    },
+    "flyers": [
+      {
+        "file": "641323070_1790375189070379_7552399918692189775_n.jpg",
+        "phash": "d571bf2aa107b01e",
+        "processed_at": "2026-04-02T05:10:50.142776+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T05:10:50.142982+00:00",
+    "updated_at": "2026-04-02T05:10:50.142990+00:00"
+  },
+  {
+    "id": "a40218eb-1d6d-4dae-9f96-f35925afb294",
+    "title": "The Michigrander - Triple 20 Granders",
+    "event_type": "bracket",
+    "track": {
+      "id": "us-131-mi",
+      "name": "US 131 Motorsports Park",
+      "city": "Martin",
+      "state": "MI"
+    },
+    "dates": {
+      "start": "2026-06-18",
+      "end": "2026-06-21"
+    },
+    "classes": [
+      "Top Bulb",
+      "No-Box",
+      "Jr Dragster",
+      "Doorcar",
+      "Dragster"
+    ],
+    "fees": {
+      "entry": "Thu Test & Tune: $35 | Thu Warmup: $100, Re-Entry $60 | Fri/Sat/Sun Weekend Pre-Entry: $525 ($125 deposit, $400 at gate) | Week-of entry (if not pre-sold out): $690 or $230/Daily | Jr Dragster Weekend: $150, Buyback $30, Week-of $180 or $60/Daily | Saturday Night Shootout: $250",
+      "spectator": "4-Day Pass: $50 | 3-Day Pass: $45 | 2-Day Pass: $30 | Single Day: $15 | Children (6-12): $5/day | Racers not testing Thursday: $10"
+    },
+    "times": {
+      "gates_open": null,
+      "registration_opens": "10:00",
+      "race_start": "14:00"
+    },
+    "contact": {
+      "phone": "269-672-7800",
+      "website": "www.us131msp.com",
+      "email": null
+    },
+    "series": null,
+    "flyers": [
+      {
+        "file": "643394962_1790374992403732_3658435242929395310_n.jpg",
+        "phash": "848705fa2a797d47",
+        "processed_at": "2026-04-02T05:11:14.788977+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T05:11:14.789098+00:00",
+    "updated_at": "2026-04-02T05:11:14.789102+00:00"
+  },
+  {
+    "id": "5ec28732-818d-49ea-8542-bd9ff71aa509",
+    "title": "6th Annual Coastal Clash",
+    "event_type": "bracket",
+    "track": {
+      "id": "us-13-dragway-de",
+      "name": "US 13 Dragway",
+      "city": "Delmar",
+      "state": "DE"
+    },
+    "dates": {
+      "start": "2026-04-10",
+      "end": "2026-04-12"
+    },
+    "series": "FRBR Promotions",
+    "classes": [
+      "Top Bulb",
+      "No-Box",
+      "Jr Dragster",
+      "All Run Gamblers",
+      "Jr Dragster Gamblers",
+      "Top Doorcar",
+      "Top Dragster",
+      "Top Door Doubles",
+      "Top Dragster Doubles"
+    ],
+    "fees": {
+      "entry": "Top Bulb: Weekend $300 / Single-Day $170 / Re-Entry $100 (1st Rnd Only); Jr Dragster: Weekend $130 / Single-Day $80 / Re-Entry $30 (1st Rnd Only); No-Box: Weekend $180 / Single-Day $110 / Re-Entry $60 (1st Rnd Only); Friday Test N' Tune: $40; Friday Night Gamblers All Run: $80 (75 car min for full payouts); Jr Dragster Gamblers: $50; Double Down: Buy Back $100",
+      "spectator": null
+    },
+    "times": {
+      "gates_open": "09:00",
+      "registration_opens": null,
+      "race_start": "17:00"
+    },
+    "contact": {
+      "email": "Andy Anderson: LeverageRacing@gmail.com",
+      "phone": null,
+      "website": null
+    },
+    "notes": "FRIDAY: Gates Open 9:00 AM, Test N' Tune ($40) 11AM\u20134PM ($20 Rebate w/ Gamblers Entry), Gamblers 5:00 PM. SATURDAY: Gates Open 8:00 AM, Time Trial 9:00 AM (Dash for Cash during Time Trial). SUNDAY: Gates Open 8:00 AM, New Time Trial 9:00 AM (New Combination Only), Eliminations following Time Trial. Crew: $15/Daily, Kids 12 & Under FREE. PAYOUTS \u2014 Top Bulb: Win $10,000 / R/U $2,000 / Semi $1,000 / $100 Rnd Money starting 4th Rnd loser. Jr Dragster: Win $1,000 / R/U $400 / Semi $180 / Quarters $80. No-Box: Win $3,500 / R/U $800 / Semi $400 / $60 Rnd Money starting 4th Rnd loser. Friday Night Gamblers All Run: $2,000 to Win / R/U $800 / Semi $250 / Qtrs $100. Jr Dragster Gamblers: 80% Payback. Double Down (Sat or Sun): No-Box racers can pay $300 SP Weekend Entry to race for Super Pro purse including $100 round money; Win No-Box & continue into Super Pro for $10,000. Run Order: No-Box / Jr Dragster / Top Doorcar / Top Dragster / Top Door Doubles / Top Dragster Doubles. Live Stream by Diamond State Digital. Presented by Koller Chiropractic Wellness Center. Trivia/Challenges & Lucky Loser Prize Vault \u2013 Win Gift Cards! Saturday Dash for Ca$h during Saturday Time Trials. Track address: 37854 Sussex Highway, Delmar, DE. Facebook: FRBRPromotions.",
+    "confidence": 0.97,
+    "unclear_fields": [
+      "registration_opens",
+      "spectator fees"
+    ],
+    "flyers": [
+      {
+        "file": "645211378_1795276198580278_1570421750318061004_n.jpg",
+        "phash": "fb1f8e788464a44e",
+        "processed_at": "2026-04-02T05:11:37.317303+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T05:11:37.317434+00:00",
+    "updated_at": "2026-04-02T05:11:37.317438+00:00"
+  },
+  {
+    "id": "9b8a6acc-bd57-48a2-b04f-66821e8cc1bc",
+    "title": "BTE King of the Coast - Event #2",
+    "event_type": "bracket",
+    "series": "King of the Coast (KOC) Bracket Series presented by McMurtry",
+    "track": {
+      "id": "gulfport-dragway-ms",
+      "name": "Gulfport Dragway",
+      "city": "Gulfport",
+      "state": "MS"
+    },
+    "dates": {
+      "start": "2026-04-24",
+      "end": "2026-04-26"
+    },
+    "classes": [
+      "Electronics (Doorslammers & Dragsters)",
+      "Footbrake",
+      "Super Quick 16 (8 Quickest Doorcars & 8 Quickest Dragsters)",
+      "Junior Dragsters Ages 6-12",
+      "Junior Dragsters Ages 6-12 (Class)",
+      "Junior Dragsters Ages 12-17",
+      "Sportsman"
+    ],
+    "times": {
+      "gates_open": "16:00",
+      "race_start": "18:00",
+      "registration_opens": null
+    },
+    "fees": {
+      "entry": "Electronics: Sat Only $120, Sun Only $120, Sat-Sun Weekend $200; Footbrake: Sat Only $90, Sun Only $90, Sat-Sun Weekend $150; Junior Dragsters: $75/Race; Sportsman: FREE w/ $20 Spectator Pass each day; Test n' Tune (Fri): $30; Wild Cards: $10ea, 2 for $20, 3 for $25",
+      "spectator": "Friday $10, 1 Race $20, Weekend Pass $40, Kids 8 & Under FREE, All Spectators after 12 Noon Sat & Sun: $20/car load or $15/person"
+    },
+    "contact": {
+      "phone": "228-863-4408",
+      "website": "www.gulfportdragway.com",
+      "email": null
+    },
+    "flyers": [
+      {
+        "file": "652334732_1807280710713160_60223816796467246_n.jpg",
+        "phash": "feb9d98a69ce0160",
+        "processed_at": "2026-04-02T05:12:01.493468+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T05:12:01.493583+00:00",
+    "updated_at": "2026-04-02T05:12:01.493586+00:00"
+  },
+  {
+    "id": "089c5153-8d8b-4b28-85b4-9e13961cbc82",
+    "title": "Laris Motorsports Insurance $75K presented by Vintage",
+    "event_type": "bracket",
+    "track": {
+      "id": "dar-oh",
+      "name": "Dar\u0430\u043d\u0430 Raceway",
+      "city": "Hebron",
+      "state": "OH"
+    },
+    "dates": {
+      "start": "2026-05-28",
+      "end": "2026-05-31"
+    },
+    "series": "Ultratech Race Fab Championship Points Series - Race #2",
+    "classes": [
+      "Top Bulb (No Prep/Bracket)",
+      "Jr Dragster"
+    ],
+    "fees": {
+      "entry": "$199 Pre-Entry (opens 12 Noon March 26) | $250 Single Day (Fri/Sun) | $300 Re-Entry (Sat) | $450 Single Day (Sat) | $749 Fri-Sun Entry (425 CAP) | $100 Weekend Day (Jr Dragster) | $20 Buy Back Rd 1 Only (Jr Dragster)",
+      "spectator": null
+    },
+    "times": {
+      "gates_open": "12:00",
+      "registration_opens": "12:00",
+      "race_start": "08:00"
+    },
+    "contact": {
+      "phone": "Tyler Bohannon: 502-417-0008 | Brian Whitworth: 502-715-1778",
+      "website": "RaceDerbyCity.com",
+      "email": null
+    },
+    "flyers": [
+      {
+        "file": "652620581_1809987980442433_6827778053001504361_n.jpg",
+        "phash": "f1b4d0b65a96e072",
+        "processed_at": "2026-04-02T05:12:22.509943+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T05:12:22.510158+00:00",
+    "updated_at": "2026-04-02T05:12:22.510164+00:00"
+  },
+  {
+    "id": "01532566-3ff1-44c4-90cb-0dd284676526",
+    "title": "RBZ Triple 10s Championship Chase Presented by Renegade - Event 1 (Beacon Dragway)",
+    "event_type": "points_race",
+    "series": "RBZ Triple 10s Championship Chase",
+    "track": {
+      "id": "beacon-dragway-ky",
+      "name": "Beacon Dragway",
+      "city": "Paducah",
+      "state": "KY"
+    },
+    "dates": {
+      "start": "2026-04-10",
+      "end": "2026-04-12"
+    },
+    "times": {
+      "gates_open": "18:00",
+      "race_start": "11:00"
+    },
+    "fees": {
+      "entry": "$165 per Day / $450 Weekend Entry. Buy Back: $80 (1st Round Only). Points Fund Entry: FREE"
+    },
+    "classes": [
+      "Super Pro / Bracket"
+    ],
+    "notes": "Multi-day bracket race. Winner $10,000 each day (Fri/Sat/Sun). Runner Up $2,000, Semi $700, 1/4s $300, 1/8s $100, 1/16s $50. Points Fund: 1st $4,000 / 2nd $2,000 / 3rd $1,000 / 4th $800 / 5th $600 / 6th $500 / 7th $400 / 8th $300 / 9th $200 / 10th $200. Points system: 20 pts to enter, 10 pts per round win, 2 bonus pts for a win, 1 bonus pt for a runner-up. Schedule: Thursday gates open 6pm (early parking); Friday time run 11am, eliminations to follow; Saturday time run 10am (time permitting), eliminations to follow; Sunday 11am new time runs only, eliminations to follow. Track address: 4460 Shemwell Ln, Paducah, KY 42003. Sponsors: Laris Motorsports Insurance, Strange Engineering, Brodix Cylinder Heads, Holley, K&R Performance Engineering, Moroso, East Coast Auto Electric, Advanced Design Carburetors, Hoosier, Jesel, Wiseco, PortaTree.",
+    "confidence": 0.97,
+    "unclear_fields": [
+      "race_start"
+    ],
+    "flyers": [
+      {
+        "file": "652908766_1809987973775767_1470389403452704759_n.jpg",
+        "phash": "91fc2c05ebc55a6a",
+        "processed_at": "2026-04-02T05:12:39.267869+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T05:12:39.268017+00:00",
+    "updated_at": "2026-04-02T05:12:39.268022+00:00"
+  },
+  {
+    "id": "849ff2f7-1a03-4e80-a5f6-2e969367cd2c",
+    "title": "SpringFast Bracket Nationals",
+    "event_type": "bracket",
+    "series": "Staging Light",
+    "track": {
+      "id": "edgewater-sports-oh",
+      "name": "Edgewater Sports Park",
+      "city": "Cleves",
+      "state": "OH"
+    },
+    "dates": {
+      "start": "2026-04-17",
+      "end": "2026-04-19"
+    },
+    "classes": [
+      "Top E.T.",
+      "No-Box",
+      "Jr. Dragster"
+    ],
+    "times": {
+      "gates_open": "08:00",
+      "registration_opens": "08:00",
+      "race_start": "10:00"
+    },
+    "fees": {
+      "entry": "Top E.T. Single-Day: Fri $100, Sat $150, Sun $100 | Top E.T. Weekend Entry: $300 (Fri-Sat-Sun) or Single 10K + Double-in-1 $5K | Re-Entry (1st Rnd Only): Fri $50, Sat $100, Sun $50 | No-Box Single-Day: $80/day | No-Box Re-Entry (1st Rnd Only): $50 | No-Box Weekend Entry: $195 (Fri-Sat-Sun or Single Day + Double 1 Day) | Jr. Dragster Entry: $50 per race | Jr. Dragster Buyback (1st Rnd Only): $30 | Fri & Sat Night Gamblers Entry: $100 | Thursday Test n' Tune Entry: $35",
+      "spectator": "Adults $15/day; Kids 10 & Under FREE"
+    },
+    "contact": {
+      "website": "www.staginglight.com",
+      "email": "staginglight@gmail.com"
+    },
+    "flyers": [
+      {
+        "file": "655729662_1817178363056728_5307457848687513493_n.jpg",
+        "phash": "9beee49a64a691a4",
+        "processed_at": "2026-04-02T05:13:01.628248+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T05:13:01.628384+00:00",
+    "updated_at": "2026-04-02T05:13:01.628388+00:00"
+  },
+  {
+    "id": "73163551-ecd6-401f-b4cf-d758f64969e8",
+    "title": "3rd Annual Pennington Bros. SuperBucks Showdown - Summer SuperBucks",
+    "event_type": "bracket",
+    "track": {
+      "id": "xtreme-tx",
+      "name": "Xtreme Raceway Park",
+      "city": "Ferris",
+      "state": "TX"
+    },
+    "dates": {
+      "start": "2026-06-04",
+      "end": "2026-06-06"
+    },
+    "series": "Pennington Bros. SuperBucks Showdown",
+    "confidence": 0.97,
+    "notes": "Two Great Events in 2026. This is Event 1 of 2: Summer SuperBucks. 3rd Annual edition of the series.",
+    "unclear_fields": [
+      "event_type",
+      "classes",
+      "fees",
+      "times"
+    ],
+    "flyers": [
+      {
+        "file": "penn.jpg",
+        "phash": "85a8e842af9dbae1",
+        "processed_at": "2026-04-02T05:13:43.204647+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T05:13:43.204784+00:00",
+    "updated_at": "2026-04-02T05:13:43.204788+00:00"
+  },
+  {
+    "id": "6213c0ba-b75d-49cc-b12b-359d96057b6b",
+    "title": "2026 Pro 1 Racing & Safety Products Xtreme Bracket Series - April 3-4 (Friday Night Under the Lights)",
+    "event_type": "bracket",
+    "track": {
+      "id": "xtreme-tx",
+      "name": "Xtreme Raceway Park",
+      "city": "Ferris",
+      "state": "TX"
+    },
+    "dates": {
+      "start": "2026-04-03",
+      "end": "2026-04-03"
+    },
+    "series": "Pro 1 Racing & Safety Products Xtreme Bracket Series / NHRA South Central Division D4 / Summit NHRA E.T. Series",
+    "times": {
+      "gates_open": "17:00",
+      "registration_opens": null,
+      "race_start": "19:30"
+    },
+    "classes": [
+      "Xtreme Bracket Gamblers",
+      "Xtreme Jr Gamblers"
+    ],
+    "fees": {
+      "entry": "Xtreme Bracket Gamblers: $75 entry / $30 buy back ($300 on top at 40 cars). Xtreme Jr Gamblers: $40 entry / $25 buy back.",
+      "spectator": null
+    },
+    "contact": {
+      "website": "xtremeracewaypark.com",
+      "phone": null,
+      "email": null
+    },
+    "notes": "Friday Night Under the Lights. Open TNT: 6PM. Time Run (1): 7:30PM. Xtreme Bracket Gamblers pays $1,000 to win / $400 RU / $150 Semi. Xtreme Jr Gamblers pays $300 to win / $150 RU / $75 Semi. Address: 1800 S Interstate 45 Service Road, Ferris, Texas 75125.",
+    "confidence": 0.97,
+    "unclear_fields": [],
+    "flyers": [
+      {
+        "file": "xrp-bracket-43.jpg",
+        "phash": "81636ba6d423bcb9",
+        "processed_at": "2026-04-02T05:15:03.601868+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T05:15:03.602001+00:00",
+    "updated_at": "2026-04-02T05:15:03.602004+00:00"
+  }
+]

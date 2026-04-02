@@ -1117,6 +1117,33 @@ def test_run_extraction_text_new_event(tmp_events_file):
     assert saved_events[0]["title"] == "Race Day"
 
 
+def test_run_extraction_text_new_tmccc_event_applies_enrichment(tmp_events_file):
+    listing = {
+        "title": "Race #2 Thunder Valley Raceway Park",
+        "source_url": "https://tmccc.org/events",
+        "source": "TMCCC",
+        "location_text": "10500 48th St., Lexington, OK 73051",
+        "description": "Track Phone: 405-413-1522\nWebsite: https://www.thundervalleyracewaypark.com\n*1/4 Mile*",
+    }
+    extracted = {
+        "title": "Race #2 Thunder Valley Raceway Park",
+        "event_type": "points_race",
+        "track": {"name": "Thunder Valley Raceway Park", "city": None, "state": None},
+        "dates": {"start": "2026-04-12"},
+        "confidence": 0.65,
+    }
+    with patch("drag_events.crawl.process.load_events", return_value=[]), \
+         patch("drag_events.crawl.extract_from_text", return_value=extracted), \
+         patch("drag_events.crawl.find_same_event", return_value=None), \
+         patch("drag_events.crawl.process.save_events") as mock_save:
+        crawl.run_extraction([], [listing])
+    saved_events = mock_save.call_args[0][0]
+    assert saved_events[0]["track"]["city"] == "Lexington"
+    assert saved_events[0]["track"]["state"] == "OK"
+    assert saved_events[0]["contact"]["phone"] == "405-413-1522"
+    assert "Super Pro Muscle" in saved_events[0]["classes"]
+
+
 def test_run_extraction_text_merged_event(tmp_events_file, sample_events, sample_extracted):
     listing = {"title": "Spring Bracket Classic", "source_url": "http://rj.com/2", "source": "RacingJunk"}
     with patch("drag_events.crawl.process.load_events", return_value=sample_events), \

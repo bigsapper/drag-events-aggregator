@@ -72,6 +72,7 @@ from .strategies.tmccc import (
     parse_tmccc_page_events_impl,
     tmccc_event_key,
 )
+from .tmccc_enrichment import enrich_tmccc_extracted_event
 
 BASE_DIR     = Path(__file__).resolve().parents[2]
 CONFIG_DIR   = BASE_DIR / "src" / "drag_events" / "config"
@@ -423,6 +424,8 @@ def run_extraction(downloaded: list[Path], text_listings: list[dict]) -> dict:
                 continue
 
             extracted = extract_from_text(listing)
+            if listing.get("source") == "TMCCC":
+                extracted = enrich_tmccc_extracted_event(extracted, listing)
 
             if not is_in_scope_event(extracted):
                 counts["skipped"] += 1

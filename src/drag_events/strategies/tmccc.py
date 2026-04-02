@@ -4,13 +4,52 @@ from bs4 import BeautifulSoup
 
 from ..event_filters import is_in_scope_listing
 from ..logging_utils import get_logger
+from ..tmccc_enrichment import TMCCC_CLASSES, parse_tmccc_description
 
 LOGGER = get_logger(__name__)
 
 
+def _tmccc_cards(soup: BeautifulSoup) -> list:
+    bigger = soup.find_all(attrs={"data-aid": "CALENDAR_BIGGER_SCREEN_CONTAINER"})
+    if bigger:
+        return bigger
+    return soup.find_all(attrs={"data-aid": "CALENDAR_SMALLER_SCREEN_CONTAINER"})
+
+
+def _extract_tmccc_time_text(card) -> str | None:
+    time_block = card.find(attrs={"data-aid": "CALENDAR_EVENT_TIME"})
+    if not time_block:
+        return None
+
+    parts = [node.get_text(" ", strip=True) for node in time_block.find_all("h4")]
+    parts = [part for part in parts if part]
+    if not parts:
+        return None
+    if len(parts) >= 3 and parts[1] == "-":
+        return f"{parts[0]} - {parts[2]}"
+    return " ".join(parts)
+
+
+def _extract_tmccc_location_text(card) -> str | None:
+    time_block = card.find(attrs={"data-aid": "CALENDAR_EVENT_TIME"})
+    if not time_block:
+        return None
+
+    inline_location = time_block.find("p")
+    if inline_location:
+        return inline_location.get_text(" ", strip=True) or None
+
+    current = time_block.next_sibling
+    while current is not None:
+        if getattr(current, "name", None) == "p":
+            return current.get_text(" ", strip=True) or None
+        current = current.next_sibling
+    return None
+
+
 def parse_tmccc_page_events_impl(html: str) -> list[dict]:
     soup = BeautifulSoup(html, "html.parser")
-    cards = soup.find_all(attrs={"data-aid": "CALENDAR_SMALLER_SCREEN_CONTAINER"})
+    cards = _tmccc_cards(soup)
     merged: dict[str, dict] = {}
 
     for card in cards:
@@ -26,17 +65,12 @@ def parse_tmccc_page_events_impl(html: str) -> list[dict]:
         if not is_in_scope_listing({"title": title}):
             continue
 
-        time_block = card.find(attrs={"data-aid": "CALENDAR_EVENT_TIME"})
-        time_text = location_text = None
-        if time_block:
-            parts = [node.get_text(" ", strip=True) for node in time_block.find_all(["h4", "p"])]
-            parts = [part for part in parts if part]
-            if parts:
-                time_text = " ".join(parts[:-1]) if len(parts) > 1 else parts[0]
-                location_text = parts[-1] if len(parts) > 1 else None
+        time_text = _extract_tmccc_time_text(card)
+        location_text = _extract_tmccc_location_text(card)
 
         desc_block = card.find(attrs={"data-aid": "CALENDAR_DESC_TEXT"})
         desc_text = desc_block.get_text(separator="\n", strip=True) if desc_block else None
+        desc_details = parse_tmccc_description(desc_text)
 
         key = f"{title}|{date_text}"
         existing = merged.get(key)
@@ -44,6 +78,8 @@ def parse_tmccc_page_events_impl(html: str) -> list[dict]:
             existing["time_text"] = existing["time_text"] or time_text
             existing["location_text"] = existing["location_text"] or location_text
             existing["description"] = existing["description"] or desc_text
+            existing["track_phone"] = existing["track_phone"] or desc_details["phone"]
+            existing["track_website"] = existing["track_website"] or desc_details["website"]
             continue
 
         merged[key] = {
@@ -52,6 +88,10 @@ def parse_tmccc_page_events_impl(html: str) -> list[dict]:
             "time_text": time_text,
             "location_text": location_text,
             "description": desc_text,
+            "track_phone": desc_details["phone"],
+            "track_website": desc_details["website"],
+            "series": "TMCCC",
+            "classes_text": ", ".join(TMCCC_CLASSES),
         }
 
     return list(merged.values())

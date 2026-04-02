@@ -17,7 +17,11 @@ test:
 run:
 	$(PYTHONPATH_RUN) $(PYTHON) -m drag_events.flyer_sync
 	$(PYTHONPATH_RUN) $(PYTHON) -m drag_events.crawl
-	$(PYTHONPATH_RUN) $(PYTHON) -m drag_events.process flyers
+	@if find flyers -maxdepth 1 -type f | grep -q .; then \
+		$(PYTHONPATH_RUN) $(PYTHON) -m drag_events.process flyers; \
+	else \
+		echo "No staged flyer images to process."; \
+	fi
 
 metrics:
 	$(PYTHONPATH_RUN) $(PYTHON) -m drag_events.crawl --metrics
