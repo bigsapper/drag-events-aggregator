@@ -1748,8 +1748,8 @@
     "track": {
       "id": "little-river-dragway",
       "name": "Little River Dragway",
-      "city": null,
-      "state": null
+      "city": "Holland",
+      "state": "TX"
     },
     "dates": {
       "start": "2026-04-10",
@@ -1770,8 +1770,6 @@
     "notes": "Friday Night classes: 6.50 Index Shootout, 5.50 Index Shootout. Saturday classes: 6.00 True, 7.00 True, 10.5 True, Random 5.50\u20135.80 Random Draw (posted rules). Tire rule: 28x10.5 or 275 Radial \u2014 No W Tires.",
     "confidence": 0.92,
     "unclear_fields": [
-      "track.city",
-      "track.state",
       "times",
       "fees.entry"
     ],
