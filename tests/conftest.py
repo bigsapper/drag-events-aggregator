@@ -6,6 +6,7 @@ import pytest
 
 PROJECT_DIR = Path(__file__).parent.parent
 TEST_FLYERS_DIR = PROJECT_DIR / "tests" / "test-flyers"
+SAMPLE_EVENT_ID = "11111111-1111-4111-8111-111111111111"
 
 
 # ── Shared event data ─────────────────────────────────────────────────────────
@@ -34,7 +35,7 @@ def sample_events(sample_extracted):
     """One existing event in the database."""
     return [
         {
-            "id": "evt-001",
+            "id": SAMPLE_EVENT_ID,
             **sample_extracted,
             "flyers": [{"file": "flyer1.jpg", "phash": "aabbccdd00112233", "processed_at": "2026-01-01T00:00:00+00:00"}],
             "created_at": "2026-01-01T00:00:00+00:00",

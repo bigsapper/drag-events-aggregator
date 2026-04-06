@@ -59,6 +59,23 @@ def test_extract_from_text_raises_if_no_tool_call():
             extract_text.extract_from_text(SAMPLE_LISTING)
 
 
+def test_extract_from_text_rejects_missing_confidence(sample_extracted):
+    invalid = dict(sample_extracted)
+    invalid.pop("confidence")
+    response = MagicMock()
+    block = MagicMock()
+    block.type = "tool_use"
+    block.name = "store_event"
+    block.input = invalid
+    response.content = [block]
+
+    client = MagicMock()
+    client.messages.create.return_value = response
+    with patch("drag_events.extract_text.get_anthropic_client", return_value=client):
+        with pytest.raises(ValueError, match="confidence"):
+            extract_text.extract_from_text(SAMPLE_LISTING)
+
+
 def test_extract_from_text_retries_transient_claude_failure(sample_extracted):
     response = MagicMock()
     block = MagicMock()

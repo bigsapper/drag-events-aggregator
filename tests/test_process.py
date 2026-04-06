@@ -8,7 +8,7 @@ from unittest.mock import patch, MagicMock
 import pytest
 
 from drag_events import process
-from tests.conftest import make_1x1_png
+from tests.conftest import SAMPLE_EVENT_ID, make_1x1_png
 
 PROJECT_DIR = Path(__file__).parent.parent
 
@@ -23,7 +23,7 @@ def test_load_events_existing_file(tmp_events_file, sample_events):
     tmp_events_file.write_text(json.dumps(sample_events))
     result = process.load_events()
     assert len(result) == 1
-    assert result[0]["id"] == "evt-001"
+    assert result[0]["id"] == SAMPLE_EVENT_ID
 
 
 def test_save_events_writes_valid_json(tmp_events_file, sample_events):
@@ -84,7 +84,7 @@ def test_process_flyer_duplicate(tmp_path, sample_events):
          patch("drag_events.process.is_duplicate_image", return_value=sample_events[0]):
         outcome, event = process.process_flyer(str(img), sample_events)
     assert outcome == "duplicate"
-    assert event["id"] == "evt-001"
+    assert event["id"] == SAMPLE_EVENT_ID
 
 
 def test_process_flyer_duplicate_skips_claude(tmp_path, sample_events, mock_vision_client):

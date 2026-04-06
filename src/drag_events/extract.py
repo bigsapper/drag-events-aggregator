@@ -7,6 +7,7 @@ from pathlib import Path
 from .retry_utils import execute_with_retries
 from .secrets import get_anthropic_client
 from .schema import EVENT_INPUT_SCHEMA
+from .validate_events import validate_payload_against_schema
 
 TOOL = {
     "name": "store_event",
@@ -25,7 +26,8 @@ Drag racing knowledge:
 - If the year is not shown, infer from context (upcoming events)
 - State abbreviations are standard US postal codes
 
-Set confidence based on image clarity and completeness of information visible."""
+Set confidence based on image clarity and completeness of information visible.
+Always include the confidence field as a number between 0 and 1."""
 
 CLAUDE_MAX_ATTEMPTS = 3
 CLAUDE_RETRY_BASE_DELAY_SECONDS = 1.0
@@ -72,6 +74,7 @@ def extract_event(image_path: str) -> dict:
 
     for block in response.content:
         if block.type == "tool_use" and block.name == "store_event":
+            validate_payload_against_schema(block.input, EVENT_INPUT_SCHEMA)
             return block.input
 
     raise ValueError(f"Claude did not call store_event tool for {image_path}")

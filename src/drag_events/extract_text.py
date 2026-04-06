@@ -5,6 +5,7 @@ import time
 from .retry_utils import execute_with_retries
 from .secrets import get_anthropic_client
 from .schema import EVENT_INPUT_SCHEMA
+from .validate_events import validate_payload_against_schema
 
 TOOL = {
     "name": "store_event",
@@ -31,7 +32,8 @@ def extract_from_text(listing: dict) -> dict:
                 "content": (
                     "Parse this drag racing event listing into structured data. "
                     "Infer event_type from the title if not explicit. "
-                    "Convert dates to YYYY-MM-DD. Extract city/state from location text.\n\n"
+                    "Convert dates to YYYY-MM-DD. Extract city/state from location text. "
+                    "Always include confidence as a number between 0 and 1.\n\n"
                     + text
                 )
             }],
@@ -44,6 +46,7 @@ def extract_from_text(listing: dict) -> dict:
 
     for block in response.content:
         if block.type == "tool_use" and block.name == "store_event":
+            validate_payload_against_schema(block.input, EVENT_INPUT_SCHEMA)
             return block.input
 
     raise ValueError(f"Claude did not call store_event for listing: {listing.get('title')}")

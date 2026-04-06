@@ -75,6 +75,24 @@ def test_extract_event_raises_if_no_tool_call(tmp_path):
             extract.extract_event(str(img))
 
 
+def test_extract_event_rejects_missing_confidence(tmp_path, sample_extracted):
+    img = make_1x1_png(tmp_path / "flyer.png")
+    invalid = dict(sample_extracted)
+    invalid.pop("confidence")
+    response = MagicMock()
+    block = MagicMock()
+    block.type = "tool_use"
+    block.name = "store_event"
+    block.input = invalid
+    response.content = [block]
+
+    client = MagicMock()
+    client.messages.create.return_value = response
+    with patch("drag_events.extract.get_anthropic_client", return_value=client):
+        with pytest.raises(ValueError, match="confidence"):
+            extract.extract_event(str(img))
+
+
 def test_extract_event_retries_transient_claude_failure(tmp_path, sample_extracted):
     img = make_1x1_png(tmp_path / "flyer.png")
     response = MagicMock()

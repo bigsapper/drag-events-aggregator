@@ -583,12 +583,13 @@
       "race_start": "08:00",
       "registration_opens": null
     },
-    "contact": {
-      "website": "www.us60dragracing.com",
-      "phone": "(270)859-4100",
-      "email": null
-    },
-    "flyers": [
+  "contact": {
+    "website": "https://www.us60dragracing.com",
+    "phone": "(270)859-4100",
+    "email": null
+  },
+  "confidence": 0,
+  "flyers": [
       {
         "file": "622345643_1762760838498481_5443507387812239288_n.jpg",
         "phash": "c0ab1b1a5f3f2968",
@@ -627,11 +628,11 @@
       "registration_opens": null,
       "race_start": "08:30"
     },
-    "contact": {
-      "phone": "Jesse Fritts: 217-294-3246 | Adam Jakupcak: 815-822-2493",
-      "email": null,
-      "website": "wastingfuelpromotions.com"
-    },
+  "contact": {
+    "phone": "Jesse Fritts: 217-294-3246 | Adam Jakupcak: 815-822-2493",
+    "email": null,
+    "website": "https://wastingfuelpromotions.com"
+  },
     "notes": "Presented by VP Racing Fuels. Track address: 6112 Hill City Road, Benton, IL 62812. ALL MONEY IS GUARANTEED. 300 entry cap, 32 No Box cap. Junior Dragsters limited to 16 entries, contested Fri\u2013Sun.\n\nPAYOUTS:\n\u2022 Friday: $5,000 to win / $1,000 r/u / $300 semis / $200 1/4s / $100 1/8s. $500 No Box Bonus. *If over 15 No Box cars, pay increases to $2,000 to win / $500 r/u for Sat/Sun.\n\u2022 Sat/Sun (FuelTech & FAB Machining): $20,000 to win / $5,000 r/u / $1,000 semis / $500 1/4s / $100 round money starting with Round 3 win. $1,000 No Box Bonus.\n\u2022 Junior Dragsters (FuelTech): $1,000 to win / $200 r/u / $50 semi.\n\nSCHEDULE:\n\u2022 Thursday: Track-operated Test & Tune.\n\u2022 Friday: Gates 7:30am, TT 8:30am, Elims to follow, Second TT after E3.\n\u2022 Saturday: Gates 7:30am, 8:30am New Entry TT, Junior TT after box re-entry, Nick Agresta Wheelie Contest after Elims.\n\u2022 Sunday: Gates 7:30am, 8:30am New Entry TT, Junior TT after box re-entry.\n\nRULES: No Box can only enter No Box once. Double MUST be in Box. Nick Agresta \"Do a Wheelie\" Contest on Saturday Night.",
     "confidence": 0.97,
     "unclear_fields": [
@@ -676,13 +677,14 @@
       "registration_opens": null,
       "race_start": "19:15"
     },
-    "contact": {
-      "phone": "615-389-8044",
-      "email": "ryanfrye16@yahoo.com",
-      "website": null
-    },
-    "series": null,
-    "flyers": [
+  "contact": {
+    "phone": "615-389-8044",
+    "email": "ryanfrye16@yahoo.com",
+    "website": null
+  },
+  "series": null,
+  "confidence": 0,
+  "flyers": [
       {
         "file": "634804686_1778184443622787_2978564948269638418_n.jpg",
         "phash": "941b310f8ff06a73",
@@ -722,12 +724,13 @@
       "registration_opens": "08:00",
       "race_start": "08:00"
     },
-    "contact": {
-      "phone": "605-933-1698",
-      "email": "tom@gallstartv.com",
-      "website": "gallstartv.com/bracketraces"
-    },
-    "flyers": [
+  "contact": {
+    "phone": "605-933-1698",
+    "email": "tom@gallstartv.com",
+    "website": "https://gallstartv.com/bracketraces"
+  },
+  "confidence": 0,
+  "flyers": [
       {
         "file": "640052970_1785577219550176_526734645165398999_n.jpg",
         "phash": "c5ef875611543cb8",
@@ -767,12 +770,13 @@
       "Gamblers Race (Friday & Saturday Night, $5,000 to Win)",
       "Test n' Tune"
     ],
-    "contact": {
-      "phone": "615-389-8044",
-      "email": "ryanfrye16@yahoo.com",
-      "website": "www.BEACONDRAGWAY.com"
-    },
-    "flyers": [
+  "contact": {
+    "phone": "615-389-8044",
+    "email": "ryanfrye16@yahoo.com",
+    "website": "https://www.beacondragway.com"
+  },
+  "confidence": 0,
+  "flyers": [
       {
         "file": "640513245_1790376169070281_8174838114260918635_n.jpg",
         "phash": "943d315395f04e6d",
@@ -806,9 +810,9 @@
       "registration_opens": "10:00",
       "race_start": "16:00"
     },
-    "contact": {
-      "website": "www.raceccrp.com"
-    },
+  "contact": {
+    "website": "https://www.raceccrp.com"
+  },
     "classes": [
       "Super Pro (SP)",
       "Bottom Bulb Elite 25"
@@ -858,12 +862,13 @@
       "registration_opens": "08:00",
       "race_start": "08:00"
     },
-    "contact": {
-      "phone": "502-417-0008 (Tyler Bohannon) / 502-715-1778 (Brian Whitworth)",
-      "website": null,
-      "email": null
-    },
-    "flyers": [
+  "contact": {
+    "phone": "502-417-0008 (Tyler Bohannon) / 502-715-1778 (Brian Whitworth)",
+    "website": null,
+    "email": null
+  },
+  "confidence": 0,
+  "flyers": [
       {
         "file": "641323070_1790375189070379_7552399918692189775_n.jpg",
         "phash": "d571bf2aa107b01e",
@@ -903,13 +908,14 @@
       "registration_opens": "10:00",
       "race_start": "14:00"
     },
-    "contact": {
-      "phone": "269-672-7800",
-      "website": "www.us131msp.com",
-      "email": null
-    },
-    "series": null,
-    "flyers": [
+  "contact": {
+    "phone": "269-672-7800",
+    "website": "https://www.us131msp.com",
+    "email": null
+  },
+  "series": null,
+  "confidence": 0,
+  "flyers": [
       {
         "file": "643394962_1790374992403732_3658435242929395310_n.jpg",
         "phash": "848705fa2a797d47",
@@ -954,11 +960,11 @@
       "registration_opens": null,
       "race_start": "17:00"
     },
-    "contact": {
-      "email": "Andy Anderson: LeverageRacing@gmail.com",
-      "phone": null,
-      "website": null
-    },
+  "contact": {
+    "email": "LeverageRacing@gmail.com",
+    "phone": null,
+    "website": null
+  },
     "notes": "FRIDAY: Gates Open 9:00 AM, Test N' Tune ($40) 11AM\u20134PM ($20 Rebate w/ Gamblers Entry), Gamblers 5:00 PM. SATURDAY: Gates Open 8:00 AM, Time Trial 9:00 AM (Dash for Cash during Time Trial). SUNDAY: Gates Open 8:00 AM, New Time Trial 9:00 AM (New Combination Only), Eliminations following Time Trial. Crew: $15/Daily, Kids 12 & Under FREE. PAYOUTS \u2014 Top Bulb: Win $10,000 / R/U $2,000 / Semi $1,000 / $100 Rnd Money starting 4th Rnd loser. Jr Dragster: Win $1,000 / R/U $400 / Semi $180 / Quarters $80. No-Box: Win $3,500 / R/U $800 / Semi $400 / $60 Rnd Money starting 4th Rnd loser. Friday Night Gamblers All Run: $2,000 to Win / R/U $800 / Semi $250 / Qtrs $100. Jr Dragster Gamblers: 80% Payback. Double Down (Sat or Sun): No-Box racers can pay $300 SP Weekend Entry to race for Super Pro purse including $100 round money; Win No-Box & continue into Super Pro for $10,000. Run Order: No-Box / Jr Dragster / Top Doorcar / Top Dragster / Top Door Doubles / Top Dragster Doubles. Live Stream by Diamond State Digital. Presented by Koller Chiropractic Wellness Center. Trivia/Challenges & Lucky Loser Prize Vault \u2013 Win Gift Cards! Saturday Dash for Ca$h during Saturday Time Trials. Track address: 37854 Sussex Highway, Delmar, DE. Facebook: FRBRPromotions.",
     "confidence": 0.97,
     "unclear_fields": [
@@ -1008,12 +1014,13 @@
       "entry": "Electronics: Sat Only $120, Sun Only $120, Sat-Sun Weekend $200; Footbrake: Sat Only $90, Sun Only $90, Sat-Sun Weekend $150; Junior Dragsters: $75/Race; Sportsman: FREE w/ $20 Spectator Pass each day; Test n' Tune (Fri): $30; Wild Cards: $10ea, 2 for $20, 3 for $25",
       "spectator": "Friday $10, 1 Race $20, Weekend Pass $40, Kids 8 & Under FREE, All Spectators after 12 Noon Sat & Sun: $20/car load or $15/person"
     },
-    "contact": {
-      "phone": "228-863-4408",
-      "website": "www.gulfportdragway.com",
-      "email": null
-    },
-    "flyers": [
+  "contact": {
+    "phone": "228-863-4408",
+    "website": "https://www.gulfportdragway.com",
+    "email": null
+  },
+  "confidence": 0,
+  "flyers": [
       {
         "file": "652334732_1807280710713160_60223816796467246_n.jpg",
         "phash": "feb9d98a69ce0160",
@@ -1051,12 +1058,13 @@
       "registration_opens": "12:00",
       "race_start": "08:00"
     },
-    "contact": {
-      "phone": "Tyler Bohannon: 502-417-0008 | Brian Whitworth: 502-715-1778",
-      "website": "RaceDerbyCity.com",
-      "email": null
-    },
-    "flyers": [
+  "contact": {
+    "phone": "Tyler Bohannon: 502-417-0008 | Brian Whitworth: 502-715-1778",
+    "website": "https://RaceDerbyCity.com",
+    "email": null
+  },
+  "confidence": 0,
+  "flyers": [
       {
         "file": "652620581_1809987980442433_6827778053001504361_n.jpg",
         "phash": "f1b4d0b65a96e072",
@@ -1135,11 +1143,12 @@
       "entry": "Top E.T. Single-Day: Fri $100, Sat $150, Sun $100 | Top E.T. Weekend Entry: $300 (Fri-Sat-Sun) or Single 10K + Double-in-1 $5K | Re-Entry (1st Rnd Only): Fri $50, Sat $100, Sun $50 | No-Box Single-Day: $80/day | No-Box Re-Entry (1st Rnd Only): $50 | No-Box Weekend Entry: $195 (Fri-Sat-Sun or Single Day + Double 1 Day) | Jr. Dragster Entry: $50 per race | Jr. Dragster Buyback (1st Rnd Only): $30 | Fri & Sat Night Gamblers Entry: $100 | Thursday Test n' Tune Entry: $35",
       "spectator": "Adults $15/day; Kids 10 & Under FREE"
     },
-    "contact": {
-      "website": "www.staginglight.com",
-      "email": "staginglight@gmail.com"
-    },
-    "flyers": [
+  "contact": {
+    "website": "https://www.staginglight.com",
+    "email": "staginglight@gmail.com"
+  },
+  "confidence": 0,
+  "flyers": [
       {
         "file": "655729662_1817178363056728_5307457848687513493_n.jpg",
         "phash": "9beee49a64a691a4",
@@ -1210,11 +1219,11 @@
       "entry": "Xtreme Bracket Gamblers: $75 entry / $30 buy back ($300 on top at 40 cars). Xtreme Jr Gamblers: $40 entry / $25 buy back.",
       "spectator": null
     },
-    "contact": {
-      "website": "xtremeracewaypark.com",
-      "phone": null,
-      "email": null
-    },
+  "contact": {
+    "website": "https://xtremeracewaypark.com",
+    "phone": null,
+    "email": null
+  },
     "notes": "Friday Night Under the Lights. Open TNT: 6PM. Time Run (1): 7:30PM. Xtreme Bracket Gamblers pays $1,000 to win / $400 RU / $150 Semi. Xtreme Jr Gamblers pays $300 to win / $150 RU / $75 Semi. Address: 1800 S Interstate 45 Service Road, Ferris, Texas 75125.",
     "confidence": 0.97,
     "unclear_fields": [],
@@ -1256,9 +1265,9 @@
       "entry": "Extreme 275: $2,500 | Pro 275: $2,500 | LDR: $1,500 | Deans List: $2,000 | Lil Gangstas: $200 | O.G. 4.84: $1,000 | Friday: Extreme 275/$2,500, Pro 275/$2,500, LDR/$1,000, Deans List/$2,500",
       "spectator": "$40 per day"
     },
-    "contact": {
-      "website": "rockinghamdragway.com"
-    },
+  "contact": {
+    "website": "https://rockinghamdragway.com"
+  },
     "notes": "Address: 2153 N US HWY 1, Rockingham, NC 28379. NO REFUNDS. Purse/payouts: Extreme 275 - $20,000 on top at 16 cars; Pro 275 - $10,000 on top at 16 cars; LDR - $5,000 on top at 16 cars; Deans List - $5,000 on top at 16 cars; Lil Gangstas - $5,000 on top at 32 cars; Heavy Hitter Street - $5,000 on top at 16 cars; O.G. 4.84 - $5,000 on top at 16 cars. Friday classes: Extreme 275, Pro 275, LDR, Deans List. Saturday classes: Lil Gangstas, Heavy Hitter Street, O.G. 4.84, 6.0 Index. General Info: $40 Track Tech Card per day; $100 Event Pit Side Parking Pass; Free Parking in spectator parking lot.",
     "confidence": 0.97,
     "unclear_fields": [

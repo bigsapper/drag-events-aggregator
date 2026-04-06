@@ -21,6 +21,7 @@ from .dedup import compute_phash, is_duplicate_image, find_same_event, merge_eve
 from .event_filters import is_in_scope_event, is_past_event
 from .extract import extract_event
 from .logging_utils import get_logger
+from .validate_events import validate_events_payload
 
 LOGGER = get_logger(__name__)
 
@@ -36,6 +37,7 @@ def load_events() -> list[dict]:
 
 
 def save_events(events: list[dict]) -> None:
+    validate_events_payload(events)
     EVENTS_FILE.write_text(json.dumps(events, indent=2))
 
 

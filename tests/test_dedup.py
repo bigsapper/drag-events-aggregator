@@ -275,7 +275,7 @@ def test_find_same_event_match(sample_events):
     new = {"title": "Spring Bracket Classic", "track": {"name": "Texas Motorplex", "state": "TX"}, "dates": {"start": "2026-05-10"}}
     result = find_same_event(new, sample_events)
     assert result is not None
-    assert result["id"] == "evt-001"
+    assert result["id"] == "11111111-1111-4111-8111-111111111111"
 
 
 def test_find_same_event_no_track_match(sample_events):
@@ -314,7 +314,7 @@ def test_find_same_event_matches_when_title_is_substring(sample_events):
 @pytest.fixture
 def existing():
     return {
-        "id": "evt-001",
+        "id": "11111111-1111-4111-8111-111111111111",
         "title": "Old Title",
         "event_type": "bracket",
         "series": None,
@@ -388,4 +388,4 @@ def test_merge_track_id_set_on_merge(existing, new_flyer):
 def test_merge_preserves_id(existing, new_flyer):
     new_data = {"track": {"name": "Texas Motorplex"}, "dates": {"start": "2026-05-10"}, "confidence": 0.7}
     merged = merge_events(existing, new_data, new_flyer)
-    assert merged["id"] == "evt-001"
+    assert merged["id"] == "11111111-1111-4111-8111-111111111111"

@@ -58,6 +58,14 @@ The single additive full workflow is:
 make run
 ```
 
+`make run` finishes by validating `dist/events.json` against `dist/events.schema.json`, so the workflow fails if it produces schema-invalid event output.
+
+You can also run validation directly:
+
+```bash
+make validate
+```
+
 To run tests:
 
 ```bash
