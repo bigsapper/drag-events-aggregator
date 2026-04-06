@@ -19,6 +19,7 @@ PHASH_THRESHOLD = 10
 BASE_DIR = Path(__file__).resolve().parents[2]
 CONFIG_DIR = BASE_DIR / "src" / "drag_events" / "config"
 _ALIASES_FILE = CONFIG_DIR / "track_aliases.json"
+_CATALOG_FILE = CONFIG_DIR / "track_catalog.json"
 
 
 def _load_alias_map() -> dict[str, str]:
@@ -31,12 +32,59 @@ def _load_alias_map() -> dict[str, str]:
             for alias in entry.get("aliases", [])}
 
 
+def _load_track_catalog() -> tuple[dict[str, dict], dict[str, str]]:
+    """Load track_catalog.json and return (tracks_by_id, slug_aliases)."""
+    if not _CATALOG_FILE.exists():
+        return {}, {}
+    data = json.loads(_CATALOG_FILE.read_text())
+    return data.get("tracks", {}), data.get("slug_aliases", {})
+
+
 _ALIAS_MAP: dict[str, str] = _load_alias_map()
+_TRACK_CATALOG, _SLUG_ALIASES = _load_track_catalog()
 
 
 def _resolve_canonical(name: str) -> str:
     """Substitute a known alias with its canonical track name."""
     return _ALIAS_MAP.get(name.strip().lower(), name)
+
+
+def lookup_track_catalog(track_id: str) -> dict | None:
+    """Return the canonical catalog entry for a track ID, following slug aliases."""
+    resolved_id = _SLUG_ALIASES.get(track_id, track_id)
+    return _TRACK_CATALOG.get(resolved_id)
+
+
+def backfill_track_from_catalog(track: dict) -> dict:
+    """Fill in missing city/state from the catalog entry for this track ID.
+
+    Returns a new dict; does not mutate the input.
+    """
+    entry = lookup_track_catalog(track.get("id", ""))
+    if not entry:
+        return track
+    return {
+        "id": entry["id"],
+        "name": track.get("name") or entry["name"],
+        "city": track.get("city") or entry.get("city"),
+        "state": track.get("state") or entry.get("state"),
+    }
+
+
+def backfill_contact_from_catalog(track_id: str, contact: dict) -> dict:
+    """Fill in missing phone/email/website from the catalog entry for this track.
+
+    Returns a new dict; does not mutate the input.
+    """
+    entry = lookup_track_catalog(track_id)
+    if not entry:
+        return contact
+    catalog_contact = entry.get("contact", {})
+    return {
+        "phone": contact.get("phone") or catalog_contact.get("phone"),
+        "email": contact.get("email") or catalog_contact.get("email"),
+        "website": contact.get("website") or catalog_contact.get("website"),
+    }
 
 
 def compute_phash(image_path: str) -> str:

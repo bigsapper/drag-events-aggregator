@@ -558,7 +558,7 @@
     "track": {
       "id": "thunder-valley-ok",
       "name": "Thunder Valley Raceway Park",
-      "city": "Noble",
+      "city": "Lexington",
       "state": "OK"
     },
     "dates": {
@@ -1782,5 +1782,195 @@
     ],
     "created_at": "2026-04-06T22:11:31.943328+00:00",
     "updated_at": "2026-04-06T22:11:31.943332+00:00"
+  },
+  {
+    "id": "ee3a42fc-56c9-47c1-88d9-a902eaf5020c",
+    "title": "Texas Nationals",
+    "event_type": "points_race",
+    "track": {
+      "id": "xtreme-tx",
+      "name": "Xtreme Raceway Park",
+      "city": "Ferris",
+      "state": "TX"
+    },
+    "dates": {
+      "start": "2026-04-17",
+      "end": "2026-04-18"
+    },
+    "series": "Summit Racing Equipment Mid-West Drag Racing Series presented by J&A Service",
+    "confidence": 0.91,
+    "unclear_fields": [
+      "city"
+    ],
+    "notes": "Countdown flyer showing \"15 Days\" away from the event date, confirming 2026 year. Event is part of the 10th Season (2017\u20132026) of the Summit Racing Equipment Mid-West Drag Racing Series presented by J&A Service.",
+    "flyers": [
+      {
+        "file": "20260406-5.jpg",
+        "phash": "d4cc3b7a6cfd1802",
+        "processed_at": "2026-04-06T23:01:24.111660+00:00"
+      }
+    ],
+    "created_at": "2026-04-06T23:01:24.111883+00:00",
+    "updated_at": "2026-04-06T23:01:24.111886+00:00"
+  },
+  {
+    "id": "9bc973e8-2a79-4404-952e-fe50e998378b",
+    "title": "Art of War 2 - True Street, Daily Driver & Small Tire",
+    "event_type": "specialty",
+    "track": {
+      "id": "westx-abilene-tx",
+      "name": "WestX Abilene Raceway",
+      "city": "Abilene",
+      "state": "TX"
+    },
+    "dates": {
+      "start": "2026-05-01",
+      "end": "2026-05-02"
+    },
+    "classes": [
+      "True Street",
+      "Daily Driver",
+      "Small Tire",
+      "Index 8.20",
+      "Index 7.50",
+      "Index 6.50",
+      "Index 5.50"
+    ],
+    "fees": {
+      "entry": "True Street: $300 Entry + $40 Tech Card (20 Car Minimum) | Daily Driver: $250 Entry + $40 Tech Card (20 Car Minimum) | Small Tire: $300 Entry + $40 Tech Card (20 Car Minimum) | Index: $150 Entry (100% Buy Back)",
+      "spectator": "General Admission: $20 | Spectator Side VIP Fence Parking: $20 | Pit Side Parking (excluding racers): $50 | RV Parking (no racecar): $100 | Power Hookup: $75"
+    },
+    "notes": "True Street purse: $20,000. Daily Driver purse: $15,000. Small Tire purse: $10,000. Index classes (8.20, 7.50, 6.50, 5.50) with $150 Entry and 100% Buy Back. Track address: 5601 W Stamford St, Abilene, TX 79603.",
+    "confidence": 0.93,
+    "unclear_fields": [
+      "times",
+      "series"
+    ],
+    "flyers": [
+      {
+        "file": "20260406-6.jpg",
+        "phash": "d0b7f2bde04e4861",
+        "processed_at": "2026-04-06T23:01:34.338227+00:00"
+      }
+    ],
+    "created_at": "2026-04-06T23:01:34.338698+00:00",
+    "updated_at": "2026-04-06T23:01:34.338707+00:00"
+  },
+  {
+    "id": "ebb8aef8-a0fd-4790-80e9-8c054b6a867d",
+    "title": "6SixtyStreet Hit It From The Back III",
+    "event_type": "no_prep",
+    "track": {
+      "id": "westx-abilene-tx",
+      "name": "WestX Abilene Raceway",
+      "city": "Abilene",
+      "state": "TX"
+    },
+    "dates": {
+      "start": "2026-08-22"
+    },
+    "series": "6SixtyStreet",
+    "classes": [
+      "Daily Driver",
+      "True Street",
+      "Tailgate",
+      "Small Tire"
+    ],
+    "confidence": 0.95,
+    "notes": "Flashlight Start format. Pour Your Own Puddle (burnout box). Rules TBD. Track address: 5601 W Stamford St, Abilene, TX 79603. This is the third installment of the \"Hit It From The Back\" event series by 6SixtyStreet.",
+    "unclear_fields": [
+      "fees",
+      "times"
+    ],
+    "flyers": [
+      {
+        "file": "20260406-7.jpg",
+        "phash": "909165856a7e6f6a",
+        "processed_at": "2026-04-06T23:01:41.197649+00:00"
+      }
+    ],
+    "created_at": "2026-04-06T23:01:41.198166+00:00",
+    "updated_at": "2026-04-06T23:01:41.198175+00:00"
+  },
+  {
+    "id": "53039c8a-950f-46ac-81a5-120c2a52c802",
+    "title": "Freedom of War - $150,000 Small Tire",
+    "event_type": "no_prep",
+    "track": {
+      "id": "westx-abilene-tx",
+      "name": "WestX Abilene Raceway",
+      "city": "Abilene",
+      "state": "TX"
+    },
+    "dates": {
+      "start": "2026-07-03",
+      "end": "2026-07-04"
+    },
+    "times": {
+      "gates_open": "08:00",
+      "registration_opens": null,
+      "race_start": "12:00"
+    },
+    "classes": [
+      "Small Tire",
+      "True Street",
+      "2nd Chance Small Tire",
+      "Daily Driver",
+      "Jr Dragsters",
+      "8.20 Class",
+      "Scrambler (5.50-5.80 Random Index)",
+      "Lil Scrambler (6.50-6.80 Random Index)",
+      "Baby Scrambler (7.50-7.80 Random Index)",
+      "PowerWheels Race"
+    ],
+    "fees": {
+      "entry": "Small Tire: $1,000 entry + $200 lock-in (64 cars, 1st round Friday); True Street: $250 entry (1st round Friday); Daily Driver: $200 entry (15 car min, Friday & Saturday); Jr Dragsters: $50 entry + 1 buy back (Friday & Saturday); 8.20 Class: $150 entry (15 car min, Friday & Saturday); Scrambler: $200 entry (15 car min, Saturday); Lil Scrambler: $200 entry (15 car min, Saturday); Baby Scrambler: $200 entry (15 car min, Saturday)",
+      "spectator": null
+    },
+    "notes": "No-prep event. $150,000 guaranteed in payouts. Small Tire payouts: 1st $75,000 / 2nd $20,000 / 3rd $10,000 / 4th $10,000 / 5th $6,250 / 6th $6,250 / 7th $6,250 / 8th $6,250. True Street payout: $5,000 off the trailer. 2nd Chance Small Tire payout: $10,000. Daily Driver payout: $3,000. Jr Dragsters payout: $1,000. 8.20 Class payout: $2,000. Scrambler payout: $3,000. Lil Scrambler payout: $3,000. Baby Scrambler payout: $2,000. Friday: Gates open 8AM, Driver's Meeting 12:15PM. Saturday: Gates open 8AM, Driver's Meeting 12PM, Fireworks 9:30PM. Firework Show Saturday night. PowerWheels Race Saturday. Address: 5601 W Stamford St, Abilene, TX 79603.",
+    "confidence": 0.97,
+    "unclear_fields": [
+      "registration_opens"
+    ],
+    "flyers": [
+      {
+        "file": "20260406-8.jpg",
+        "phash": "c4c6c2f0aebcd4c6",
+        "processed_at": "2026-04-06T23:01:55.737376+00:00"
+      }
+    ],
+    "created_at": "2026-04-06T23:01:55.737879+00:00",
+    "updated_at": "2026-04-06T23:01:55.737887+00:00"
+  },
+  {
+    "id": "a05821ff-5f9d-42cb-a730-f27b584d4fd0",
+    "title": "Southern N/T Nationals 9",
+    "event_type": "grudge",
+    "track": {
+      "id": "xtreme-tx",
+      "name": "Xtreme Raceway Park",
+      "city": "Ferris",
+      "state": "TX"
+    },
+    "dates": {
+      "start": "2026-09-10",
+      "end": "2026-09-12"
+    },
+    "series": "4Ever Grudge",
+    "notes": "Event announced by Jacob Harper. This is the 9th installment of the Southern N/T Nationals. Promoted under the 4Ever Grudge News banner. No entry fees, class lists, or schedule times visible on flyer.",
+    "unclear_fields": [
+      "city",
+      "state"
+    ],
+    "confidence": 0.91,
+    "flyers": [
+      {
+        "file": "20260406-9.jpg",
+        "phash": "94066fe925177aca",
+        "processed_at": "2026-04-06T23:02:00.961610+00:00"
+      }
+    ],
+    "created_at": "2026-04-06T23:02:00.962169+00:00",
+    "updated_at": "2026-04-06T23:02:00.962179+00:00"
   }
 ]

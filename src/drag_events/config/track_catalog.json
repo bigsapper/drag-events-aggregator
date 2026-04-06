@@ -1,0 +1,103 @@
+{
+  "tracks": {
+    "concho-valley-dragway-tx": {
+      "id": "concho-valley-dragway-tx",
+      "name": "Concho Valley Dragway",
+      "city": "San Angelo",
+      "state": "TX",
+      "address": "7955 RM 853, San Angelo, TX 76904",
+      "contact": {
+        "phone": "325-610-6346",
+        "email": "peggy@wingermachine.com",
+        "website": "https://www.facebook.com/p/Concho-Valley-Dragway-61559877147976/"
+      }
+    },
+    "houston-tx": {
+      "id": "houston-tx",
+      "name": "Houston Motorsports Park",
+      "city": "Houston",
+      "state": "TX",
+      "address": "11620 N. Lake Houston Parkway, Houston, TX 77044",
+      "contact": {
+        "phone": "281-594-7590",
+        "email": "dean@houstonmotorsportspark.com",
+        "website": "https://www.houstonmotorsportspark.com/wp/"
+      }
+    },
+    "little-river-dragway-tx": {
+      "id": "little-river-dragway-tx",
+      "name": "Little River Dragway",
+      "city": "Holland",
+      "state": "TX",
+      "address": "13550 State Hwy 95, Holland, TX 76534",
+      "contact": {
+        "phone": "254-982-0119",
+        "email": null,
+        "website": "https://littleriverdragway.com/"
+      }
+    },
+    "texas-motorplex-tx": {
+      "id": "texas-motorplex-tx",
+      "name": "Texas Motorplex",
+      "city": "Ennis",
+      "state": "TX",
+      "address": "7500 US-287, Ennis, TX 75119",
+      "contact": {
+        "phone": "972-878-2641",
+        "email": "support@texasmotorplex.com",
+        "website": "http://www.texasmotorplex.com"
+      }
+    },
+    "thunder-valley-ok": {
+      "id": "thunder-valley-ok",
+      "name": "Thunder Valley Raceway Park",
+      "city": "Lexington",
+      "state": "OK",
+      "address": "10500 48th St, Lexington, OK 73051",
+      "contact": {
+        "phone": "405-413-1522",
+        "email": null,
+        "website": "https://www.thundervalleyracewaypark.com"
+      }
+    },
+    "westx-abilene-tx": {
+      "id": "westx-abilene-tx",
+      "name": "WestX Abilene Raceway",
+      "city": "Abilene",
+      "state": "TX",
+      "address": "5601 W Stamford St, Abilene, TX 79603",
+      "contact": {
+        "phone": "325-266-4276",
+        "email": null,
+        "website": "https://www.waraceway.com/"
+      }
+    },
+    "wichita-falls-tx": {
+      "id": "wichita-falls-tx",
+      "name": "Wichita Falls Raceway Park",
+      "city": "Iowa Park",
+      "state": "TX",
+      "address": "633 FM 369, Iowa Park, TX 76367",
+      "contact": {
+        "phone": "940-613-5359",
+        "email": null,
+        "website": "https://www.wichitaracewaypark.com"
+      }
+    },
+    "xtreme-tx": {
+      "id": "xtreme-tx",
+      "name": "Xtreme Raceway Park",
+      "city": "Ferris",
+      "state": "TX",
+      "address": "1800 S I-45 Service Road, Ferris, TX 75125",
+      "contact": {
+        "phone": "972-544-3724",
+        "email": null,
+        "website": "https://www.xtremeracewaypark.com"
+      }
+    }
+  },
+  "slug_aliases": {
+    "xtreme": "xtreme-tx"
+  }
+}

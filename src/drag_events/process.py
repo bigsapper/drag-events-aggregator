@@ -17,7 +17,10 @@ import uuid
 from datetime import datetime, timezone
 from pathlib import Path
 
-from .dedup import compute_phash, is_duplicate_image, find_same_event, merge_events, track_slug
+from .dedup import (
+    compute_phash, is_duplicate_image, find_same_event, merge_events, track_slug,
+    backfill_track_from_catalog, backfill_contact_from_catalog,
+)
 from .event_filters import is_in_scope_event, is_past_event
 from .extract import extract_event
 from .logging_utils import get_logger
@@ -89,12 +92,17 @@ def process_flyer(image_path: str, events: list[dict]) -> tuple[str, dict]:
 
     # New event
     track = extracted.get("track") or {}
-    extracted["track"] = {
+    track_with_id = {
         "id":    track_slug(track.get("name"), track.get("state")),
         "name":  track.get("name"),
         "city":  track.get("city"),
         "state": track.get("state"),
     }
+    extracted["track"] = backfill_track_from_catalog(track_with_id)
+    if extracted.get("contact") is not None:
+        extracted["contact"] = backfill_contact_from_catalog(
+            extracted["track"]["id"], extracted["contact"]
+        )
     new_event = {
         "id": str(uuid.uuid4()),
         **extracted,
