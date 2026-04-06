@@ -1,6 +1,7 @@
 """Convert text-based event listings (RacingJunk, MyRacePass) into structured event records."""
 
 import time
+from datetime import date
 
 from .retry_utils import execute_with_retries
 from .secrets import get_anthropic_client
@@ -15,6 +16,14 @@ TOOL = {
 
 CLAUDE_MAX_ATTEMPTS = 3
 CLAUDE_RETRY_BASE_DELAY_SECONDS = 1.0
+
+
+def _date_inference_instruction(today: date | None = None) -> str:
+    current_date = today or date.today()
+    return (
+        f"Today's date is {current_date.isoformat()}. "
+        f"If the listing omits the year, default to {current_date.year} unless the listing clearly indicates a different year."
+    )
 
 
 def extract_from_text(listing: dict) -> dict:
@@ -33,7 +42,9 @@ def extract_from_text(listing: dict) -> dict:
                     "Parse this drag racing event listing into structured data. "
                     "Infer event_type from the title if not explicit. "
                     "Convert dates to YYYY-MM-DD. Extract city/state from location text. "
-                    "Always include confidence as a number between 0 and 1.\n\n"
+                    "Always include confidence as a number between 0 and 1. "
+                    + _date_inference_instruction()
+                    + "\n\n"
                     + text
                 )
             }],

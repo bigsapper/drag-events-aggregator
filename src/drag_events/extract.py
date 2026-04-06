@@ -2,6 +2,7 @@
 
 import base64
 import time
+from datetime import date
 from pathlib import Path
 
 from .retry_utils import execute_with_retries
@@ -33,6 +34,14 @@ CLAUDE_MAX_ATTEMPTS = 3
 CLAUDE_RETRY_BASE_DELAY_SECONDS = 1.0
 
 
+def _date_inference_instruction(today: date | None = None) -> str:
+    current_date = today or date.today()
+    return (
+        f"Today's date is {current_date.isoformat()}. "
+        f"If a flyer omits the year, default to {current_date.year} unless the flyer clearly indicates a different year."
+    )
+
+
 def extract_event(image_path: str) -> dict:
     """Send a flyer image to Claude and return extracted event data."""
     path = Path(image_path)
@@ -60,7 +69,10 @@ def extract_event(image_path: str) -> dict:
                         },
                         {
                             "type": "text",
-                            "text": "Extract all drag racing event information from this flyer."
+                            "text": (
+                                "Extract all drag racing event information from this flyer. "
+                                + _date_inference_instruction()
+                            )
                         }
                     ]
                 }

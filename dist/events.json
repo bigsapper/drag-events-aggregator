@@ -1740,5 +1740,49 @@
     "flyers": [],
     "created_at": "2026-04-01T01:10:29.958824+00:00",
     "updated_at": "2026-04-01T01:10:29.958824+00:00"
+  },
+  {
+    "id": "2e01edb5-f14a-4253-bc9f-8519548bb57a",
+    "title": "The Rumble at the River Returns!",
+    "event_type": "specialty",
+    "track": {
+      "id": "little-river-dragway",
+      "name": "Little River Dragway",
+      "city": null,
+      "state": null
+    },
+    "dates": {
+      "start": "2026-04-10",
+      "end": "2026-04-11"
+    },
+    "classes": [
+      "6.50 Index Shootout",
+      "5.50 Index Shootout",
+      "6.00 True",
+      "7.00 True",
+      "10.5 True",
+      "Random 5.50-5.80 Random Draw"
+    ],
+    "fees": {
+      "entry": null,
+      "spectator": "$20"
+    },
+    "notes": "Friday Night classes: 6.50 Index Shootout, 5.50 Index Shootout. Saturday classes: 6.00 True, 7.00 True, 10.5 True, Random 5.50\u20135.80 Random Draw (posted rules). Tire rule: 28x10.5 or 275 Radial \u2014 No W Tires.",
+    "confidence": 0.92,
+    "unclear_fields": [
+      "track.city",
+      "track.state",
+      "times",
+      "fees.entry"
+    ],
+    "flyers": [
+      {
+        "file": "20260406-4.2.jpg",
+        "phash": "d0cd31320f5e7b70",
+        "processed_at": "2026-04-06T22:11:31.943052+00:00"
+      }
+    ],
+    "created_at": "2026-04-06T22:11:31.943328+00:00",
+    "updated_at": "2026-04-06T22:11:31.943332+00:00"
   }
 ]

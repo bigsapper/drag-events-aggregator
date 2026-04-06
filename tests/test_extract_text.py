@@ -1,5 +1,7 @@
 """Tests for extract_text.py — Claude text extraction."""
 
+from datetime import date
+
 import pytest
 from unittest.mock import MagicMock, patch
 
@@ -45,6 +47,20 @@ def test_extract_from_text_includes_title_in_prompt(mock_text_client):
     call_kwargs = mock_text_client.call_args[1]
     content = call_kwargs["messages"][0]["content"]
     assert "Summer Bracket Bash" in content
+
+
+def test_extract_from_text_includes_current_year_default_instruction(mock_text_client):
+    with patch("drag_events.extract_text._date_inference_instruction", return_value="Today's date is 2026-04-06. If the listing omits the year, default to 2026 unless the listing clearly indicates a different year."):
+        extract_text.extract_from_text(SAMPLE_LISTING)
+    call_kwargs = mock_text_client.call_args[1]
+    content = call_kwargs["messages"][0]["content"]
+    assert "default to 2026" in content
+
+
+def test_text_date_inference_instruction_uses_supplied_date():
+    text = extract_text._date_inference_instruction(date(2026, 4, 6))
+    assert "Today's date is 2026-04-06." in text
+    assert "default to 2026" in text
 
 
 def test_extract_from_text_raises_if_no_tool_call():

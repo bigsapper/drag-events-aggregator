@@ -1,5 +1,7 @@
 """Tests for extract.py — Claude vision extraction."""
 
+from datetime import date
+
 import pytest
 from pathlib import Path
 from unittest.mock import MagicMock, patch
@@ -33,6 +35,21 @@ def test_extract_event_forces_tool_use(tmp_path, mock_vision_client):
     extract.extract_event(str(img))
     call_kwargs = mock_vision_client.call_args[1]
     assert call_kwargs["tool_choice"] == {"type": "tool", "name": "store_event"}
+
+
+def test_extract_event_includes_current_year_default_instruction(tmp_path, mock_vision_client):
+    img = make_1x1_png(tmp_path / "flyer.png")
+    with patch("drag_events.extract._date_inference_instruction", return_value="Today's date is 2026-04-06. If a flyer omits the year, default to 2026 unless the flyer clearly indicates a different year."):
+        extract.extract_event(str(img))
+    messages = mock_vision_client.call_args[1]["messages"]
+    text_block = messages[0]["content"][1]
+    assert "default to 2026" in text_block["text"]
+
+
+def test_date_inference_instruction_uses_supplied_date():
+    text = extract._date_inference_instruction(date(2026, 4, 6))
+    assert "Today's date is 2026-04-06." in text
+    assert "default to 2026" in text
 
 
 def test_extract_event_jpeg_media_type(tmp_path, mock_vision_client):
