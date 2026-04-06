@@ -1227,5 +1227,136 @@
     ],
     "created_at": "2026-04-02T05:15:03.602001+00:00",
     "updated_at": "2026-04-02T05:15:03.602004+00:00"
+  },
+  {
+    "id": "426ffbbb-203b-47cb-87eb-fef9378bc2be",
+    "title": "Swan Fest - King of the Track",
+    "event_type": "no_prep",
+    "track": {
+      "id": "rockingham-dragway-nc",
+      "name": "Rockingham Dragway",
+      "city": "Rockingham",
+      "state": "NC"
+    },
+    "dates": {
+      "start": "2026-04-30",
+      "end": "2026-05-02"
+    },
+    "classes": [
+      "Extreme 275",
+      "Pro 275",
+      "LDR",
+      "Deans List",
+      "Lil Gangstas",
+      "Heavy Hitter Street",
+      "O.G. 4.84",
+      "6.0 Index"
+    ],
+    "fees": {
+      "entry": "Extreme 275: $2,500 | Pro 275: $2,500 | LDR: $1,500 | Deans List: $2,000 | Lil Gangstas: $200 | O.G. 4.84: $1,000 | Friday: Extreme 275/$2,500, Pro 275/$2,500, LDR/$1,000, Deans List/$2,500",
+      "spectator": "$40 per day"
+    },
+    "contact": {
+      "website": "rockinghamdragway.com"
+    },
+    "notes": "Address: 2153 N US HWY 1, Rockingham, NC 28379. NO REFUNDS. Purse/payouts: Extreme 275 - $20,000 on top at 16 cars; Pro 275 - $10,000 on top at 16 cars; LDR - $5,000 on top at 16 cars; Deans List - $5,000 on top at 16 cars; Lil Gangstas - $5,000 on top at 32 cars; Heavy Hitter Street - $5,000 on top at 16 cars; O.G. 4.84 - $5,000 on top at 16 cars. Friday classes: Extreme 275, Pro 275, LDR, Deans List. Saturday classes: Lil Gangstas, Heavy Hitter Street, O.G. 4.84, 6.0 Index. General Info: $40 Track Tech Card per day; $100 Event Pit Side Parking Pass; Free Parking in spectator parking lot.",
+    "confidence": 0.97,
+    "unclear_fields": [
+      "times",
+      "Heavy Hitter Street entry fee (not listed on flyer)"
+    ],
+    "flyers": [
+      {
+        "file": "20260404-3.jpg",
+        "phash": "f0cec9f01c677432",
+        "processed_at": "2026-04-06T18:46:06.764998+00:00"
+      }
+    ],
+    "created_at": "2026-04-06T18:46:06.765505+00:00",
+    "updated_at": "2026-04-06T18:46:06.765521+00:00"
+  },
+  {
+    "id": "2a03593b-5c95-447a-99fc-656cf834c5df",
+    "title": "Alley Cat Racing Presents Texas Shootout's Grudge Racing",
+    "event_type": "grudge",
+    "track": {
+      "id": "houston-tx",
+      "name": "Houston Motorsports Park",
+      "city": "Houston",
+      "state": "TX"
+    },
+    "dates": {
+      "start": "2026-04-25"
+    },
+    "series": "Alley Cat Racing",
+    "classes": [
+      "7.50 Fullsize",
+      "6.50 Fullsize",
+      "5.30 Lil Dawg",
+      "Daily Driver N/A"
+    ],
+    "fees": {
+      "entry": "7.50 Fullsize: $150 | 6.50 Fullsize: $150 | 5.30 Lil Dawg: $150 | Daily Driver N/A: $200",
+      "spectator": null
+    },
+    "times": {
+      "gates_open": "16:00",
+      "race_start": "17:00",
+      "registration_opens": null
+    },
+    "contact": {
+      "website": null,
+      "phone": null,
+      "email": null
+    },
+    "notes": "ADDRESS: 11620 N. Lake Houston Parkway, 77044. | ALSO WELCOMES: Grudge Racing & Test n Tune. | LIVE MUSIC & CONCESSIONS. | Social TikTok: @just4welcome_ | CLASS DETAILS \u2014 7.50 FULLSIZE: $3K to win, SUVs allowed, Sportsman tree, Foot brake/2step OK, No delay box, No wheelie bars, No street tires, 315 or smaller, 1st Rd. buy back. | 6.50 FULLSIZE: $3K to win, Pro tree, Trans brake/2step, Any power adder, No delay box, No street tires, No wheelie bars, 315 or smaller, 1st Rd. buy back. | 5.30 LIL DAWG: $2K guaranteed on top, No time slips, Must be door car, No wheelie bars, No throttle stops, Off-road tire, Any power adder, 315 or smaller. | DAILY DRIVER N/A: $2K to win, No street tires, No times shown, Overdrive transmission, Stock suspension location, Stock firewall, Foot brake/2step OK, Pro tree, Factory appearing in/out, 10 car minimum.",
+    "confidence": 0.97,
+    "unclear_fields": [],
+    "flyers": [
+      {
+        "file": "20260404-4.jpg",
+        "phash": "9cc157514a8eb755",
+        "processed_at": "2026-04-06T18:46:27.753756+00:00"
+      }
+    ],
+    "created_at": "2026-04-06T18:46:27.754115+00:00",
+    "updated_at": "2026-04-06T18:46:27.754125+00:00"
+  },
+  {
+    "id": "bb173afd-1753-4cb3-ad33-a6c45e1338f3",
+    "title": "Texas Truck Throwdown 2026",
+    "event_type": "specialty",
+    "track": {
+      "id": "concho-valley-dragway-tx",
+      "name": "Concho Valley Dragway",
+      "city": "San Angelo",
+      "state": "TX"
+    },
+    "dates": {
+      "start": "2026-05-08",
+      "end": "2026-05-09"
+    },
+    "classes": [
+      "Big Baller Class",
+      "6.3X Index"
+    ],
+    "series": "Wamsley Performance / Summese (sponsors/sanctioning)",
+    "notes": "Rules visible on flyer: No Minimum Weight | Tires 28\", 275, 29\", 31\" | .400 Pro Tree | N/T No Slips | Must Have Proper Safety Equipment | Any Engine Combo | No Delay Boxes | No Throttle Stops. Social media caption: \"Can your truck run 6.3s?? If so this class is for you!\" \u2014 Truck-only specialty index race event. Est. 2024 noted on track logo.",
+    "confidence": 0.82,
+    "unclear_fields": [
+      "fees",
+      "times",
+      "contact",
+      "series"
+    ],
+    "flyers": [
+      {
+        "file": "20260406-2.jpg",
+        "phash": "f68309741f5e615a",
+        "processed_at": "2026-04-06T18:47:15.888368+00:00"
+      }
+    ],
+    "created_at": "2026-04-06T18:47:15.888761+00:00",
+    "updated_at": "2026-04-06T18:47:15.888770+00:00"
   }
 ]
