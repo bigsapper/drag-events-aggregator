@@ -1,7 +1,7 @@
 [
   {
     "id": "57bc97b9-f865-436d-9d4f-190b56c92a25",
-    "title": "Race #2 Thunder Valley Raceway Park",
+    "title": "Race #2 Thunder Valley Raceway Park **CANCELLED**",
     "event_type": "points_race",
     "track": {
       "id": "thunder-valley-ok",
@@ -13,36 +13,48 @@
       "start": "2026-04-12"
     },
     "times": {
-      "gates_open": "08:00"
+      "gates_open": "08:00",
+      "registration_opens": null,
+      "race_start": "08:00"
     },
     "classes": [
+      "CA$H Bracket",
+      "Competition Muscle",
+      "EV Muscle",
+      "Electronics",
+      "King Muscle",
+      "Modified Muscle",
+      "Pro Muscle",
       "Stock Muscle",
       "Street Muscle",
-      "King Muscle",
-      "EV Muscle",
-      "Competition Muscle",
-      "Modified Muscle",
-      "Electronics",
-      "Pro Muscle",
-      "Super Pro Muscle",
-      "CA$H Bracket"
+      "Super Pro Muscle"
     ],
     "series": "TMCCC",
     "contact": {
       "phone": "405-413-1522",
+      "email": null,
       "website": "https://www.thundervalleyracewaypark.com"
     },
-    "notes": "1/4 Mile track. 4 Points 1st Round event.\n1/4 Mile\n4 Points 1st Round\nhttps://www.thundervalleyracewaypark.com",
+    "notes": "**EVENT CANCELLED** - 1/4 Mile track - 4 Points 1st Round\n1/4 Mile\n4 Points 1st Round\nhttps://www.thundervalleyracewaypark.com",
     "confidence": 0.95,
     "flyers": [
       {
         "file": "https://tmccc.org/events",
         "phash": null,
         "processed_at": "2026-04-02T05:07:35.068595+00:00"
+      },
+      {
+        "file": "https://tmccc.org/events",
+        "phash": null,
+        "processed_at": "2026-04-10T21:24:20.440842+00:00"
       }
     ],
     "created_at": "2026-04-02T05:07:35.068604+00:00",
-    "updated_at": "2026-04-02T05:07:35.068607+00:00"
+    "updated_at": "2026-04-10T21:24:20.440876+00:00",
+    "fees": {
+      "entry": null,
+      "spectator": null
+    }
   },
   {
     "id": "1cd43162-290b-4a9a-bc1d-3f907b689a8b",
@@ -228,144 +240,6 @@
     ],
     "created_at": "2026-04-02T05:07:44.222810+00:00",
     "updated_at": "2026-04-02T05:07:44.222815+00:00"
-  },
-  {
-    "id": "911431bb-ca19-4803-90d5-64f6785ab62c",
-    "title": "Race #7 Xtreme Raceway Park",
-    "event_type": "points_race",
-    "track": {
-      "id": "xtreme-tx",
-      "name": "Xtreme Raceway Park",
-      "city": "Ferris",
-      "state": "TX"
-    },
-    "dates": {
-      "start": "2026-06-28"
-    },
-    "times": {
-      "gates_open": "09:00",
-      "race_start": "09:00"
-    },
-    "classes": [
-      "Stock Muscle",
-      "Street Muscle",
-      "King Muscle",
-      "EV Muscle",
-      "Competition Muscle",
-      "Modified Muscle",
-      "Electronics",
-      "Pro Muscle",
-      "Super Pro Muscle",
-      "CA$H Bracket"
-    ],
-    "series": "TMCCC",
-    "contact": {
-      "phone": "972-544-3724",
-      "website": "https://www.xtremeracewaypark.com"
-    },
-    "notes": "Track location: 1800 S I45 Service road, Ferris TX 75125. Event is part of TMCCC series.\nhttps://www.xtremeracewaypark.com",
-    "confidence": 0.95,
-    "flyers": [
-      {
-        "file": "https://tmccc.org/events",
-        "phash": null,
-        "processed_at": "2026-04-02T05:07:46.542269+00:00"
-      }
-    ],
-    "created_at": "2026-04-02T05:07:46.542286+00:00",
-    "updated_at": "2026-04-02T05:07:46.542291+00:00"
-  },
-  {
-    "id": "415bdd5b-4474-4bab-a180-02750e475aa8",
-    "title": "Race #8 Xtreme Raceway Park",
-    "event_type": "bracket",
-    "track": {
-      "id": "xtreme-tx",
-      "name": "Xtreme Raceway Park",
-      "city": "Ferris",
-      "state": "TX"
-    },
-    "dates": {
-      "start": "2026-08-30"
-    },
-    "times": {
-      "gates_open": "09:00",
-      "race_start": "09:00"
-    },
-    "series": "TMCCC",
-    "classes": [
-      "Stock Muscle",
-      "Street Muscle",
-      "King Muscle",
-      "EV Muscle",
-      "Competition Muscle",
-      "Modified Muscle",
-      "Electronics",
-      "Pro Muscle",
-      "Super Pro Muscle",
-      "CA$H Bracket"
-    ],
-    "contact": {
-      "phone": "972-544-3724",
-      "website": "https://www.xtremeracewaypark.com"
-    },
-    "confidence": 0.92,
-    "notes": "https://www.xtremeracewaypark.com",
-    "flyers": [
-      {
-        "file": "https://tmccc.org/events",
-        "phash": null,
-        "processed_at": "2026-04-02T05:07:51.696002+00:00"
-      }
-    ],
-    "created_at": "2026-04-02T05:07:51.696011+00:00",
-    "updated_at": "2026-04-02T05:07:51.696013+00:00"
-  },
-  {
-    "id": "9c46bc76-249f-47a3-9cd2-30c06003ff45",
-    "title": "Race #9 Xtreme Raceway Park",
-    "event_type": "bracket",
-    "track": {
-      "id": "xtreme-tx",
-      "name": "Xtreme Raceway Park",
-      "city": "Ferris",
-      "state": "TX"
-    },
-    "dates": {
-      "start": "2026-06-21"
-    },
-    "times": {
-      "gates_open": "09:00",
-      "race_start": "09:00"
-    },
-    "contact": {
-      "phone": "972-544-3724",
-      "website": "https://www.xtremeracewaypark.com/"
-    },
-    "series": "TMCCC",
-    "classes": [
-      "Stock Muscle",
-      "Street Muscle",
-      "King Muscle",
-      "EV Muscle",
-      "Competition Muscle",
-      "Modified Muscle",
-      "Electronics",
-      "Pro Muscle",
-      "Super Pro Muscle",
-      "CA$H Bracket"
-    ],
-    "notes": "Does require engine diaper if running 6.50 or faster\nhttps://www.xtremeracewaypark.com/\nDOES REQUIRE ENGINE DIAPER IF RUNNING 6.50 OR FASTER",
-    "confidence": 0.92,
-    "flyers": [
-      {
-        "file": "https://tmccc.org/events",
-        "phash": null,
-        "processed_at": "2026-04-02T05:07:53.807729+00:00"
-      }
-    ],
-    "created_at": "2026-04-02T05:07:53.807742+00:00",
-    "updated_at": "2026-04-02T05:07:53.807745+00:00"
   },
   {
     "id": "6b0146c3-f703-4b82-977e-a248735aa375",
@@ -679,7 +553,7 @@
   {
     "id": "2a03593b-5c95-447a-99fc-656cf834c5df",
     "title": "Alley Cat Racing Presents Texas Shootout's Grudge Racing",
-    "event_type": "grudge",
+    "event_type": "specialty",
     "track": {
       "id": "houston-tx",
       "name": "Houston Motorsports Park",
@@ -689,28 +563,29 @@
     "dates": {
       "start": "2026-04-25"
     },
-    "series": "Alley Cat Racing",
+    "series": "Alleycat Racing and HMP",
     "classes": [
-      "7.50 Fullsize",
-      "6.50 Fullsize",
       "5.30 Lil Dawg",
+      "6.50 Fullsize",
+      "6.50 Index",
+      "7.50 Fullsize",
       "Daily Driver N/A"
     ],
     "fees": {
-      "entry": "7.50 Fullsize: $150 | 6.50 Fullsize: $150 | 5.30 Lil Dawg: $150 | Daily Driver N/A: $200",
+      "entry": "$1,000 Guaranteed on Top",
       "spectator": null
     },
     "times": {
       "gates_open": "16:00",
-      "race_start": "17:00",
-      "registration_opens": null
+      "registration_opens": null,
+      "race_start": "17:00"
     },
     "contact": {
-      "website": null,
       "phone": null,
-      "email": null
+      "email": null,
+      "website": null
     },
-    "notes": "ADDRESS: 11620 N. Lake Houston Parkway, 77044. | ALSO WELCOMES: Grudge Racing & Test n Tune. | LIVE MUSIC & CONCESSIONS. | Social TikTok: @just4welcome_ | CLASS DETAILS \u2014 7.50 FULLSIZE: $3K to win, SUVs allowed, Sportsman tree, Foot brake/2step OK, No delay box, No wheelie bars, No street tires, 315 or smaller, 1st Rd. buy back. | 6.50 FULLSIZE: $3K to win, Pro tree, Trans brake/2step, Any power adder, No delay box, No street tires, No wheelie bars, 315 or smaller, 1st Rd. buy back. | 5.30 LIL DAWG: $2K guaranteed on top, No time slips, Must be door car, No wheelie bars, No throttle stops, Off-road tire, Any power adder, 315 or smaller. | DAILY DRIVER N/A: $2K to win, No street tires, No times shown, Overdrive transmission, Stock suspension location, Stock firewall, Foot brake/2step OK, Pro tree, Factory appearing in/out, 10 car minimum.",
+    "notes": "Presented by Alleycat Racing and HMP. $1,000 guaranteed on top. Track rules for all shootouts. Live music and concessions available. Address: 11620 N. Lake Houston Pkwy, 77044.",
     "confidence": 0.97,
     "unclear_fields": [],
     "flyers": [
@@ -718,10 +593,15 @@
         "file": "20260404-4.jpg",
         "phash": "9cc157514a8eb755",
         "processed_at": "2026-04-06T18:46:27.753756+00:00"
+      },
+      {
+        "file": "20260408-1.jpg",
+        "phash": "adc55e5c30a3036f",
+        "processed_at": "2026-04-10T21:24:35.389588+00:00"
       }
     ],
     "created_at": "2026-04-06T18:46:27.754115+00:00",
-    "updated_at": "2026-04-06T18:46:27.754125+00:00"
+    "updated_at": "2026-04-10T21:24:35.390099+00:00"
   },
   {
     "id": "bb173afd-1753-4cb3-ad33-a6c45e1338f3",
@@ -1972,5 +1852,227 @@
     ],
     "created_at": "2026-04-06T23:02:00.962169+00:00",
     "updated_at": "2026-04-06T23:02:00.962179+00:00"
+  },
+  {
+    "id": "f684a5f1-6176-44b5-a380-39f7ec52ab6b",
+    "title": "Race #7 Xtreme Raceway Park",
+    "event_type": "points_race",
+    "track": {
+      "id": "xtreme-tx",
+      "name": "Xtreme Raceway Park",
+      "city": "Ferris",
+      "state": "TX"
+    },
+    "dates": {
+      "start": "2026-06-21"
+    },
+    "times": {
+      "gates_open": "09:00",
+      "race_start": "09:00"
+    },
+    "series": "TMCCC",
+    "classes": [
+      "Stock Muscle",
+      "Street Muscle",
+      "King Muscle",
+      "EV Muscle",
+      "Competition Muscle",
+      "Modified Muscle",
+      "Electronics",
+      "Pro Muscle",
+      "Super Pro Muscle",
+      "CA$H Bracket"
+    ],
+    "contact": {
+      "phone": "972-544-3724",
+      "website": "https://www.xtremeracewaypark.com"
+    },
+    "confidence": 0.95,
+    "notes": "Event is Race #7 in the TMCCC series. Hours listed as 9am-4pm. Track address: 1800 S I45 Service road, Ferris TX 75125\nhttps://www.xtremeracewaypark.com",
+    "flyers": [
+      {
+        "file": "https://tmccc.org/events",
+        "phash": null,
+        "processed_at": "2026-04-10T21:24:23.081366+00:00"
+      }
+    ],
+    "created_at": "2026-04-10T21:24:23.081377+00:00",
+    "updated_at": "2026-04-10T21:24:23.081380+00:00"
+  },
+  {
+    "id": "641dfaee-8226-4b6e-b3ff-fc8e31be5002",
+    "title": "Race #8 Xtreme Raceway Park",
+    "event_type": "points_race",
+    "track": {
+      "id": "xtreme-tx",
+      "name": "Xtreme Raceway Park",
+      "city": "Ferris",
+      "state": "TX"
+    },
+    "dates": {
+      "start": "2026-06-28"
+    },
+    "times": {
+      "gates_open": "09:00"
+    },
+    "series": "TMCCC",
+    "classes": [
+      "Stock Muscle",
+      "Street Muscle",
+      "King Muscle",
+      "EV Muscle",
+      "Competition Muscle",
+      "Modified Muscle",
+      "Electronics",
+      "Pro Muscle",
+      "Super Pro Muscle",
+      "CA$H Bracket"
+    ],
+    "contact": {
+      "phone": "972-544-3724",
+      "website": "https://www.xtremeracewaypark.com"
+    },
+    "confidence": 0.95,
+    "notes": "https://www.xtremeracewaypark.com",
+    "flyers": [
+      {
+        "file": "https://tmccc.org/events",
+        "phash": null,
+        "processed_at": "2026-04-10T21:24:25.234422+00:00"
+      }
+    ],
+    "created_at": "2026-04-10T21:24:25.234432+00:00",
+    "updated_at": "2026-04-10T21:24:25.234435+00:00"
+  },
+  {
+    "id": "c7d574e1-bb5f-47d6-a53c-392417913d9f",
+    "title": "Race #9 Xtreme Raceway Park",
+    "event_type": "bracket",
+    "track": {
+      "id": "xtreme-tx",
+      "name": "Xtreme Raceway Park",
+      "city": "Ferris",
+      "state": "TX"
+    },
+    "dates": {
+      "start": "2026-08-30"
+    },
+    "times": {
+      "gates_open": "09:00",
+      "race_start": "09:00"
+    },
+    "series": "TMCCC",
+    "classes": [
+      "Stock Muscle",
+      "Street Muscle",
+      "King Muscle",
+      "EV Muscle",
+      "Competition Muscle",
+      "Modified Muscle",
+      "Electronics",
+      "Pro Muscle",
+      "Super Pro Muscle",
+      "CA$H Bracket"
+    ],
+    "contact": {
+      "phone": "972-544-3724",
+      "website": "https://www.xtremeracewaypark.com/"
+    },
+    "notes": "DOES REQUIRE ENGINE DIAPER IF RUNNING 6.50 OR FASTER\nhttps://www.xtremeracewaypark.com/",
+    "confidence": 0.85,
+    "flyers": [
+      {
+        "file": "https://tmccc.org/events",
+        "phash": null,
+        "processed_at": "2026-04-10T21:24:27.279716+00:00"
+      }
+    ],
+    "created_at": "2026-04-10T21:24:27.279727+00:00",
+    "updated_at": "2026-04-10T21:24:27.279730+00:00"
+  },
+  {
+    "id": "378a4ad7-b4e1-479d-b4cf-3cd8a7b95d9a",
+    "title": "Rumble in the Jungle",
+    "event_type": "grudge",
+    "series": "Last Minute Racing",
+    "track": {
+      "id": "xtreme-tx",
+      "name": "Xtreme Raceway Park",
+      "city": "Ferris",
+      "state": "TX"
+    },
+    "dates": {
+      "start": "2026-06-19",
+      "end": "2026-06-20"
+    },
+    "classes": [
+      "Lil Gangstas (5.30 Index)",
+      "6.50 Index",
+      "7.50 Index"
+    ],
+    "fees": {
+      "entry": "$30 per person; $30 pit parking; $30 tech card; $50/day for RV w/o trailer. Buy-ins: Lil Gangstas $250, 6.50 Index $200, 7.50 Index $200",
+      "spectator": null
+    },
+    "notes": "Presented by Last Minute Racing. Sponsored by Nitrous Express (NX). Grudge Racing both days. \n\nFRIDAY payouts: Lil Gangstas $250 buy-in / $5,000 to win; 6.50 Index $200 buy-in / $2,000 to win; 7.50 Index $200 buy-in / $2,000 to win.\n\nSATURDAY payouts: Lil Gangstas $250 buy-in / $10,000 to win; 6.50 Index $200 buy-in / $4,000 to win; 7.50 Index $200 buy-in / $4,000 to win.\n\nLil Gangstas rules: 5.30 index, 28x10.5 (no WS), 275/60/15 radial or smaller (unless factory-equipped on 17in rim or bigger), door car/trucks, no wheelie bars, no throttle stops, no delay boxes, no time slips.\n\n6.50 Index rules: First round buy backs, pro tree, transbrake allowed, no throttle stops, no delay boxes.\n\n7.50 Index rules: First round buy backs, pro tree, footbrake only, no throttle stops.\n\nTrack address: 1800 S Interstate 45 Service Rd, Ferris, TX 75125. Strange Gangstas logo visible on flyer.",
+    "confidence": 0.97,
+    "unclear_fields": [
+      "times"
+    ],
+    "flyers": [
+      {
+        "file": "20260408-2.jpg",
+        "phash": "e1c2199f3e771819",
+        "processed_at": "2026-04-10T21:24:49.115994+00:00"
+      }
+    ],
+    "created_at": "2026-04-10T21:24:49.116254+00:00",
+    "updated_at": "2026-04-10T21:24:49.116258+00:00"
+  },
+  {
+    "id": "d1d39054-e699-4fc8-87b1-84f0fe9b24f8",
+    "title": "Grudge Fest 4",
+    "event_type": "grudge",
+    "track": {
+      "id": "xtreme-tx",
+      "name": "Xtreme Raceway Park",
+      "city": "Ferris",
+      "state": "TX"
+    },
+    "dates": {
+      "start": "2026-05-29",
+      "end": "2026-05-30"
+    },
+    "series": "LOL Racing / Nitrous Express (NX) presented event",
+    "classes": [
+      "Anything on 28s",
+      "All Steel, All Glass",
+      "Lil Tangstas 5.30"
+    ],
+    "times": {
+      "gates_open": "17:00",
+      "race_start": "15:00"
+    },
+    "fees": {
+      "entry": "$300 buy-in per class (16 car minimum per class)",
+      "spectator": "$30/day admission"
+    },
+    "contact": {
+      "phone": "Alan Rodriguez (972) 290-9749 / Oscar Cardoza (214) 886-3756",
+      "email": null,
+      "website": "https://www.xtremeracewaypark.com"
+    },
+    "notes": "Friday Gates Open: 5PM | Saturday Gates Open: 1PM | Saturday Track's Hot: 3PM | Tech Cards: $30/day | Pit Side Parking: $25/day | RVs and Travel Trailers not attached to a car trailer: $50/day | Free Parking on Spectator Side. \n\nCLASS DETAILS:\n\u2022 Anything on 28s ($10,000 to win): 28/275 tire, any power adder, any chassis, class cars are welcome.\n\u2022 All Steel, All Glass ($10,000 to win): No class cars, 28/275 or smaller, any power adder, steel doors required unless factory, real side glass required, no IDC CF/FB front ends allowed, Lexan front and rear OK, steel fenders required unless factory, ladder bar & 4 links OK.\n\u2022 Lil Tangstas 5.30 ($10,000 to win, $300 buy-in): 28x10.5 slick (non W) or 275 radial, door cars only, no testing the day of race, no tickets or timeslips, no wheelie bars, no throttle controllers.\n\nTrack address: 1800 S Interstate 45 Service Rd, Ferris, TX 75125.",
+    "confidence": 0.97,
+    "unclear_fields": [],
+    "flyers": [
+      {
+        "file": "20260408-3.jpg",
+        "phash": "cfa59991d0e67485",
+        "processed_at": "2026-04-10T21:25:05.982700+00:00"
+      }
+    ],
+    "created_at": "2026-04-10T21:25:05.983347+00:00",
+    "updated_at": "2026-04-10T21:25:05.983361+00:00"
   }
 ]
