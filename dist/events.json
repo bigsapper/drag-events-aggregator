@@ -718,7 +718,7 @@
     },
     "confidence": 1.0,
     "unclear_fields": [],
-    "notes": "Xtreme NHRA Bracket Series",
+    "notes": "Xtreme IHRA Bracket Series",
     "flyers": [],
     "created_at": "2026-04-01T01:10:29.958824+00:00",
     "updated_at": "2026-04-01T01:10:29.958824+00:00"
@@ -765,7 +765,7 @@
     },
     "confidence": 1.0,
     "unclear_fields": [],
-    "notes": "Xtreme NHRA Bracket Series",
+    "notes": "Xtreme IHRA Bracket Series",
     "flyers": [],
     "created_at": "2026-04-01T01:10:29.958824+00:00",
     "updated_at": "2026-04-01T01:10:29.958824+00:00"
@@ -812,7 +812,7 @@
     },
     "confidence": 1.0,
     "unclear_fields": [],
-    "notes": "Xtreme NHRA Bracket Series",
+    "notes": "Xtreme IHRA Bracket Series",
     "flyers": [],
     "created_at": "2026-04-01T01:10:29.958824+00:00",
     "updated_at": "2026-04-01T01:10:29.958824+00:00"
@@ -859,7 +859,7 @@
     },
     "confidence": 1.0,
     "unclear_fields": [],
-    "notes": "Xtreme NHRA Bracket Series",
+    "notes": "Xtreme IHRA Bracket Series",
     "flyers": [],
     "created_at": "2026-04-01T01:10:29.958824+00:00",
     "updated_at": "2026-04-01T01:10:29.958824+00:00"
@@ -906,7 +906,7 @@
     },
     "confidence": 1.0,
     "unclear_fields": [],
-    "notes": "Xtreme NHRA Bracket Series",
+    "notes": "Xtreme IHRA Bracket Series",
     "flyers": [],
     "created_at": "2026-04-01T01:10:29.958824+00:00",
     "updated_at": "2026-04-01T01:10:29.958824+00:00"
@@ -953,7 +953,7 @@
     },
     "confidence": 1.0,
     "unclear_fields": [],
-    "notes": "Xtreme NHRA Bracket Series",
+    "notes": "Xtreme IHRA Bracket Series",
     "flyers": [],
     "created_at": "2026-04-01T01:10:29.958824+00:00",
     "updated_at": "2026-04-01T01:10:29.958824+00:00"
@@ -1000,14 +1000,14 @@
     },
     "confidence": 1.0,
     "unclear_fields": [],
-    "notes": "Xtreme NHRA Bracket Series",
+    "notes": "Xtreme IHRA Bracket Series",
     "flyers": [],
     "created_at": "2026-04-01T01:10:29.958824+00:00",
     "updated_at": "2026-04-01T01:10:29.958824+00:00"
   },
   {
     "id": "59903be2-d3d2-46e7-a2b1-3139308d1b16",
-    "title": "Team Finals - NHRA Bracket Series",
+    "title": "Team Finals - IHRA Bracket Series",
     "event_type": "bracket",
     "series": null,
     "track": {
@@ -1043,7 +1043,7 @@
     },
     "confidence": 1.0,
     "unclear_fields": [],
-    "notes": "Team Finals - Xtreme NHRA Bracket Series",
+    "notes": "Team Finals - Xtreme IHRA Bracket Series",
     "flyers": [],
     "created_at": "2026-04-01T01:10:29.958824+00:00",
     "updated_at": "2026-04-01T01:10:29.958824+00:00"
