@@ -46,7 +46,18 @@ _TRACK_CATALOG, _SLUG_ALIASES = _load_track_catalog()
 
 def _resolve_canonical(name: str) -> str:
     """Substitute a known alias with its canonical track name."""
-    return _ALIAS_MAP.get(name.strip().lower(), name)
+    normalized_name = name.strip().lower()
+    exact_match = _ALIAS_MAP.get(normalized_name)
+    if exact_match:
+        return exact_match
+
+    for alias, canonical in _ALIAS_MAP.items():
+        if len(alias) < 4:
+            continue
+        if re.search(rf"(^|[^a-z0-9]){re.escape(alias)}([^a-z0-9]|$)", normalized_name):
+            return canonical
+
+    return name
 
 
 def lookup_track_catalog(track_id: str) -> dict | None:
@@ -227,9 +238,10 @@ def _merge_track(existing: dict, new_data: dict) -> dict:
     new_track = new_data.get("track", {})
     merged_name = new_track.get("name") or existing_track.get("name")
     merged_state = new_track.get("state") or existing_track.get("state")
+    canonical_name = _resolve_canonical(merged_name) if merged_name else merged_name
     return {
-        "id": track_slug(merged_name, merged_state),
-        "name": merged_name,
+        "id": track_slug(canonical_name, merged_state),
+        "name": canonical_name,
         "city": new_track.get("city") or existing_track.get("city"),
         "state": merged_state,
     }

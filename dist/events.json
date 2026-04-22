@@ -2077,12 +2077,12 @@
   },
   {
     "id": "f6ba7830-f3ff-4500-886d-bba84a978bc9",
-    "title": "Street Car Takeover Dallas",
+    "title": "Street Car Takeover - Ennis, Texas",
     "event_type": "specialty",
     "track": {
       "id": "texas-motorplex-tx",
       "name": "Texas Motorplex",
-      "city": "Dallas",
+      "city": "Ennis",
       "state": "TX"
     },
     "dates": {
@@ -2091,15 +2091,20 @@
     },
     "series": "Street Car Takeover (SCT)",
     "classes": [
-      "Street"
+      "1/4 Mile Queens",
+      "Jr Dragster",
+      "Lil Gangstas",
+      "Roll Race",
+      "Street",
+      "Street Racer"
     ],
     "contact": {
       "phone": null,
       "email": null,
       "website": "https://streetcartakeover.com"
     },
-    "notes": "Tagline: \"Where Street Cars Go To Party.\" Street Car Takeover is a traveling street car racing and car show series. No specific classes, times, or fees are listed on this flyer beyond the event name, location, and dates.",
-    "confidence": 0.92,
+    "notes": "Two-day event. FRIDAY MAY 1: Gates open racers 3:00 PM; Gates open spectators 5:00 PM; Open Test & Tune 6:00\u201311:00 PM; Q1 Street Racer / 1/4 Mile Queens / Jr's 6:00 PM; Q2 Street Racer / 1/4 Mile Queens / Jr's 9:00 PM. SATURDAY MAY 2: Gates open racers 8:00 AM; Gates open spectators 9:00 AM; Mandatory Roll Race Meeting 9:00 AM; Roll Race Qualifying 9:30 AM; Roll Race Eliminations 11:00 AM; Open Test & Tune 12:30\u20131:30 PM; Drag Race Drivers Meeting 1:00 PM; All Drag Race Classes Q3 2:00 PM; Round 1 \u2013 Lil Gangstas 2:15 PM; Round 1 \u2013 All Classes 4:00 PM. Tagline: \"Where Street Cars Go to Party.\"",
+    "confidence": 0.95,
     "unclear_fields": [
       "classes",
       "fees",
@@ -2110,9 +2115,23 @@
         "file": "20260421-1.jpg",
         "phash": "fa83057e25f03a8b",
         "processed_at": "2026-04-22T15:12:44+00:00"
+      },
+      {
+        "file": "20260422-1.jpg",
+        "phash": "d8c58700e0393fbf",
+        "processed_at": "2026-04-22T15:32:15.289244+00:00"
       }
     ],
     "created_at": "2026-04-22T15:12:44+00:00",
-    "updated_at": "2026-04-22T15:12:44+00:00"
+    "updated_at": "2026-04-22T15:32:15.289539+00:00",
+    "times": {
+      "gates_open": "15:00",
+      "registration_opens": null,
+      "race_start": "16:00"
+    },
+    "fees": {
+      "entry": null,
+      "spectator": null
+    }
   }
 ]

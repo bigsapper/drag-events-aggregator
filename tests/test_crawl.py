@@ -1129,7 +1129,7 @@ def test_run_extraction_text_new_tmccc_event_applies_enrichment(tmp_events_file)
         "title": "Race #2 Thunder Valley Raceway Park",
         "event_type": "points_race",
         "track": {"name": "Thunder Valley Raceway Park", "city": None, "state": None},
-        "dates": {"start": "2026-04-12"},
+        "dates": {"start": "2026-05-12"},
         "confidence": 0.65,
     }
     with patch("drag_events.crawl.process.load_events", return_value=[]), \

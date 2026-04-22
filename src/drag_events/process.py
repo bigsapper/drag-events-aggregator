@@ -16,6 +16,7 @@ import sys
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
+from urllib.parse import urlparse
 
 from .dedup import (
     compute_phash, is_duplicate_image, find_same_event, merge_events, track_slug,
@@ -31,6 +32,24 @@ LOGGER = get_logger(__name__)
 BASE_DIR = Path(__file__).resolve().parents[2]
 EVENTS_FILE = BASE_DIR / "dist" / "events.json"
 IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp", ".gif"}
+
+
+def _normalize_contact_website(event: dict) -> dict:
+    contact = event.get("contact")
+    if not isinstance(contact, dict):
+        return event
+
+    website = contact.get("website")
+    if not isinstance(website, str) or not website.strip():
+        return event
+
+    normalized = website.strip()
+    parsed = urlparse(normalized)
+    if not parsed.scheme and "." in normalized:
+        normalized = f"https://{normalized}"
+
+    contact["website"] = normalized
+    return event
 
 
 def load_events() -> list[dict]:
@@ -64,6 +83,7 @@ def process_flyer(image_path: str, events: list[dict]) -> tuple[str, dict]:
     # Layer 2: call Claude to extract event data
     LOGGER.info("  Calling Claude vision API...")
     extracted = extract_event(image_path)
+    extracted = _normalize_contact_website(extracted)
 
     if not is_in_scope_event(extracted):
         LOGGER.info("  Out-of-scope event detected, skipping.")

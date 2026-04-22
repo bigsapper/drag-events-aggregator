@@ -117,6 +117,30 @@ def test_process_flyer_new_event_has_flyer_entry(tmp_path, sample_events, mock_v
     assert event["flyers"][0]["file"] == img.name
 
 
+def test_process_flyer_normalizes_contact_website(tmp_path, sample_events):
+    img = make_1x1_png(tmp_path / "flyer.jpg")
+    extracted = {
+        "title": "Street Car Takeover Dallas",
+        "event_type": "specialty",
+        "series": None,
+        "track": {"name": "Texas Motorplex", "city": "Ennis", "state": "TX"},
+        "dates": {"start": "2026-05-01", "end": "2026-05-02"},
+        "times": {"gates_open": None, "registration_opens": None, "race_start": None},
+        "classes": ["Street"],
+        "fees": {"entry": None, "spectator": None},
+        "contact": {"phone": None, "email": None, "website": "streetcartakeover.com"},
+        "confidence": 0.9,
+        "unclear_fields": [],
+        "notes": None,
+    }
+    with patch("drag_events.process.compute_phash", return_value="00000000ffffffff"), \
+         patch("drag_events.process.is_duplicate_image", return_value=None), \
+         patch("drag_events.process.extract_event", return_value=extracted), \
+         patch("drag_events.process.find_same_event", return_value=None):
+        _, event = process.process_flyer(str(img), sample_events)
+    assert event["contact"]["website"] == "https://streetcartakeover.com"
+
+
 def test_process_flyer_merged(tmp_path, sample_events, mock_vision_client, sample_extracted):
     img = make_1x1_png(tmp_path / "flyer.jpg")
     with patch("drag_events.process.compute_phash", return_value="00000000ffffffff"), \

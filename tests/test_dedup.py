@@ -258,6 +258,10 @@ def test_resolve_canonical_case_insensitive(alias_map):
 def test_resolve_canonical_unknown_returns_original(alias_map):
     assert _resolve_canonical("Texas Motorplex") == "Texas Motorplex"
 
+def test_resolve_canonical_embedded_alias(monkeypatch):
+    monkeypatch.setattr(dedup, "_ALIAS_MAP", {"motorplex": "Texas Motorplex"})
+    assert _resolve_canonical("Ennis Raceway / Texas Motorplex") == "Texas Motorplex"
+
 def test_alias_match_abbreviation_and_full_name(alias_map):
     """'XRP' and 'Xtreme Raceway Park' should match as the same track."""
     a = {"track": {"name": "XRP", "state": "TX"}}
@@ -267,6 +271,13 @@ def test_alias_match_abbreviation_and_full_name(alias_map):
 def test_alias_slug_matches_canonical_slug(alias_map):
     """Alias and canonical name produce the same track.id slug."""
     assert track_slug("XRP", "TX") == track_slug("Xtreme Raceway Park", "TX")
+
+
+def test_alias_match_ennis_dragway_to_texas_motorplex(monkeypatch):
+    monkeypatch.setattr(dedup, "_ALIAS_MAP", {"ennis dragway": "Texas Motorplex"})
+    a = {"track": {"name": "Ennis Dragway", "state": "TX"}}
+    b = {"track": {"name": "Texas Motorplex", "state": "TX"}}
+    assert _tracks_match(a, b) is True
 
 
 # ── find_same_event ───────────────────────────────────────────────────────────
@@ -383,6 +394,14 @@ def test_merge_track_id_set_on_merge(existing, new_flyer):
     new_data = {"track": {"name": "Texas Motorplex", "state": "TX"}, "dates": {"start": "2026-05-10"}, "confidence": 0.9}
     merged = merge_events(existing, new_data, new_flyer)
     assert merged["track"]["id"] == track_slug("Texas Motorplex", "TX")
+
+
+def test_merge_track_uses_canonical_alias_name(existing, new_flyer, monkeypatch):
+    monkeypatch.setattr(dedup, "_ALIAS_MAP", {"ennis dragway": "Texas Motorplex"})
+    new_data = {"track": {"name": "Ennis Dragway", "city": "Ennis", "state": "TX"}, "dates": {"start": "2026-05-10"}, "confidence": 0.9}
+    merged = merge_events(existing, new_data, new_flyer)
+    assert merged["track"]["id"] == "texas-motorplex-tx"
+    assert merged["track"]["name"] == "Texas Motorplex"
 
 
 def test_merge_preserves_id(existing, new_flyer):
