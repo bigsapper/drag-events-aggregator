@@ -2074,5 +2074,45 @@
     ],
     "created_at": "2026-04-10T21:25:05.983347+00:00",
     "updated_at": "2026-04-10T21:25:05.983361+00:00"
+  },
+  {
+    "id": "f6ba7830-f3ff-4500-886d-bba84a978bc9",
+    "title": "Street Car Takeover Dallas",
+    "event_type": "specialty",
+    "track": {
+      "id": "texas-motorplex-tx",
+      "name": "Texas Motorplex",
+      "city": "Dallas",
+      "state": "TX"
+    },
+    "dates": {
+      "start": "2026-05-01",
+      "end": "2026-05-02"
+    },
+    "series": "Street Car Takeover (SCT)",
+    "classes": [
+      "Street"
+    ],
+    "contact": {
+      "phone": null,
+      "email": null,
+      "website": "https://streetcartakeover.com"
+    },
+    "notes": "Tagline: \"Where Street Cars Go To Party.\" Street Car Takeover is a traveling street car racing and car show series. No specific classes, times, or fees are listed on this flyer beyond the event name, location, and dates.",
+    "confidence": 0.92,
+    "unclear_fields": [
+      "classes",
+      "fees",
+      "times"
+    ],
+    "flyers": [
+      {
+        "file": "20260421-1.jpg",
+        "phash": "fa83057e25f03a8b",
+        "processed_at": "2026-04-22T15:12:44+00:00"
+      }
+    ],
+    "created_at": "2026-04-22T15:12:44+00:00",
+    "updated_at": "2026-04-22T15:12:44+00:00"
   }
 ]
