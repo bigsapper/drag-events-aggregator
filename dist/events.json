@@ -381,6 +381,42 @@
     "updated_at": "2026-04-02T05:08:00.258539+00:00"
   },
   {
+    "id": "37646d26-a656-4c20-a4c8-4fd1982098ad",
+    "title": "NHRA Div4 Quarter-Max Battle for the Buckle, Race #8: XRP",
+    "event_type": "points_race",
+    "series": "Quarter-Max Battle for the Buckle: Grassroots Bracket Series",
+    "track": {
+      "id": "xtreme-tx",
+      "name": "Xtreme Raceway Park",
+      "city": "Ferris",
+      "state": "TX"
+    },
+    "dates": {
+      "start": "2026-10-24"
+    },
+    "classes": [
+      "Super Pro",
+      "Pro ET",
+      "Sportsman",
+      "Junior Categories"
+    ],
+    "notes": "Traveling points series where NHRA racers can earn points by claiming their best four events in Super Pro, Pro ET, Sportsman, and Junior Categories.\n\nSuper Pro & Pro ET: $5,000 in cash and prizes will be awarded and split amongst the top eight points finishers. The Champion will receive a Championship Buckle and a Pro 1 Jacket.\n\nSportsman & Juniors: $2,500 in cash and prizes will be awarded and split amongst the top eight points finishers. The Champion will receive a Championship Buckle and a Pro 1 Jacket.",
+    "confidence": 0.9,
+    "unclear_fields": [
+      "times",
+      "fees"
+    ],
+    "flyers": [
+      {
+        "file": "https://www.facebook.com/events/1438701364143576/",
+        "phash": null,
+        "processed_at": "2026-04-22T15:49:44+00:00"
+      }
+    ],
+    "created_at": "2026-04-22T15:49:44+00:00",
+    "updated_at": "2026-04-22T15:49:44+00:00"
+  },
+  {
     "id": "ba7d6741-2e39-448a-8b7a-104ab8c5e5e0",
     "title": "Race #13 Xtreme Raceway Park",
     "event_type": "points_race",
