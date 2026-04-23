@@ -3,7 +3,7 @@
 import re
 from urllib.parse import urljoin
 
-from ..logging_utils import get_logger
+from ...logging_utils import get_logger
 
 LOGGER = get_logger(__name__)
 

@@ -86,7 +86,7 @@ def tmp_events_file(tmp_path, monkeypatch):
 
 @pytest.fixture
 def tmp_crawl_state(tmp_path, monkeypatch):
-    from drag_events import crawl
+    import drag_events.crawl as crawl
     path = tmp_path / ".crawl_state.json"
     monkeypatch.setattr(crawl, "CRAWL_STATE", path)
     return path
@@ -94,7 +94,7 @@ def tmp_crawl_state(tmp_path, monkeypatch):
 
 @pytest.fixture
 def tmp_flyers_dir(tmp_path, monkeypatch):
-    from drag_events import crawl
+    import drag_events.crawl as crawl
     flyers = tmp_path / "flyers"
     flyers.mkdir()
     monkeypatch.setattr(crawl, "FLYERS_DIR", flyers)

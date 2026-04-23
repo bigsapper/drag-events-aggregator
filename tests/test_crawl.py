@@ -9,7 +9,7 @@ from unittest.mock import MagicMock, patch, call
 import pytest
 from bs4 import BeautifulSoup
 
-from drag_events import crawl
+import drag_events.crawl as crawl
 from tests.conftest import make_1x1_png
 
 PROJECT_DIR = Path(__file__).parent.parent

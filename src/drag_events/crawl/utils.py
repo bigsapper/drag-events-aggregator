@@ -18,13 +18,13 @@ DEFAULT_SOURCE_MAX_PAGES = {
 }
 EVENT_PAGE_KEYWORDS = [
     "event", "schedule", "race", "calendar", "upcoming",
-    "news", "flyer", "announcement"
+    "news", "flyer", "announcement",
 ]
 MIN_WIDTH = 400
 MIN_HEIGHT = 400
 IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp"}
 DEFAULT_HEADERS = {
-    "User-Agent": "Mozilla/5.0 (compatible; DragEventsBot/1.0; fetching public event info)"
+    "User-Agent": "Mozilla/5.0 (compatible; DragEventsBot/1.0; fetching public event info)",
 }
 
 

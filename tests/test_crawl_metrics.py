@@ -4,7 +4,7 @@ import json
 import sys
 from unittest.mock import patch
 
-from drag_events import crawl
+import drag_events.crawl as crawl
 
 
 def test_format_duration_handles_seconds_minutes_and_hours():

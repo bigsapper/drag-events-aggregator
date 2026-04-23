@@ -6,10 +6,10 @@ Items related to CI, scheduled execution, and automated notifications are parked
 ## Architecture — Crawl Strategy Scalability
 
 Aggregator crawl strategies have already been extracted into dedicated modules under
-`src/drag_events/strategies/`. The remaining coupling is registration: adding a new strategy still
-requires modifying `crawl.py` to import it and add it to `STRATEGY_MAP`.
+`src/drag_events/crawl/strategies/`. The remaining coupling is registration: adding a new strategy still
+requires modifying `src/drag_events/crawl/__init__.py` to import it and add it to `STRATEGY_MAP`.
 
-- [ ] Add dynamic strategy registration/loading so new aggregator strategies can be added without editing `crawl.py`
+- [ ] Add dynamic strategy registration/loading so new aggregator strategies can be added without editing `src/drag_events/crawl/__init__.py`
 - [ ] Improve the manual flyer intake workflow:
   flyer sourcing still happens outside this project, but staged intake now syncs from the configured Google Drive folder into `flyers/` for local processing. The remaining work is to refine the operator process around that upstream sourcing workflow.
 
