@@ -1,6 +1,38 @@
 """CLI orchestration for crawl runs."""
 
 
+def _filter_named_items(items: list[dict], name_filter: str | None) -> list[dict]:
+    if not name_filter:
+        return items
+    return [item for item in items if name_filter in item["name"].lower()]
+
+
+def _crawl_items(
+    items: list[dict],
+    *,
+    perf_counter,
+    crawl_item,
+    summarize_result,
+    save_state,
+    state,
+    sleep,
+    log_item=None,
+) -> tuple[list, list[dict]]:
+    results = []
+    metrics = []
+    for item in items:
+        if log_item is not None:
+            log_item(item)
+        item_start = perf_counter()
+        result = crawl_item(item, state)
+        elapsed = round(perf_counter() - item_start, 2)
+        results.append(result)
+        metrics.append(summarize_result(item, result, elapsed))
+        save_state(state)
+        sleep(1)
+    return results, metrics
+
+
 def run_crawl_cli(
     args: list[str],
     *,
@@ -63,44 +95,46 @@ def run_crawl_cli(
         total_text_listings = []
 
         if run_tracks:
-            tracks = load_tracks_config()
-            if track_filter:
-                tracks = [track for track in tracks if track_filter in track["name"].lower()]
+            tracks = _filter_named_items(load_tracks_config(), track_filter)
             logger.info(f"=== Track websites ({len(tracks)}) ===")
-            for track in tracks:
-                item_start = perf_counter()
-                files = crawl_track(track, state)
-                elapsed = round(perf_counter() - item_start, 2)
-                total_downloaded.extend(files)
-                run_metrics["tracks"].append({
+            track_results, run_metrics["tracks"] = _crawl_items(
+                tracks,
+                perf_counter=perf_counter,
+                crawl_item=crawl_track,
+                summarize_result=lambda track, files, elapsed: {
                     "name": track["name"],
                     "elapsed_seconds": elapsed,
                     "downloaded_images": len(files),
-                })
-                save_state(state)
-                sleep(1)
+                },
+                save_state=save_state,
+                state=state,
+                sleep=sleep,
+            )
+            for files in track_results:
+                total_downloaded.extend(files)
 
         if run_sources:
-            sources = load_sources_config()
-            if source_filter:
-                sources = [source for source in sources if source_filter in source["name"].lower()]
+            sources = _filter_named_items(load_sources_config(), source_filter)
             logger.info(f"\n=== Aggregator sources ({len(sources)}) ===")
-            for source in sources:
-                logger.info(f"\n{source['name']}")
-                item_start = perf_counter()
-                files, listings = crawl_source(source, state)
-                elapsed = round(perf_counter() - item_start, 2)
-                total_downloaded.extend(files)
-                total_text_listings.extend(listings)
-                run_metrics["sources"].append({
+            source_results, run_metrics["sources"] = _crawl_items(
+                sources,
+                perf_counter=perf_counter,
+                crawl_item=crawl_source,
+                summarize_result=lambda source, result, elapsed: {
                     "name": source["name"],
                     "strategy": source.get("strategy"),
                     "elapsed_seconds": elapsed,
-                    "downloaded_images": len(files),
-                    "text_listings": len(listings),
-                })
-                save_state(state)
-                sleep(1)
+                    "downloaded_images": len(result[0]),
+                    "text_listings": len(result[1]),
+                },
+                save_state=save_state,
+                state=state,
+                sleep=sleep,
+                log_item=lambda source: logger.info(f"\n{source['name']}"),
+            )
+            for files, listings in source_results:
+                total_downloaded.extend(files)
+                total_text_listings.extend(listings)
 
         logger.info(f"\n{'─' * 50}")
         logger.info(f"Crawl complete. {len(total_downloaded)} new flyer images, {len(total_text_listings)} text listings.")

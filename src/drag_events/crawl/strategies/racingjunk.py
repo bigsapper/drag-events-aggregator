@@ -1,9 +1,13 @@
 """RacingJunk crawler strategy."""
 
-import re
-from urllib.parse import urljoin
-
 from ...logging_utils import get_logger
+from .common import (
+    extract_link_url,
+    extract_listing_title,
+    extract_text_by_class,
+    find_listing_cards,
+    record_seen_title,
+)
 
 LOGGER = get_logger(__name__)
 
@@ -29,30 +33,26 @@ def crawl_racingjunk_impl(
         if not soup:
             break
 
-        cards = soup.select(".event-listing, .event-card, article, .listing-item")
-        if not cards:
-            cards = soup.find_all(attrs={"class": re.compile(r"event|listing|card", re.I)})
+        cards = find_listing_cards(
+            soup,
+            primary_selectors=".event-listing, .event-card, article, .listing-item",
+            fallback_class_pattern=r"event|listing|card",
+        )
         if not cards:
             break
 
         found_new = False
         for card in cards:
-            title_tag = card.find(["h2", "h3", "h4", "a"])
-            title = title_tag.get_text(strip=True) if title_tag else ""
-            if not title or title in state.get("racingjunk_events", []):
+            title = extract_listing_title(card)
+            if not record_seen_title(state, "racingjunk_events", title):
                 continue
-            state.setdefault("racingjunk_events", []).append(title)
             found_new = True
-
-            date_tag = card.find(attrs={"class": re.compile(r"date|time", re.I)})
-            location_tag = card.find(attrs={"class": re.compile(r"location|venue|city", re.I)})
-            link_tag = card.find("a", href=True)
 
             new_events.append({
                 "title": title,
-                "date_text": date_tag.get_text(strip=True) if date_tag else None,
-                "location_text": location_tag.get_text(strip=True) if location_tag else None,
-                "source_url": urljoin(drag_url, link_tag["href"]) if link_tag else drag_url,
+                "date_text": extract_text_by_class(card, r"date|time"),
+                "location_text": extract_text_by_class(card, r"location|venue|city"),
+                "source_url": extract_link_url(card, drag_url),
                 "source": "RacingJunk",
             })
 

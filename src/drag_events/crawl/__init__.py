@@ -119,21 +119,86 @@ HTTP_RETRY_BASE_DELAY_SECONDS = 1.0
 LOGGER = get_logger(__name__)
 
 
+def _legacy_runtime_files() -> list[tuple[Path, Path]]:
+    return [
+        (LEGACY_CRAWL_STATE, CRAWL_STATE),
+        (LEGACY_METRICS_LOG, METRICS_LOG),
+        (LEGACY_METRICS_SUMMARY, METRICS_SUMMARY),
+        (LEGACY_ERROR_LOG, ERROR_LOG),
+        (RUNTIME_LEGACY_METRICS_LOG, METRICS_LOG),
+        (RUNTIME_LEGACY_METRICS_SUMMARY, METRICS_SUMMARY),
+        (RUNTIME_LEGACY_ERROR_LOG, ERROR_LOG),
+    ]
+
+
+def _http_retry_options() -> dict:
+    return {
+        "execute_with_retries": execute_with_retries,
+        "max_attempts": HTTP_MAX_ATTEMPTS,
+        "base_delay_seconds": HTTP_RETRY_BASE_DELAY_SECONDS,
+        "sleep": time.sleep,
+        "logger": LOGGER,
+        "log_error": log_error,
+    }
+
+
+def _source_request_options(source: dict) -> dict:
+    return {"headers": get_request_headers(source), "sleep": time.sleep}
+
+
+def _extraction_dependencies() -> dict:
+    return {
+        "perf_counter": time.perf_counter,
+        "load_events": process.load_events,
+        "save_events": process.save_events,
+        "process_flyer": process.process_flyer,
+        "now": datetime.now,
+        "timezone": timezone,
+        "extract_from_text": extract_from_text,
+        "enrich_tmccc_extracted_event": enrich_tmccc_extracted_event,
+        "is_in_scope_listing": is_in_scope_listing,
+        "is_in_scope_event": is_in_scope_event,
+        "is_past_event": is_past_event,
+        "find_same_event": find_same_event,
+        "merge_events": merge_events,
+        "track_slug": track_slug,
+        "uuid4": uuid.uuid4,
+        "get_retry_telemetry": get_retry_telemetry,
+        "logger": LOGGER,
+        "log_error": log_error,
+    }
+
+
+def _cli_dependencies() -> dict:
+    return {
+        "load_metric_entries": load_metric_entries,
+        "summarize_metrics": summarize_metrics,
+        "print_metrics_summary": print_metrics_summary,
+        "reset_retry_telemetry": reset_retry_telemetry,
+        "now": datetime.now,
+        "timezone": timezone,
+        "perf_counter": time.perf_counter,
+        "load_state": load_state,
+        "load_tracks_config": load_tracks_config,
+        "load_sources_config": load_sources_config,
+        "crawl_track": crawl_track,
+        "crawl_source": crawl_source,
+        "run_extraction": run_extraction,
+        "save_state": save_state,
+        "sleep": time.sleep,
+        "get_retry_telemetry": get_retry_telemetry,
+        "should_record_runtime_metrics": should_record_runtime_metrics,
+        "record_run_metrics": record_run_metrics,
+        "format_duration": format_duration,
+        "metrics_log": METRICS_LOG,
+        "error_log": ERROR_LOG,
+        "logger": LOGGER,
+        "log_error": log_error,
+    }
+
+
 def ensure_runtime_layout() -> None:
-    ensure_runtime_layout_impl(
-        RUNTIME_DIR,
-        STATE_DIR,
-        TRACING_DIR,
-        [
-            (LEGACY_CRAWL_STATE, CRAWL_STATE),
-            (LEGACY_METRICS_LOG, METRICS_LOG),
-            (LEGACY_METRICS_SUMMARY, METRICS_SUMMARY),
-            (LEGACY_ERROR_LOG, ERROR_LOG),
-            (RUNTIME_LEGACY_METRICS_LOG, METRICS_LOG),
-            (RUNTIME_LEGACY_METRICS_SUMMARY, METRICS_SUMMARY),
-            (RUNTIME_LEGACY_ERROR_LOG, ERROR_LOG),
-        ],
-    )
+    ensure_runtime_layout_impl(RUNTIME_DIR, STATE_DIR, TRACING_DIR, _legacy_runtime_files())
 
 
 def load_state() -> dict:
@@ -144,12 +209,8 @@ def save_state(state: dict) -> None:
     save_state_impl(CRAWL_STATE, state, ensure_runtime_layout=ensure_runtime_layout, json_dumps=json.dumps)
 
 
-def format_duration(seconds: float) -> str:
-    return _format_duration(seconds)
-
-
-def summarize_metrics(entries: list[dict]) -> dict:
-    return _summarize_metrics(entries)
+format_duration = _format_duration
+summarize_metrics = _summarize_metrics
 
 
 def load_metric_entries(metrics_log: Path = METRICS_LOG) -> list[dict]:
@@ -227,13 +288,8 @@ def download_image(url: str, headers: dict[str, str] | None = None) -> Path | No
         flyers_dir=FLYERS_DIR,
         default_headers=HEADERS,
         url_to_filename=url_to_filename,
-        execute_with_retries=execute_with_retries,
         request_image=_request_image,
-        max_attempts=HTTP_MAX_ATTEMPTS,
-        base_delay_seconds=HTTP_RETRY_BASE_DELAY_SECONDS,
-        sleep=time.sleep,
-        logger=LOGGER,
-        log_error=log_error,
+        **_http_retry_options(),
     )
 
 
@@ -242,14 +298,9 @@ def fetch_page(url: str, headers: dict[str, str] | None = None) -> BeautifulSoup
         url,
         headers=headers or HEADERS,
         default_headers=HEADERS,
-        execute_with_retries=execute_with_retries,
         request_page=_request_page,
-        max_attempts=HTTP_MAX_ATTEMPTS,
-        base_delay_seconds=HTTP_RETRY_BASE_DELAY_SECONDS,
-        sleep=time.sleep,
         soup_parser=BeautifulSoup,
-        logger=LOGGER,
-        log_error=log_error,
+        **_http_retry_options(),
     )
 
 
@@ -272,9 +323,8 @@ def crawl_bracketraces(source: dict, state: dict) -> list[Path]:
         state,
         fetch_page=fetch_page,
         download_image=download_image,
-        headers=get_request_headers(source),
+        **_source_request_options(source),
         delay_seconds=get_source_delay(source),
-        sleep=time.sleep,
     )
 
 
@@ -283,10 +333,9 @@ def crawl_racingjunk(source: dict, state: dict) -> list[dict]:
         source,
         state,
         fetch_page=fetch_page,
-        headers=get_request_headers(source),
+        **_source_request_options(source),
         delay_seconds=get_source_delay(source),
         max_pages=get_source_max_pages(source),
-        sleep=time.sleep,
     )
 
 
@@ -294,16 +343,9 @@ def crawl_myracepass(source: dict, state: dict) -> list[dict]:
     return crawl_myracepass_impl(source, state, fetch_page=fetch_page, headers=get_request_headers(source))
 
 
-def parse_tmccc_page_events(html: str) -> list[dict]:
-    return parse_tmccc_page_events_impl(html)
-
-
-def _tmccc_event_key(event: dict) -> str:
-    return tmccc_event_key(event)
-
-
-def _advance_tmccc_calendar(page, current_keys: list[str]) -> bool:
-    return advance_tmccc_calendar_impl(page, current_keys)
+parse_tmccc_page_events = parse_tmccc_page_events_impl
+_tmccc_event_key = tmccc_event_key
+_advance_tmccc_calendar = advance_tmccc_calendar_impl
 
 
 def crawl_tmccc(source: dict, state: dict) -> list[dict]:
@@ -335,54 +377,8 @@ def crawl_source(source: dict, state: dict) -> tuple[list[Path], list[dict]]:
 
 
 def run_extraction(downloaded: list[Path], text_listings: list[dict]) -> dict:
-    return run_extraction_impl(
-        downloaded,
-        text_listings,
-        perf_counter=time.perf_counter,
-        load_events=process.load_events,
-        save_events=process.save_events,
-        process_flyer=process.process_flyer,
-        now=datetime.now,
-        timezone=timezone,
-        extract_from_text=extract_from_text,
-        enrich_tmccc_extracted_event=enrich_tmccc_extracted_event,
-        is_in_scope_listing=is_in_scope_listing,
-        is_in_scope_event=is_in_scope_event,
-        is_past_event=is_past_event,
-        find_same_event=find_same_event,
-        merge_events=merge_events,
-        track_slug=track_slug,
-        uuid4=uuid.uuid4,
-        get_retry_telemetry=get_retry_telemetry,
-        logger=LOGGER,
-        log_error=log_error,
-    )
+    return run_extraction_impl(downloaded, text_listings, **_extraction_dependencies())
 
 
 def main() -> None:
-    run_crawl_cli(
-        sys.argv[1:],
-        load_metric_entries=load_metric_entries,
-        summarize_metrics=summarize_metrics,
-        print_metrics_summary=print_metrics_summary,
-        reset_retry_telemetry=reset_retry_telemetry,
-        now=datetime.now,
-        timezone=timezone,
-        perf_counter=time.perf_counter,
-        load_state=load_state,
-        load_tracks_config=load_tracks_config,
-        load_sources_config=load_sources_config,
-        crawl_track=crawl_track,
-        crawl_source=crawl_source,
-        run_extraction=run_extraction,
-        save_state=save_state,
-        sleep=time.sleep,
-        get_retry_telemetry=get_retry_telemetry,
-        should_record_runtime_metrics=should_record_runtime_metrics,
-        record_run_metrics=record_run_metrics,
-        format_duration=format_duration,
-        metrics_log=METRICS_LOG,
-        error_log=ERROR_LOG,
-        logger=LOGGER,
-        log_error=log_error,
-    )
+    run_crawl_cli(sys.argv[1:], **_cli_dependencies())

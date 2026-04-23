@@ -39,67 +39,91 @@ def _load_json_file(path: Path) -> object:
         raise ConfigValidationError(f"Invalid JSON in {path}: {exc.msg}") from exc
 
 
-def validate_tracks_config(data: object) -> list[dict]:
+def _validate_config_entries(data: object, *, kind: str) -> list[dict]:
     if not isinstance(data, list):
-        raise ConfigValidationError("tracks config must be a list of objects")
+        raise ConfigValidationError(f"{kind} config must be a list of objects")
 
     validated = []
     for index, entry in enumerate(data):
         if not isinstance(entry, dict):
-            raise ConfigValidationError(f"tracks[{index}] must be an object")
+            raise ConfigValidationError(f"{kind}[{index}] must be an object")
+        validated.append(entry)
+    return validated
 
-        name = entry.get("name")
+
+def _require_non_empty_string(entry: dict, field: str, *, kind: str, index: int) -> str:
+    value = entry.get(field)
+    if not isinstance(value, str) or not value.strip():
+        raise ConfigValidationError(f"{kind}[{index}].{field} must be a non-empty string")
+    return value
+
+
+def _require_http_url(entry: dict, field: str, *, kind: str, index: int) -> str:
+    value = entry.get(field)
+    if not isinstance(value, str) or not value.startswith(("http://", "https://")):
+        raise ConfigValidationError(f"{kind}[{index}].{field} must be an http/https URL")
+    return value
+
+
+def _validate_enabled(entry: dict, *, kind: str, index: int) -> bool:
+    enabled = entry.get("enabled", True)
+    if not isinstance(enabled, bool):
+        raise ConfigValidationError(f"{kind}[{index}].enabled must be a boolean when provided")
+    return enabled
+
+
+def _validate_request_headers(entry: dict, *, kind: str, index: int) -> None:
+    request_headers = entry.get("request_headers")
+    if request_headers is None:
+        return
+    if not isinstance(request_headers, dict):
+        raise ConfigValidationError(f"{kind}[{index}].request_headers must be an object when provided")
+    for header_name, header_value in request_headers.items():
+        if not isinstance(header_name, str) or not header_name.strip():
+            raise ConfigValidationError(f"{kind}[{index}].request_headers keys must be non-empty strings")
+        if not isinstance(header_value, str):
+            raise ConfigValidationError(f"{kind}[{index}].request_headers values must be strings")
+
+
+def _validate_optional_non_negative_number(entry: dict, field: str, *, kind: str, index: int) -> None:
+    value = entry.get(field)
+    if value is None:
+        return
+    if isinstance(value, bool) or not isinstance(value, (int, float)) or value < 0:
+        raise ConfigValidationError(f"{kind}[{index}].{field} must be a non-negative number when provided")
+
+
+def _validate_optional_positive_int(entry: dict, field: str, *, kind: str, index: int) -> None:
+    value = entry.get(field)
+    if value is None:
+        return
+    if isinstance(value, bool) or not isinstance(value, int) or value < 1:
+        raise ConfigValidationError(f"{kind}[{index}].{field} must be a positive integer when provided")
+
+
+def validate_tracks_config(data: object) -> list[dict]:
+    validated = []
+    for index, entry in enumerate(_validate_config_entries(data, kind="tracks")):
+        _require_non_empty_string(entry, "name", kind="tracks", index=index)
         state = entry.get("state")
-        url = entry.get("url")
-        enabled = entry.get("enabled", True)
-        if not isinstance(name, str) or not name.strip():
-            raise ConfigValidationError(f"tracks[{index}].name must be a non-empty string")
+        _require_http_url(entry, "url", kind="tracks", index=index)
+        _validate_enabled(entry, kind="tracks", index=index)
         if not isinstance(state, str) or not re.fullmatch(r"[A-Z]{2}", state):
             raise ConfigValidationError(f"tracks[{index}].state must be a 2-letter uppercase state code")
-        if not isinstance(url, str) or not url.startswith(("http://", "https://")):
-            raise ConfigValidationError(f"tracks[{index}].url must be an http/https URL")
-        if not isinstance(enabled, bool):
-            raise ConfigValidationError(f"tracks[{index}].enabled must be a boolean when provided")
         validated.append(entry)
     return validated
 
 
 def validate_sources_config(data: object) -> list[dict]:
-    if not isinstance(data, list):
-        raise ConfigValidationError("sources config must be a list of objects")
-
     validated = []
-    for index, entry in enumerate(data):
-        if not isinstance(entry, dict):
-            raise ConfigValidationError(f"sources[{index}] must be an object")
-
-        name = entry.get("name")
-        url = entry.get("url")
+    for index, entry in enumerate(_validate_config_entries(data, kind="sources")):
+        _require_non_empty_string(entry, "name", kind="sources", index=index)
+        _require_http_url(entry, "url", kind="sources", index=index)
         strategy = entry.get("strategy")
-        enabled = entry.get("enabled", True)
-        request_headers = entry.get("request_headers")
-        page_delay_seconds = entry.get("page_delay_seconds")
-        max_pages = entry.get("max_pages")
-        if not isinstance(name, str) or not name.strip():
-            raise ConfigValidationError(f"sources[{index}].name must be a non-empty string")
-        if not isinstance(url, str) or not url.startswith(("http://", "https://")):
-            raise ConfigValidationError(f"sources[{index}].url must be an http/https URL")
-        if not isinstance(enabled, bool):
-            raise ConfigValidationError(f"sources[{index}].enabled must be a boolean when provided")
-        if request_headers is not None:
-            if not isinstance(request_headers, dict):
-                raise ConfigValidationError(f"sources[{index}].request_headers must be an object when provided")
-            for header_name, header_value in request_headers.items():
-                if not isinstance(header_name, str) or not header_name.strip():
-                    raise ConfigValidationError(f"sources[{index}].request_headers keys must be non-empty strings")
-                if not isinstance(header_value, str):
-                    raise ConfigValidationError(f"sources[{index}].request_headers values must be strings")
-        if page_delay_seconds is not None:
-            if isinstance(page_delay_seconds, bool) or not isinstance(page_delay_seconds, (int, float)) or page_delay_seconds < 0:
-                raise ConfigValidationError(f"sources[{index}].page_delay_seconds must be a non-negative number when provided")
-        if max_pages is not None:
-            if isinstance(max_pages, bool) or not isinstance(max_pages, int) or max_pages < 1:
-                raise ConfigValidationError(f"sources[{index}].max_pages must be a positive integer when provided")
+        _validate_enabled(entry, kind="sources", index=index)
+        _validate_request_headers(entry, kind="sources", index=index)
+        _validate_optional_non_negative_number(entry, "page_delay_seconds", kind="sources", index=index)
+        _validate_optional_positive_int(entry, "max_pages", kind="sources", index=index)
         if strategy not in VALID_SOURCE_STRATEGIES:
             valid = ", ".join(sorted(VALID_SOURCE_STRATEGIES))
             raise ConfigValidationError(f"sources[{index}].strategy must be one of: {valid}")
