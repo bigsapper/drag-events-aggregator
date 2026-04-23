@@ -1,5 +1,6 @@
 """Secret resolution helpers for external service clients."""
 
+from collections.abc import Mapping
 from functools import lru_cache
 from pathlib import Path
 import os
@@ -47,7 +48,7 @@ def _read_project_dotenv_key(path: Path, key_name: str) -> str:
     raise SecretConfigurationError(f"Project .env file does not define {key_name}: {path}")
 
 
-def get_anthropic_api_key(env: dict[str, str] | None = None) -> str:
+def get_anthropic_api_key(env: Mapping[str, str] | None = None) -> str:
     """Resolve the Anthropic API key from environment, explicit secret files, or project-local .env."""
     environment = os.environ if env is None else env
 

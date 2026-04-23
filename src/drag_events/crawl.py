@@ -354,6 +354,9 @@ def crawl_source(source: dict, state: dict) -> tuple[list[Path], list[dict]]:
     Returns (image_paths, text_listings) — only one will be non-empty per source.
     """
     strategy = source.get("strategy")
+    if not isinstance(strategy, str):
+        LOGGER.warning(f"  Invalid strategy {strategy!r}, skipping.")
+        return [], []
     fn = STRATEGY_MAP.get(strategy)
     if not fn:
         LOGGER.warning(f"  Unknown strategy '{strategy}', skipping.")

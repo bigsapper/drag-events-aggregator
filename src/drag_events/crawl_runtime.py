@@ -1,5 +1,6 @@
 """Runtime state, metrics, and logging helpers for crawler execution."""
 
+from collections.abc import Mapping
 import json
 import math
 import os
@@ -111,12 +112,12 @@ def record_run_metrics_impl(
     return summary
 
 
-def should_record_runtime_metrics(env: dict | None = None) -> bool:
+def should_record_runtime_metrics(env: Mapping[str, str] | None = None) -> bool:
     environment = os.environ if env is None else env
     return "PYTEST_CURRENT_TEST" not in environment
 
 
-def should_log_errors(details: dict | None = None, *, env: dict | None = None) -> bool:
+def should_log_errors(details: dict | None = None, *, env: Mapping[str, str] | None = None) -> bool:
     environment = os.environ if env is None else env
     if "PYTEST_CURRENT_TEST" in environment:
         return False

@@ -1037,6 +1037,15 @@ def test_crawl_source_unknown_strategy(capsys):
     assert "Unknown strategy" in capsys.readouterr().out
 
 
+def test_crawl_source_non_string_strategy(capsys):
+    source = {"name": "Broken", "strategy": None, "url": "http://x.com"}
+    state = {}
+    images, listings = crawl.crawl_source(source, state)
+    assert images == []
+    assert listings == []
+    assert "Invalid strategy" in capsys.readouterr().out
+
+
 def test_crawl_source_empty_result():
     source = {"name": "Test", "strategy": "bracketraces", "url": "http://x.com", "event_pages": []}
     state = {"seen_urls": []}
