@@ -9,7 +9,7 @@ from unittest.mock import MagicMock, patch, call
 import pytest
 from bs4 import BeautifulSoup
 
-import drag_events.crawl as crawl
+import drag_events.crawl.cli as crawl
 from tests.conftest import make_1x1_png
 
 PROJECT_DIR = Path(__file__).parent.parent
@@ -345,7 +345,7 @@ def test_download_image_skips_existing(tmp_flyers_dir):
     url = "http://track.com/flyer.jpg"
     dest = tmp_flyers_dir / crawl.url_to_filename(url)
     dest.write_bytes(b"existing")
-    with patch("drag_events.crawl.requests.get") as mock_get:
+    with patch("drag_events.crawl.cli.requests.get") as mock_get:
         result = crawl.download_image(url)
     assert result is None
     mock_get.assert_not_called()
@@ -354,7 +354,7 @@ def test_download_image_skips_existing(tmp_flyers_dir):
 def test_download_image_success(tmp_flyers_dir):
     url = "http://track.com/newflyer.jpg"
     resp = _mock_response(content=b"\xff\xd8\xff", content_type="image/jpeg")
-    with patch("drag_events.crawl.requests.get", return_value=resp):
+    with patch("drag_events.crawl.cli.requests.get", return_value=resp):
         result = crawl.download_image(url)
     assert result is not None
     assert result.exists()
@@ -363,15 +363,15 @@ def test_download_image_success(tmp_flyers_dir):
 def test_download_image_non_image_content_type(tmp_flyers_dir):
     url = "http://track.com/page.jpg"
     resp = _mock_response(content=b"<html>", content_type="text/html")
-    with patch("drag_events.crawl.requests.get", return_value=resp):
+    with patch("drag_events.crawl.cli.requests.get", return_value=resp):
         result = crawl.download_image(url)
     assert result is None
 
 
 def test_download_image_request_exception(tmp_flyers_dir, capsys):
     url = "http://track.com/broken.jpg"
-    with patch("drag_events.crawl.requests.get", side_effect=Exception("timeout")), \
-         patch("drag_events.crawl.time.sleep"):
+    with patch("drag_events.crawl.cli.requests.get", side_effect=Exception("timeout")), \
+         patch("drag_events.crawl.cli.time.sleep"):
         result = crawl.download_image(url)
     assert result is None
     assert "Download failed" in capsys.readouterr().out
@@ -380,8 +380,8 @@ def test_download_image_request_exception(tmp_flyers_dir, capsys):
 def test_download_image_retries_transient_request_failure(tmp_flyers_dir):
     url = "http://track.com/retry.jpg"
     resp = _mock_response(content=b"\xff\xd8\xff", content_type="image/jpeg")
-    with patch("drag_events.crawl.requests.get", side_effect=[Exception("timeout"), resp]) as mock_get, \
-         patch("drag_events.crawl.time.sleep") as mock_sleep:
+    with patch("drag_events.crawl.cli.requests.get", side_effect=[Exception("timeout"), resp]) as mock_get, \
+         patch("drag_events.crawl.cli.time.sleep") as mock_sleep:
         result = crawl.download_image(url)
     assert result is not None
     assert mock_get.call_count == 2
@@ -392,7 +392,7 @@ def test_download_image_retries_transient_request_failure(tmp_flyers_dir):
 
 def test_fetch_page_returns_soup():
     resp = _mock_response(text="<html><body>Hello</body></html>")
-    with patch("drag_events.crawl.requests.get", return_value=resp):
+    with patch("drag_events.crawl.cli.requests.get", return_value=resp):
         soup = crawl.fetch_page("http://track.com")
     assert soup is not None
     assert soup.find("body") is not None
@@ -400,15 +400,15 @@ def test_fetch_page_returns_soup():
 
 def test_fetch_page_http_error_returns_none(capsys):
     resp = _mock_response(raise_for_status=True)
-    with patch("drag_events.crawl.requests.get", return_value=resp), \
-         patch("drag_events.crawl.time.sleep"):
+    with patch("drag_events.crawl.cli.requests.get", return_value=resp), \
+         patch("drag_events.crawl.cli.time.sleep"):
         result = crawl.fetch_page("http://track.com")
     assert result is None
 
 
 def test_fetch_page_connection_error_returns_none(capsys):
-    with patch("drag_events.crawl.requests.get", side_effect=Exception("connection refused")), \
-         patch("drag_events.crawl.time.sleep"):
+    with patch("drag_events.crawl.cli.requests.get", side_effect=Exception("connection refused")), \
+         patch("drag_events.crawl.cli.time.sleep"):
         result = crawl.fetch_page("http://track.com")
     assert result is None
     assert "Could not fetch" in capsys.readouterr().out
@@ -416,8 +416,8 @@ def test_fetch_page_connection_error_returns_none(capsys):
 
 def test_fetch_page_retries_transient_request_failure():
     resp = _mock_response(text="<html><body>Hello</body></html>")
-    with patch("drag_events.crawl.requests.get", side_effect=[Exception("timeout"), resp]) as mock_get, \
-         patch("drag_events.crawl.time.sleep") as mock_sleep:
+    with patch("drag_events.crawl.cli.requests.get", side_effect=[Exception("timeout"), resp]) as mock_get, \
+         patch("drag_events.crawl.cli.time.sleep") as mock_sleep:
         result = crawl.fetch_page("http://track.com")
     assert result is not None
     assert mock_get.call_count == 2
@@ -427,7 +427,7 @@ def test_fetch_page_retries_transient_request_failure():
 def test_fetch_page_uses_custom_headers():
     resp = _mock_response(text="<html><body>Hello</body></html>")
     headers = {"User-Agent": "CustomBot/1.0", "X-Test": "true"}
-    with patch("drag_events.crawl.requests.get", return_value=resp) as mock_get:
+    with patch("drag_events.crawl.cli.requests.get", return_value=resp) as mock_get:
         crawl.fetch_page("http://track.com", headers=headers)
     assert mock_get.call_args.kwargs["headers"] == headers
 
@@ -438,8 +438,8 @@ def test_crawl_track_no_new_images():
     state = {"seen_urls": ["http://track.com/flyer.jpg"]}
     html = '<img src="/flyer.jpg" width="600" height="600">'
     resp = _mock_response(text=html)
-    with patch("drag_events.crawl.requests.get", return_value=resp), \
-         patch("drag_events.crawl.time.sleep"):
+    with patch("drag_events.crawl.cli.requests.get", return_value=resp), \
+         patch("drag_events.crawl.cli.time.sleep"):
         result = crawl.crawl_track({"name": "Test Track", "url": "http://track.com"}, state)
     assert result == []
 
@@ -457,8 +457,8 @@ def test_crawl_track_downloads_new_image(tmp_flyers_dir):
             return _mock_response(text=page_html)
         return _mock_response(text=home_html)
 
-    with patch("drag_events.crawl.requests.get", side_effect=side_effect), \
-         patch("drag_events.crawl.time.sleep"):
+    with patch("drag_events.crawl.cli.requests.get", side_effect=side_effect), \
+         patch("drag_events.crawl.cli.time.sleep"):
         result = crawl.crawl_track({"name": "Test Track", "url": "http://track.com"}, state)
     assert len(result) == 1
 
@@ -476,8 +476,8 @@ def test_crawl_bracketraces_downloads_flyer(tmp_flyers_dir):
         return _mock_response(text=html)
 
     source = {"url": "http://bracketraces.com", "event_pages": ["/event-spring-fling.php"]}
-    with patch("drag_events.crawl.requests.get", side_effect=side_effect), \
-         patch("drag_events.crawl.time.sleep"):
+    with patch("drag_events.crawl.cli.requests.get", side_effect=side_effect), \
+         patch("drag_events.crawl.cli.time.sleep"):
         result = crawl.crawl_bracketraces(source, state)
     assert len(result) == 1
 
@@ -493,8 +493,8 @@ def test_crawl_bracketraces_finds_flyer_anchor(tmp_flyers_dir):
         return _mock_response(text=html)
 
     source = {"url": "http://bracketraces.com", "event_pages": ["/event.php"]}
-    with patch("drag_events.crawl.requests.get", side_effect=side_effect), \
-         patch("drag_events.crawl.time.sleep"):
+    with patch("drag_events.crawl.cli.requests.get", side_effect=side_effect), \
+         patch("drag_events.crawl.cli.time.sleep"):
         result = crawl.crawl_bracketraces(source, state)
     assert len(result) == 1
 
@@ -502,8 +502,8 @@ def test_crawl_bracketraces_finds_flyer_anchor(tmp_flyers_dir):
 def test_crawl_bracketraces_skips_fetch_failure():
     state = {"seen_urls": []}
     source = {"url": "http://bracketraces.com", "event_pages": ["/event.php"]}
-    with patch("drag_events.crawl.requests.get", side_effect=Exception("timeout")), \
-         patch("drag_events.crawl.time.sleep"):
+    with patch("drag_events.crawl.cli.requests.get", side_effect=Exception("timeout")), \
+         patch("drag_events.crawl.cli.time.sleep"):
         result = crawl.crawl_bracketraces(source, state)
     assert result == []
 
@@ -525,8 +525,8 @@ def test_crawl_bracketraces_uses_request_headers_and_configured_delay(tmp_flyers
         "request_headers": {"X-Test": "true"},
         "page_delay_seconds": 1.25,
     }
-    with patch("drag_events.crawl.requests.get", side_effect=side_effect), \
-         patch("drag_events.crawl.time.sleep") as mock_sleep:
+    with patch("drag_events.crawl.cli.requests.get", side_effect=side_effect), \
+         patch("drag_events.crawl.cli.time.sleep") as mock_sleep:
         result = crawl.crawl_bracketraces(source, state)
     assert len(result) == 1
     mock_sleep.assert_called_once_with(1.25)
@@ -551,8 +551,8 @@ def test_crawl_racingjunk_new_events():
     page1 = _mock_response(text=_RJ_HTML)
     page2 = _mock_response(text="<html><body></body></html>")
 
-    with patch("drag_events.crawl.requests.get", side_effect=[page1, page2]), \
-         patch("drag_events.crawl.time.sleep"):
+    with patch("drag_events.crawl.cli.requests.get", side_effect=[page1, page2]), \
+         patch("drag_events.crawl.cli.time.sleep"):
         result = crawl.crawl_racingjunk(
             {"url": "http://racingjunk.com/events", "drag_racing_url": "http://racingjunk.com/drag"},
             state,
@@ -564,8 +564,8 @@ def test_crawl_racingjunk_new_events():
 
 def test_crawl_racingjunk_skips_known_titles():
     state = {"seen_urls": [], "racingjunk_events": ["Summer Bracket Race"]}
-    with patch("drag_events.crawl.requests.get", return_value=_mock_response(text=_RJ_HTML)), \
-         patch("drag_events.crawl.time.sleep"):
+    with patch("drag_events.crawl.cli.requests.get", return_value=_mock_response(text=_RJ_HTML)), \
+         patch("drag_events.crawl.cli.time.sleep"):
         result = crawl.crawl_racingjunk(
             {"url": "http://racingjunk.com", "drag_racing_url": "http://racingjunk.com/drag"},
             state,
@@ -576,8 +576,8 @@ def test_crawl_racingjunk_skips_known_titles():
 def test_crawl_racingjunk_stops_on_empty_page():
     state = {"seen_urls": [], "racingjunk_events": []}
     empty = _mock_response(text="<html><body></body></html>")
-    with patch("drag_events.crawl.requests.get", return_value=empty), \
-         patch("drag_events.crawl.time.sleep"):
+    with patch("drag_events.crawl.cli.requests.get", return_value=empty), \
+         patch("drag_events.crawl.cli.time.sleep"):
         result = crawl.crawl_racingjunk(
             {"url": "http://racingjunk.com", "drag_racing_url": "http://racingjunk.com/drag"},
             state,
@@ -590,8 +590,8 @@ def test_crawl_racingjunk_honors_max_pages_and_delay():
     page_one = _mock_response(text=_RJ_HTML.replace("Summer Bracket Race", "Race One"))
     page_two = _mock_response(text=_RJ_HTML.replace("Summer Bracket Race", "Race Two"))
 
-    with patch("drag_events.crawl.requests.get", side_effect=[page_one, page_two]) as mock_get, \
-         patch("drag_events.crawl.time.sleep") as mock_sleep:
+    with patch("drag_events.crawl.cli.requests.get", side_effect=[page_one, page_two]) as mock_get, \
+         patch("drag_events.crawl.cli.time.sleep") as mock_sleep:
         result = crawl.crawl_racingjunk(
             {
                 "url": "http://racingjunk.com/events",
@@ -625,7 +625,7 @@ _MRP_HTML = """
 
 def test_crawl_myracepass_new_events():
     state = {"seen_urls": [], "myracepass_events": []}
-    with patch("drag_events.crawl.requests.get", return_value=_mock_response(text=_MRP_HTML)):
+    with patch("drag_events.crawl.cli.requests.get", return_value=_mock_response(text=_MRP_HTML)):
         result = crawl.crawl_myracepass({"url": "http://myracepass.com/events"}, state)
     assert len(result) == 1
     assert result[0]["title"] == "Friday Night Drags"
@@ -633,15 +633,15 @@ def test_crawl_myracepass_new_events():
 
 def test_crawl_myracepass_skips_known():
     state = {"seen_urls": [], "myracepass_events": ["Friday Night Drags"]}
-    with patch("drag_events.crawl.requests.get", return_value=_mock_response(text=_MRP_HTML)):
+    with patch("drag_events.crawl.cli.requests.get", return_value=_mock_response(text=_MRP_HTML)):
         result = crawl.crawl_myracepass({"url": "http://myracepass.com/events"}, state)
     assert result == []
 
 
 def test_crawl_myracepass_fetch_failure():
     state = {"seen_urls": [], "myracepass_events": []}
-    with patch("drag_events.crawl.requests.get", side_effect=Exception("timeout")), \
-         patch("drag_events.crawl.time.sleep"):
+    with patch("drag_events.crawl.cli.requests.get", side_effect=Exception("timeout")), \
+         patch("drag_events.crawl.cli.time.sleep"):
         result = crawl.crawl_myracepass({"url": "http://myracepass.com/events"}, state)
     assert result == []
 
@@ -1004,7 +1004,7 @@ def _mock_feed(entries):
 def test_crawl_rss_new_items():
     state = {"seen_urls": [], "racingjunk_events": [], "myracepass_events": []}
     entry = {"link": "http://site.com/event/1", "title": "Race Day", "published": "2026-06-01", "summary": "Fun race"}
-    with patch("drag_events.crawl.feedparser.parse", return_value=_mock_feed([entry])):
+    with patch("drag_events.crawl.cli.feedparser.parse", return_value=_mock_feed([entry])):
         result = crawl.crawl_rss({"url": "http://site.com/feed.rss", "name": "TestFeed"}, state)
     assert len(result) == 1
     assert result[0]["title"] == "Race Day"
@@ -1014,14 +1014,14 @@ def test_crawl_rss_new_items():
 def test_crawl_rss_skips_seen_urls():
     state = {"seen_urls": ["http://site.com/event/1"], "racingjunk_events": [], "myracepass_events": []}
     entry = {"link": "http://site.com/event/1", "title": "Race Day", "published": "2026-06-01", "summary": ""}
-    with patch("drag_events.crawl.feedparser.parse", return_value=_mock_feed([entry])):
+    with patch("drag_events.crawl.cli.feedparser.parse", return_value=_mock_feed([entry])):
         result = crawl.crawl_rss({"url": "http://site.com/feed.rss", "name": "TestFeed"}, state)
     assert result == []
 
 
 def test_crawl_rss_empty_feed():
     state = {"seen_urls": []}
-    with patch("drag_events.crawl.feedparser.parse", return_value=_mock_feed([])):
+    with patch("drag_events.crawl.cli.feedparser.parse", return_value=_mock_feed([])):
         result = crawl.crawl_rss({"url": "http://site.com/feed.rss", "name": "TestFeed"}, state)
     assert result == []
 
@@ -1049,7 +1049,7 @@ def test_crawl_source_non_string_strategy(capsys):
 def test_crawl_source_empty_result():
     source = {"name": "Test", "strategy": "bracketraces", "url": "http://x.com", "event_pages": []}
     state = {"seen_urls": []}
-    with patch("drag_events.crawl.time.sleep"):
+    with patch("drag_events.crawl.cli.time.sleep"):
         images, listings = crawl.crawl_source(source, state)
     assert images == []
     assert listings == []
@@ -1083,7 +1083,7 @@ def test_crawl_source_text_strategy_returns_in_second_slot():
 # ── run_extraction ────────────────────────────────────────────────────────────
 
 def test_run_extraction_noop_on_empty_input(tmp_events_file):
-    with patch("drag_events.crawl.flyer_processing.load_events") as mock_load:
+    with patch("drag_events.crawl.cli.flyer_processing.load_events") as mock_load:
         result = crawl.run_extraction([], [])
     mock_load.assert_not_called()
     assert result["skipped"] == 0
@@ -1091,9 +1091,9 @@ def test_run_extraction_noop_on_empty_input(tmp_events_file):
 
 def test_run_extraction_image_new_event(tmp_path, tmp_events_file, sample_extracted):
     img = make_1x1_png(tmp_path / "flyer.jpg")
-    with patch("drag_events.crawl.flyer_processing.load_events", return_value=[]), \
-         patch("drag_events.crawl.flyer_processing.process_flyer", return_value=("new", sample_extracted)), \
-         patch("drag_events.crawl.flyer_processing.save_events") as mock_save:
+    with patch("drag_events.crawl.cli.flyer_processing.load_events", return_value=[]), \
+         patch("drag_events.crawl.cli.flyer_processing.process_flyer", return_value=("new", sample_extracted)), \
+         patch("drag_events.crawl.cli.flyer_processing.save_events") as mock_save:
         crawl.run_extraction([img], [])
     mock_save.assert_called_once()
     assert not img.exists()  # file deleted after successful processing
@@ -1101,9 +1101,9 @@ def test_run_extraction_image_new_event(tmp_path, tmp_events_file, sample_extrac
 
 def test_run_extraction_image_error_keeps_file(tmp_path, tmp_events_file):
     img = make_1x1_png(tmp_path / "flyer.jpg")
-    with patch("drag_events.crawl.flyer_processing.load_events", return_value=[]), \
-         patch("drag_events.crawl.flyer_processing.process_flyer", side_effect=RuntimeError("boom")), \
-         patch("drag_events.crawl.flyer_processing.save_events"):
+    with patch("drag_events.crawl.cli.flyer_processing.load_events", return_value=[]), \
+         patch("drag_events.crawl.cli.flyer_processing.process_flyer", side_effect=RuntimeError("boom")), \
+         patch("drag_events.crawl.cli.flyer_processing.save_events"):
         crawl.run_extraction([img], [])
     assert img.exists()  # kept on error
 
@@ -1115,10 +1115,10 @@ def test_run_extraction_text_new_event(tmp_events_file):
         "track": {"name": "Tulsa Raceway Park", "state": "OK"},
         "dates": {"start": "2026-06-01"}, "confidence": 0.8,
     }
-    with patch("drag_events.crawl.flyer_processing.load_events", return_value=[]), \
-         patch("drag_events.crawl.extract_from_text", return_value=extracted), \
-         patch("drag_events.crawl.find_same_event", return_value=None), \
-         patch("drag_events.crawl.flyer_processing.save_events") as mock_save:
+    with patch("drag_events.crawl.cli.flyer_processing.load_events", return_value=[]), \
+         patch("drag_events.crawl.cli.extract_from_text", return_value=extracted), \
+         patch("drag_events.crawl.cli.find_same_event", return_value=None), \
+         patch("drag_events.crawl.cli.flyer_processing.save_events") as mock_save:
         crawl.run_extraction([], [listing])
     mock_save.assert_called_once()
     saved_events = mock_save.call_args[0][0]
@@ -1141,10 +1141,10 @@ def test_run_extraction_text_new_tmccc_event_applies_enrichment(tmp_events_file)
         "dates": {"start": "2026-05-12"},
         "confidence": 0.65,
     }
-    with patch("drag_events.crawl.flyer_processing.load_events", return_value=[]), \
-         patch("drag_events.crawl.extract_from_text", return_value=extracted), \
-         patch("drag_events.crawl.find_same_event", return_value=None), \
-         patch("drag_events.crawl.flyer_processing.save_events") as mock_save:
+    with patch("drag_events.crawl.cli.flyer_processing.load_events", return_value=[]), \
+         patch("drag_events.crawl.cli.extract_from_text", return_value=extracted), \
+         patch("drag_events.crawl.cli.find_same_event", return_value=None), \
+         patch("drag_events.crawl.cli.flyer_processing.save_events") as mock_save:
         crawl.run_extraction([], [listing])
     saved_events = mock_save.call_args[0][0]
     assert saved_events[0]["track"]["city"] == "Lexington"
@@ -1155,10 +1155,10 @@ def test_run_extraction_text_new_tmccc_event_applies_enrichment(tmp_events_file)
 
 def test_run_extraction_text_merged_event(tmp_events_file, sample_events, sample_extracted):
     listing = {"title": "Spring Bracket Classic", "source_url": "http://rj.com/2", "source": "RacingJunk"}
-    with patch("drag_events.crawl.flyer_processing.load_events", return_value=sample_events), \
-         patch("drag_events.crawl.extract_from_text", return_value=sample_extracted), \
-         patch("drag_events.crawl.find_same_event", return_value=sample_events[0]), \
-         patch("drag_events.crawl.flyer_processing.save_events") as mock_save:
+    with patch("drag_events.crawl.cli.flyer_processing.load_events", return_value=sample_events), \
+         patch("drag_events.crawl.cli.extract_from_text", return_value=sample_extracted), \
+         patch("drag_events.crawl.cli.find_same_event", return_value=sample_events[0]), \
+         patch("drag_events.crawl.cli.flyer_processing.save_events") as mock_save:
         crawl.run_extraction([], [listing])
     saved = mock_save.call_args[0][0]
     assert len(saved[0]["flyers"]) == 2  # original + new
@@ -1166,18 +1166,18 @@ def test_run_extraction_text_merged_event(tmp_events_file, sample_events, sample
 
 def test_run_extraction_text_error_continues(tmp_events_file, capsys):
     listing = {"title": "Bad Event", "source_url": "", "source": "RJ"}
-    with patch("drag_events.crawl.flyer_processing.load_events", return_value=[]), \
-         patch("drag_events.crawl.extract_from_text", side_effect=RuntimeError("Claude error")), \
-         patch("drag_events.crawl.flyer_processing.save_events"):
+    with patch("drag_events.crawl.cli.flyer_processing.load_events", return_value=[]), \
+         patch("drag_events.crawl.cli.extract_from_text", side_effect=RuntimeError("Claude error")), \
+         patch("drag_events.crawl.cli.flyer_processing.save_events"):
         crawl.run_extraction([], [listing])
     assert "ERROR" in capsys.readouterr().out
 
 
 def test_run_extraction_text_skips_out_of_scope_listing(tmp_events_file):
     listing = {"title": "2026 TMCCC Banquet", "source_url": "http://tmccc.org/events", "source": "TMCCC"}
-    with patch("drag_events.crawl.flyer_processing.load_events", return_value=[]), \
-         patch("drag_events.crawl.extract_from_text") as mock_extract, \
-         patch("drag_events.crawl.flyer_processing.save_events") as mock_save:
+    with patch("drag_events.crawl.cli.flyer_processing.load_events", return_value=[]), \
+         patch("drag_events.crawl.cli.extract_from_text") as mock_extract, \
+         patch("drag_events.crawl.cli.flyer_processing.save_events") as mock_save:
         result = crawl.run_extraction([], [listing])
     mock_extract.assert_not_called()
     mock_save.assert_called_once_with([])
@@ -1193,9 +1193,9 @@ def test_run_extraction_text_skips_past_event(tmp_events_file):
         "dates": {"start": "2025-06-01"},
         "confidence": 0.8,
     }
-    with patch("drag_events.crawl.flyer_processing.load_events", return_value=[]), \
-         patch("drag_events.crawl.extract_from_text", return_value=extracted), \
-         patch("drag_events.crawl.flyer_processing.save_events") as mock_save:
+    with patch("drag_events.crawl.cli.flyer_processing.load_events", return_value=[]), \
+         patch("drag_events.crawl.cli.extract_from_text", return_value=extracted), \
+         patch("drag_events.crawl.cli.flyer_processing.save_events") as mock_save:
         result = crawl.run_extraction([], [listing])
     mock_save.assert_called_once_with([])
     assert result["skipped"] == 1
@@ -1210,9 +1210,9 @@ def test_run_extraction_text_skips_out_of_scope_extracted_event(tmp_events_file)
         "dates": {"start": "2026-12-05"},
         "confidence": 0.3,
     }
-    with patch("drag_events.crawl.flyer_processing.load_events", return_value=[]), \
-         patch("drag_events.crawl.extract_from_text", return_value=extracted), \
-         patch("drag_events.crawl.flyer_processing.save_events") as mock_save:
+    with patch("drag_events.crawl.cli.flyer_processing.load_events", return_value=[]), \
+         patch("drag_events.crawl.cli.extract_from_text", return_value=extracted), \
+         patch("drag_events.crawl.cli.flyer_processing.save_events") as mock_save:
         result = crawl.run_extraction([], [listing])
     mock_save.assert_called_once_with([])
     assert result["skipped"] == 1
@@ -1222,29 +1222,29 @@ def test_run_extraction_text_skips_out_of_scope_extracted_event(tmp_events_file)
 
 def test_main_runs_all_by_default(tmp_crawl_state):
     with patch.object(sys, "argv", ["crawl.py"]), \
-         patch("drag_events.crawl.load_tracks_config", return_value=[]), \
-         patch("drag_events.crawl.load_sources_config", return_value=[]), \
-         patch("drag_events.crawl.run_extraction"), \
-         patch("drag_events.crawl.save_state"), \
-         patch("drag_events.crawl.time.sleep"):
+         patch("drag_events.crawl.cli.load_tracks_config", return_value=[]), \
+         patch("drag_events.crawl.cli.load_sources_config", return_value=[]), \
+         patch("drag_events.crawl.cli.run_extraction"), \
+         patch("drag_events.crawl.cli.save_state"), \
+         patch("drag_events.crawl.cli.time.sleep"):
         crawl.main()
 
 
 def test_main_tracks_only(tmp_crawl_state):
     with patch.object(sys, "argv", ["crawl.py", "--tracks"]), \
-         patch("drag_events.crawl.load_tracks_config", return_value=[]), \
-         patch("drag_events.crawl.run_extraction"), \
-         patch("drag_events.crawl.save_state"), \
-         patch("drag_events.crawl.time.sleep"):
+         patch("drag_events.crawl.cli.load_tracks_config", return_value=[]), \
+         patch("drag_events.crawl.cli.run_extraction"), \
+         patch("drag_events.crawl.cli.save_state"), \
+         patch("drag_events.crawl.cli.time.sleep"):
         crawl.main()
 
 
 def test_main_sources_only(tmp_crawl_state):
     with patch.object(sys, "argv", ["crawl.py", "--sources"]), \
-         patch("drag_events.crawl.load_sources_config", return_value=[]), \
-         patch("drag_events.crawl.run_extraction"), \
-         patch("drag_events.crawl.save_state"), \
-         patch("drag_events.crawl.time.sleep"):
+         patch("drag_events.crawl.cli.load_sources_config", return_value=[]), \
+         patch("drag_events.crawl.cli.run_extraction"), \
+         patch("drag_events.crawl.cli.save_state"), \
+         patch("drag_events.crawl.cli.time.sleep"):
         crawl.main()
 
 
@@ -1253,11 +1253,11 @@ def test_main_track_filter(tmp_crawl_state):
     tracks = [{"name": "Texas Motorplex", "url": "http://a.com"},
               {"name": "Tulsa Raceway Park", "url": "http://b.com"}]
     with patch.object(sys, "argv", ["crawl.py", "--track", "texas"]), \
-         patch("drag_events.crawl.load_tracks_config", return_value=tracks), \
-         patch("drag_events.crawl.crawl_track", return_value=[]) as mock_ct, \
-         patch("drag_events.crawl.run_extraction"), \
-         patch("drag_events.crawl.save_state"), \
-         patch("drag_events.crawl.time.sleep"):
+         patch("drag_events.crawl.cli.load_tracks_config", return_value=tracks), \
+         patch("drag_events.crawl.cli.crawl_track", return_value=[]) as mock_ct, \
+         patch("drag_events.crawl.cli.run_extraction"), \
+         patch("drag_events.crawl.cli.save_state"), \
+         patch("drag_events.crawl.cli.time.sleep"):
         crawl.main()
     # Only Texas Motorplex matches "texas"
     assert mock_ct.call_count == 1
@@ -1269,11 +1269,11 @@ def test_main_source_filter(tmp_crawl_state):
     sources = [{"name": "Bracketraces.com", "strategy": "bracketraces", "url": "http://a.com", "event_pages": []},
                {"name": "RacingJunk Events", "strategy": "racingjunk", "url": "http://b.com", "drag_racing_url": "http://b.com/drag"}]
     with patch.object(sys, "argv", ["crawl.py", "--source", "bracketraces"]), \
-         patch("drag_events.crawl.load_sources_config", return_value=sources), \
-         patch("drag_events.crawl.crawl_source", return_value=([], [])) as mock_cs, \
-         patch("drag_events.crawl.run_extraction"), \
-         patch("drag_events.crawl.save_state"), \
-         patch("drag_events.crawl.time.sleep"):
+         patch("drag_events.crawl.cli.load_sources_config", return_value=sources), \
+         patch("drag_events.crawl.cli.crawl_source", return_value=([], [])) as mock_cs, \
+         patch("drag_events.crawl.cli.run_extraction"), \
+         patch("drag_events.crawl.cli.save_state"), \
+         patch("drag_events.crawl.cli.time.sleep"):
         crawl.main()
     assert mock_cs.call_count == 1
     assert mock_cs.call_args[0][0]["name"] == "Bracketraces.com"
@@ -1284,11 +1284,11 @@ def test_main_iterates_tracks_and_saves_state(tmp_crawl_state):
     tracks = [{"name": "Track A", "url": "http://a.com"},
               {"name": "Track B", "url": "http://b.com"}]
     with patch.object(sys, "argv", ["crawl.py", "--tracks"]), \
-         patch("drag_events.crawl.load_tracks_config", return_value=tracks), \
-         patch("drag_events.crawl.crawl_track", return_value=[]) as mock_ct, \
-         patch("drag_events.crawl.run_extraction"), \
-         patch("drag_events.crawl.save_state") as mock_ss, \
-         patch("drag_events.crawl.time.sleep") as mock_sleep:
+         patch("drag_events.crawl.cli.load_tracks_config", return_value=tracks), \
+         patch("drag_events.crawl.cli.crawl_track", return_value=[]) as mock_ct, \
+         patch("drag_events.crawl.cli.run_extraction"), \
+         patch("drag_events.crawl.cli.save_state") as mock_ss, \
+         patch("drag_events.crawl.cli.time.sleep") as mock_sleep:
         crawl.main()
     assert mock_ct.call_count == 2
     assert mock_ss.call_count == 2
@@ -1302,11 +1302,11 @@ def test_main_iterates_sources_and_saves_state(tmp_crawl_state):
         {"name": "Source B", "strategy": "bracketraces", "url": "http://b.com", "event_pages": []},
     ]
     with patch.object(sys, "argv", ["crawl.py", "--sources"]), \
-         patch("drag_events.crawl.load_sources_config", return_value=sources), \
-         patch("drag_events.crawl.crawl_source", return_value=([], [])) as mock_cs, \
-         patch("drag_events.crawl.run_extraction"), \
-         patch("drag_events.crawl.save_state") as mock_ss, \
-         patch("drag_events.crawl.time.sleep") as mock_sleep:
+         patch("drag_events.crawl.cli.load_sources_config", return_value=sources), \
+         patch("drag_events.crawl.cli.crawl_source", return_value=([], [])) as mock_cs, \
+         patch("drag_events.crawl.cli.run_extraction"), \
+         patch("drag_events.crawl.cli.save_state") as mock_ss, \
+         patch("drag_events.crawl.cli.time.sleep") as mock_sleep:
         crawl.main()
     assert mock_cs.call_count == 2
     assert mock_ss.call_count == 2
@@ -1315,11 +1315,11 @@ def test_main_iterates_sources_and_saves_state(tmp_crawl_state):
 
 def test_main_fails_fast_on_invalid_tracks_config(tmp_crawl_state):
     with patch.object(sys, "argv", ["crawl.py", "--tracks"]), \
-         patch("drag_events.crawl.load_tracks_config", side_effect=crawl.ConfigValidationError("bad tracks config")), \
-         patch("drag_events.crawl.should_record_runtime_metrics", return_value=False), \
-         patch("drag_events.crawl.record_run_metrics", return_value={}), \
-         patch("drag_events.crawl.log_error") as mock_log, \
-         patch("drag_events.crawl.time.sleep"):
+         patch("drag_events.crawl.cli.load_tracks_config", side_effect=crawl.ConfigValidationError("bad tracks config")), \
+         patch("drag_events.crawl.cli.should_record_runtime_metrics", return_value=False), \
+         patch("drag_events.crawl.cli.record_run_metrics", return_value={}), \
+         patch("drag_events.crawl.cli.log_error") as mock_log, \
+         patch("drag_events.crawl.cli.time.sleep"):
         with pytest.raises(crawl.ConfigValidationError, match="bad tracks config"):
             crawl.main()
 
@@ -1338,7 +1338,7 @@ def test_get_image_links_invalid_dimension_attribute():
 def test_crawl_track_returns_empty_when_homepage_unreachable():
     """If fetch_page returns None for the homepage, crawl_track returns []."""
     state = {"seen_urls": []}
-    with patch("drag_events.crawl.fetch_page", return_value=None):
+    with patch("drag_events.crawl.cli.fetch_page", return_value=None):
         result = crawl.crawl_track({"name": "Dead Track", "url": "http://dead.com"}, state)
     assert result == []
 
@@ -1346,10 +1346,12 @@ def test_crawl_track_returns_empty_when_homepage_unreachable():
 def test_crawl_racingjunk_breaks_on_fetch_none():
     """If fetch_page returns None mid-pagination, the loop stops cleanly."""
     state = {"seen_urls": [], "racingjunk_events": []}
-    with patch("drag_events.crawl.fetch_page", return_value=None), \
-         patch("drag_events.crawl.time.sleep"):
+    with patch("drag_events.crawl.cli.fetch_page", return_value=None), \
+         patch("drag_events.crawl.cli.time.sleep"):
         result = crawl.crawl_racingjunk(
             {"url": "http://rj.com", "drag_racing_url": "http://rj.com/drag"},
             state,
         )
     assert result == []
+
+

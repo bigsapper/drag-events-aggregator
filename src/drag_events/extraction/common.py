@@ -5,7 +5,7 @@ from datetime import date
 
 from ..core.retry_utils import execute_with_retries
 from ..core.secrets import get_anthropic_client
-from ..event_validation import validate_payload_against_schema
+from ..event_validation.cli import validate_payload_against_schema
 from .schema import EVENT_INPUT_SCHEMA
 
 TOOL_NAME = "store_event"
@@ -63,3 +63,4 @@ def request_structured_event(
             return block.input
 
     raise ValueError(f"Claude did not call {TOOL_NAME}")
+

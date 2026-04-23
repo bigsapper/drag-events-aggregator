@@ -4,7 +4,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from drag_events import flyer_sync
+from drag_events.flyer_sync import cli as flyer_sync
 
 
 FOLDER_HTML = """
@@ -246,8 +246,10 @@ def test_main_logs_summary(monkeypatch):
 
 
 def test_run_cli_exits_on_config_error():
-    with patch("drag_events.flyer_sync.main", side_effect=flyer_sync.FlyerSyncConfigError("bad config")):
-        with patch("drag_events.flyer_sync.LOGGER") as logger:
+    with patch("drag_events.flyer_sync.cli.main", side_effect=flyer_sync.FlyerSyncConfigError("bad config")):
+        with patch("drag_events.flyer_sync.cli.LOGGER") as logger:
             with pytest.raises(SystemExit, match="1"):
                 flyer_sync.run_cli()
             logger.error.assert_called_once_with("bad config")
+
+

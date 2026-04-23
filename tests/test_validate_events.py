@@ -4,8 +4,8 @@ import copy
 
 import pytest
 
-from drag_events import flyer_processing
-from drag_events.event_validation import SchemaValidationError, validate_events_payload
+from drag_events.flyer_processing import cli as flyer_processing
+from drag_events.event_validation.cli import SchemaValidationError, validate_events_payload
 
 
 def test_validate_events_payload_accepts_sample_events(sample_events):
@@ -42,3 +42,5 @@ def test_save_events_rejects_schema_invalid_output(tmp_events_file, sample_event
         flyer_processing.save_events(invalid)
 
     assert not tmp_events_file.exists()
+
+

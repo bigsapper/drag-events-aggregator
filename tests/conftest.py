@@ -78,7 +78,7 @@ def mock_text_client(sample_extracted):
 
 @pytest.fixture
 def tmp_events_file(tmp_path, monkeypatch):
-    from drag_events import flyer_processing
+    from drag_events.flyer_processing import cli as flyer_processing
     path = tmp_path / "events.json"
     monkeypatch.setattr(flyer_processing, "EVENTS_FILE", path)
     return path
@@ -86,7 +86,7 @@ def tmp_events_file(tmp_path, monkeypatch):
 
 @pytest.fixture
 def tmp_crawl_state(tmp_path, monkeypatch):
-    import drag_events.crawl as crawl
+    import drag_events.crawl.cli as crawl
     path = tmp_path / ".crawl_state.json"
     monkeypatch.setattr(crawl, "CRAWL_STATE", path)
     return path
@@ -94,7 +94,7 @@ def tmp_crawl_state(tmp_path, monkeypatch):
 
 @pytest.fixture
 def tmp_flyers_dir(tmp_path, monkeypatch):
-    import drag_events.crawl as crawl
+    import drag_events.crawl.cli as crawl
     flyers = tmp_path / "flyers"
     flyers.mkdir()
     monkeypatch.setattr(crawl, "FLYERS_DIR", flyers)
@@ -109,3 +109,5 @@ def make_1x1_png(path: Path) -> Path:
     img = Image.new("RGB", (1, 1), color=(255, 255, 255))
     img.save(path)
     return path
+
+

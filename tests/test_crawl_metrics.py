@@ -4,7 +4,7 @@ import json
 import sys
 from unittest.mock import patch
 
-import drag_events.crawl as crawl
+import drag_events.crawl.cli as crawl
 
 
 def test_format_duration_handles_seconds_minutes_and_hours():
@@ -147,7 +147,7 @@ def test_record_run_metrics_appends_jsonl_and_updates_summary(tmp_path):
 def test_log_error_writes_context_details_and_message(tmp_path):
     error_log = tmp_path / "crawl_errors.log"
 
-    with patch("drag_events.crawl.should_log_errors", return_value=True):
+    with patch("drag_events.crawl.cli.should_log_errors", return_value=True):
         crawl.log_error(
             "fetch_page",
             RuntimeError("boom"),
@@ -164,8 +164,8 @@ def test_log_error_writes_context_details_and_message(tmp_path):
 def test_log_error_uses_default_error_log_path_when_not_provided(tmp_path):
     default_log = tmp_path / "default.log"
 
-    with patch("drag_events.crawl.should_log_errors", return_value=True), \
-         patch("drag_events.crawl.get_error_log_path", return_value=default_log):
+    with patch("drag_events.crawl.cli.should_log_errors", return_value=True), \
+         patch("drag_events.crawl.cli.get_error_log_path", return_value=default_log):
         crawl.log_error("fetch_page", RuntimeError("boom"))
 
     assert default_log.exists()
@@ -178,8 +178,8 @@ def test_log_error_can_include_traceback_without_trailing_newline(tmp_path):
     try:
         raise RuntimeError("boom")
     except RuntimeError as exc:
-        with patch("drag_events.crawl.should_log_errors", return_value=True), \
-             patch("drag_events.crawl.traceback.format_exc", return_value="TRACE"):
+        with patch("drag_events.crawl.cli.should_log_errors", return_value=True), \
+             patch("drag_events.crawl.cli.traceback.format_exc", return_value="TRACE"):
             crawl.log_error("fetch_page", exc, error_log=error_log, include_traceback=True)
 
     content = error_log.read_text()
@@ -198,7 +198,7 @@ def test_log_error_skips_logging_under_pytest(monkeypatch, tmp_path):
 def test_log_error_skips_manual_test_flyer_errors(tmp_path):
     error_log = tmp_path / "crawl_errors.log"
 
-    with patch.dict("drag_events.crawl.os.environ", {}, clear=False):
+    with patch.dict("drag_events.crawl.cli.os.environ", {}, clear=False):
         crawl.log_error(
             "run_extraction.process_flyer",
             RuntimeError("boom"),
@@ -218,11 +218,11 @@ def test_main_skips_runtime_metric_recording_under_pytest(monkeypatch):
     monkeypatch.setenv("PYTEST_CURRENT_TEST", "tests/test_crawl_metrics.py::test")
 
     with patch.object(sys, "argv", ["crawl.py"]), \
-         patch("drag_events.crawl.json.loads", return_value=[]), \
-         patch("drag_events.crawl.run_extraction", return_value={}), \
-         patch("drag_events.crawl.save_state"), \
-         patch("drag_events.crawl.time.sleep"), \
-         patch("drag_events.crawl.record_run_metrics") as mock_record:
+         patch("drag_events.crawl.cli.json.loads", return_value=[]), \
+         patch("drag_events.crawl.cli.run_extraction", return_value={}), \
+         patch("drag_events.crawl.cli.save_state"), \
+         patch("drag_events.crawl.cli.time.sleep"), \
+         patch("drag_events.crawl.cli.record_run_metrics") as mock_record:
         crawl.main()
 
     mock_record.assert_not_called()
@@ -250,8 +250,8 @@ def test_main_metrics_mode_prints_summary_and_returns(monkeypatch):
     monkeypatch.delenv("PYTEST_CURRENT_TEST", raising=False)
 
     with patch.object(sys, "argv", ["crawl.py", "--metrics"]), \
-         patch("drag_events.crawl.load_metric_entries", return_value=[{"status": "success", "elapsed_seconds": 10}]) as mock_load, \
-         patch("drag_events.crawl.print_metrics_summary") as mock_print:
+         patch("drag_events.crawl.cli.load_metric_entries", return_value=[{"status": "success", "elapsed_seconds": 10}]) as mock_load, \
+         patch("drag_events.crawl.cli.print_metrics_summary") as mock_print:
         crawl.main()
 
     mock_load.assert_called_once()
@@ -310,12 +310,12 @@ def test_main_records_metrics_outside_pytest_when_extraction_returns_non_dict(mo
     monkeypatch.delenv("PYTEST_CURRENT_TEST", raising=False)
 
     with patch.object(sys, "argv", ["crawl.py"]), \
-         patch("drag_events.crawl.json.loads", return_value=[]), \
-         patch("drag_events.crawl.get_retry_telemetry", return_value={"http": {"retries": 1}, "claude": {"retries": 2}}), \
-         patch("drag_events.crawl.run_extraction", return_value="not-a-dict"), \
-         patch("drag_events.crawl.save_state"), \
-         patch("drag_events.crawl.time.sleep"), \
-         patch("drag_events.crawl.record_run_metrics", return_value={"average_seconds": 10, "median_seconds": 10}) as mock_record:
+         patch("drag_events.crawl.cli.json.loads", return_value=[]), \
+         patch("drag_events.crawl.cli.get_retry_telemetry", return_value={"http": {"retries": 1}, "claude": {"retries": 2}}), \
+         patch("drag_events.crawl.cli.run_extraction", return_value="not-a-dict"), \
+         patch("drag_events.crawl.cli.save_state"), \
+         patch("drag_events.crawl.cli.time.sleep"), \
+         patch("drag_events.crawl.cli.record_run_metrics", return_value={"average_seconds": 10, "median_seconds": 10}) as mock_record:
         crawl.main()
 
     recorded = mock_record.call_args[0][0]
@@ -327,13 +327,13 @@ def test_main_resets_retry_telemetry_before_run(monkeypatch):
     monkeypatch.delenv("PYTEST_CURRENT_TEST", raising=False)
 
     with patch.object(sys, "argv", ["crawl.py"]), \
-         patch("drag_events.crawl.json.loads", return_value=[]), \
-         patch("drag_events.crawl.reset_retry_telemetry") as mock_reset, \
-         patch("drag_events.crawl.get_retry_telemetry", return_value={"http": {}, "claude": {}}), \
-         patch("drag_events.crawl.run_extraction", return_value={}), \
-         patch("drag_events.crawl.save_state"), \
-         patch("drag_events.crawl.time.sleep"), \
-         patch("drag_events.crawl.record_run_metrics", return_value={"average_seconds": 10, "median_seconds": 10}):
+         patch("drag_events.crawl.cli.json.loads", return_value=[]), \
+         patch("drag_events.crawl.cli.reset_retry_telemetry") as mock_reset, \
+         patch("drag_events.crawl.cli.get_retry_telemetry", return_value={"http": {}, "claude": {}}), \
+         patch("drag_events.crawl.cli.run_extraction", return_value={}), \
+         patch("drag_events.crawl.cli.save_state"), \
+         patch("drag_events.crawl.cli.time.sleep"), \
+         patch("drag_events.crawl.cli.record_run_metrics", return_value={"average_seconds": 10, "median_seconds": 10}):
         crawl.main()
 
     mock_reset.assert_called_once()
@@ -343,10 +343,10 @@ def test_main_logs_and_reraises_top_level_error_outside_pytest(monkeypatch):
     monkeypatch.delenv("PYTEST_CURRENT_TEST", raising=False)
 
     with patch.object(sys, "argv", ["crawl.py"]), \
-         patch("drag_events.crawl.load_state", side_effect=RuntimeError("boom")), \
-         patch("drag_events.crawl.log_error") as mock_log, \
-         patch("drag_events.crawl.record_run_metrics", return_value={}) as mock_record, \
-         patch("drag_events.crawl.time.sleep"):
+         patch("drag_events.crawl.cli.load_state", side_effect=RuntimeError("boom")), \
+         patch("drag_events.crawl.cli.log_error") as mock_log, \
+         patch("drag_events.crawl.cli.record_run_metrics", return_value={}) as mock_record, \
+         patch("drag_events.crawl.cli.time.sleep"):
         try:
             crawl.main()
         except RuntimeError as exc:
@@ -358,3 +358,5 @@ def test_main_logs_and_reraises_top_level_error_outside_pytest(monkeypatch):
     recorded = mock_record.call_args[0][0]
     assert recorded["status"] == "error"
     assert recorded["error"] == "boom"
+
+
