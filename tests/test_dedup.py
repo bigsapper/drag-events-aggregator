@@ -3,8 +3,8 @@
 import pytest
 from pathlib import Path
 
-from drag_events import dedup
-from drag_events.dedup import (
+from drag_events.events import dedup
+from drag_events.events.dedup import (
     compute_phash,
     phash_distance,
     is_duplicate_image,

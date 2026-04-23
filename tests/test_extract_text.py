@@ -5,7 +5,7 @@ from datetime import date
 import pytest
 from unittest.mock import MagicMock, patch
 
-from drag_events import extract_text
+from drag_events.extraction import text as extract_text
 
 
 SAMPLE_LISTING = {
@@ -50,7 +50,7 @@ def test_extract_from_text_includes_title_in_prompt(mock_text_client):
 
 
 def test_extract_from_text_includes_current_year_default_instruction(mock_text_client):
-    with patch("drag_events.extract_text._date_inference_instruction", return_value="Today's date is 2026-04-06. If the listing omits the year, default to 2026 unless the listing clearly indicates a different year."):
+    with patch("drag_events.extraction.text._date_inference_instruction", return_value="Today's date is 2026-04-06. If the listing omits the year, default to 2026 unless the listing clearly indicates a different year."):
         extract_text.extract_from_text(SAMPLE_LISTING)
     call_kwargs = mock_text_client.call_args[1]
     content = call_kwargs["messages"][0]["content"]
@@ -70,7 +70,7 @@ def test_extract_from_text_raises_if_no_tool_call():
     mock_response.content = [text_block]
     client = MagicMock()
     client.messages.create.return_value = mock_response
-    with patch("drag_events.extract_text.get_anthropic_client", return_value=client):
+    with patch("drag_events.extraction.text.get_anthropic_client", return_value=client):
         with pytest.raises(ValueError, match="store_event"):
             extract_text.extract_from_text(SAMPLE_LISTING)
 
@@ -87,7 +87,7 @@ def test_extract_from_text_rejects_missing_confidence(sample_extracted):
 
     client = MagicMock()
     client.messages.create.return_value = response
-    with patch("drag_events.extract_text.get_anthropic_client", return_value=client):
+    with patch("drag_events.extraction.text.get_anthropic_client", return_value=client):
         with pytest.raises(ValueError, match="confidence"):
             extract_text.extract_from_text(SAMPLE_LISTING)
 
@@ -101,9 +101,9 @@ def test_extract_from_text_retries_transient_claude_failure(sample_extracted):
     response.content = [block]
 
     client = MagicMock()
-    with patch("drag_events.extract_text.get_anthropic_client", return_value=client), \
+    with patch("drag_events.extraction.text.get_anthropic_client", return_value=client), \
          patch.object(client.messages, "create", side_effect=[RuntimeError("timeout"), response]) as mock_create, \
-         patch("drag_events.extract_text.time.sleep") as mock_sleep:
+         patch("drag_events.extraction.text.time.sleep") as mock_sleep:
         result = extract_text.extract_from_text(SAMPLE_LISTING)
 
     assert result["title"] == sample_extracted["title"]

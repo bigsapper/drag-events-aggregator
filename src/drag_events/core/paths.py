@@ -1,6 +1,6 @@
 from pathlib import Path
 
-BASE_DIR = Path(__file__).resolve().parents[2]
+BASE_DIR = Path(__file__).resolve().parents[3]
 SRC_DIR = BASE_DIR / "src" / "drag_events"
 CONFIG_DIR = SRC_DIR / "config"
 DIST_DIR = BASE_DIR / "dist"

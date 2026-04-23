@@ -8,7 +8,7 @@ import statistics
 from datetime import datetime, timezone
 from pathlib import Path
 
-from ..logging_utils import get_logger
+from ..core.logging_utils import get_logger
 
 LOGGER = get_logger(__name__)
 

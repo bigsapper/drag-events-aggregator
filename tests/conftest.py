@@ -58,19 +58,19 @@ def _make_tool_response(event_data: dict) -> MagicMock:
 
 @pytest.fixture
 def mock_vision_client(sample_extracted):
-    """Patch the Anthropic client used by extract.py with a canned vision response."""
+    """Patch the Anthropic client used by extraction.image with a canned vision response."""
     client = MagicMock()
     client.messages.create.return_value = _make_tool_response(sample_extracted)
-    with patch("drag_events.extract.get_anthropic_client", return_value=client):
+    with patch("drag_events.extraction.image.get_anthropic_client", return_value=client):
         yield client.messages.create
 
 
 @pytest.fixture
 def mock_text_client(sample_extracted):
-    """Patch the Anthropic client used by extract_text.py with a canned text response."""
+    """Patch the Anthropic client used by extraction.text with a canned text response."""
     client = MagicMock()
     client.messages.create.return_value = _make_tool_response(sample_extracted)
-    with patch("drag_events.extract_text.get_anthropic_client", return_value=client):
+    with patch("drag_events.extraction.text.get_anthropic_client", return_value=client):
         yield client.messages.create
 
 

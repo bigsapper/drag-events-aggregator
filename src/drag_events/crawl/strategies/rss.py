@@ -1,6 +1,6 @@
 """RSS crawler strategy."""
 
-from ...logging_utils import get_logger
+from ...core.logging_utils import get_logger
 
 LOGGER = get_logger(__name__)
 

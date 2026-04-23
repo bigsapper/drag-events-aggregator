@@ -3,7 +3,7 @@
 from pathlib import Path
 from urllib.parse import urljoin, urlparse
 
-from ...logging_utils import get_logger
+from ...core.logging_utils import get_logger
 from ..utils import IMAGE_EXTENSIONS, get_image_links
 
 LOGGER = get_logger(__name__)

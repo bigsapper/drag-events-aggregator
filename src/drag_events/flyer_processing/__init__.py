@@ -18,7 +18,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import urlparse
 
-from ..dedup import (
+from ..events.dedup import (
     backfill_contact_from_catalog,
     backfill_track_from_catalog,
     compute_phash,
@@ -27,11 +27,11 @@ from ..dedup import (
     merge_events,
     track_slug,
 )
-from ..event_filters import is_in_scope_event, is_past_event
+from ..events.filters import is_in_scope_event, is_past_event
 from ..event_validation import validate_events_payload
-from ..extract import extract_event
-from ..logging_utils import get_logger
-from ..paths import EVENTS_FILE
+from ..core.logging_utils import get_logger
+from ..core.paths import EVENTS_FILE
+from ..extraction.image import extract_event
 
 LOGGER = get_logger(__name__)
 IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp", ".gif"}

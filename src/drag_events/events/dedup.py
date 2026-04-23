@@ -12,7 +12,7 @@ import imagehash
 from PIL import Image
 from datetime import date
 
-from .paths import TRACK_ALIASES_FILE, TRACK_CATALOG_FILE
+from ..core.paths import TRACK_ALIASES_FILE, TRACK_CATALOG_FILE
 
 # Hamming distance threshold — hashes within this distance are the same image
 PHASH_THRESHOLD = 10

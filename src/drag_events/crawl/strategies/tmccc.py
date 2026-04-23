@@ -2,9 +2,9 @@
 
 from bs4 import BeautifulSoup
 
-from ...event_filters import is_in_scope_listing
-from ...logging_utils import get_logger
-from ...tmccc_enrichment import TMCCC_CLASSES, parse_tmccc_description
+from ...core.logging_utils import get_logger
+from ...events.filters import is_in_scope_listing
+from ...events.tmccc import TMCCC_CLASSES, parse_tmccc_description
 
 LOGGER = get_logger(__name__)
 

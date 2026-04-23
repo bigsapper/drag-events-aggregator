@@ -5,7 +5,7 @@ from unittest.mock import patch
 
 import pytest
 
-from drag_events import secrets
+from drag_events.core import secrets
 
 
 def test_get_anthropic_api_key_prefers_environment_variable():
@@ -30,7 +30,7 @@ def test_get_anthropic_api_key_reads_project_dotenv_when_other_sources_absent(tm
     project_dotenv = tmp_path / ".env"
     project_dotenv.write_text("ANTHROPIC_API_KEY=sk-project-key\n")
 
-    with patch("drag_events.secrets.PROJECT_SECRET_FILE", project_dotenv):
+    with patch("drag_events.core.secrets.PROJECT_SECRET_FILE", project_dotenv):
         assert secrets.get_anthropic_api_key({}) == "sk-project-key"
 
 
@@ -40,12 +40,12 @@ def test_get_anthropic_api_key_prefers_explicit_secret_file_over_project_dotenv(
     project_dotenv = tmp_path / ".env"
     project_dotenv.write_text("ANTHROPIC_API_KEY=sk-project-key\n")
 
-    with patch("drag_events.secrets.PROJECT_SECRET_FILE", project_dotenv):
+    with patch("drag_events.core.secrets.PROJECT_SECRET_FILE", project_dotenv):
         assert secrets.get_anthropic_api_key({"ANTHROPIC_API_KEY_FILE": str(explicit_secret)}) == "sk-file-key"
 
 
 def test_get_anthropic_api_key_raises_for_missing_secret(tmp_path):
-    with patch("drag_events.secrets.PROJECT_SECRET_FILE", tmp_path / ".missing-env"):
+    with patch("drag_events.core.secrets.PROJECT_SECRET_FILE", tmp_path / ".missing-env"):
         with pytest.raises(secrets.SecretConfigurationError, match="define ANTHROPIC_API_KEY"):
             secrets.get_anthropic_api_key({})
 
@@ -99,8 +99,8 @@ def test_get_anthropic_client_builds_client_with_resolved_key():
     secrets.get_anthropic_client.cache_clear()
     mock_client = object()
 
-    with patch("drag_events.secrets.get_anthropic_api_key", return_value="sk-test-key"), \
-         patch("drag_events.secrets.anthropic.Anthropic", return_value=mock_client) as mock_factory:
+    with patch("drag_events.core.secrets.get_anthropic_api_key", return_value="sk-test-key"), \
+         patch("drag_events.core.secrets.anthropic.Anthropic", return_value=mock_client) as mock_factory:
         result = secrets.get_anthropic_client()
 
     assert result is mock_client
@@ -112,8 +112,8 @@ def test_get_anthropic_client_caches_result():
     secrets.get_anthropic_client.cache_clear()
     mock_client = object()
 
-    with patch("drag_events.secrets.get_anthropic_api_key", return_value="sk-test-key"), \
-         patch("drag_events.secrets.anthropic.Anthropic", return_value=mock_client) as mock_factory:
+    with patch("drag_events.core.secrets.get_anthropic_api_key", return_value="sk-test-key"), \
+         patch("drag_events.core.secrets.anthropic.Anthropic", return_value=mock_client) as mock_factory:
         first = secrets.get_anthropic_client()
         second = secrets.get_anthropic_client()
 

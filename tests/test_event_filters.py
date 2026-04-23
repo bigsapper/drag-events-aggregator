@@ -1,6 +1,6 @@
 from datetime import date
 
-from drag_events import event_filters
+from drag_events.events import filters as event_filters
 
 
 def test_is_past_event_uses_end_date_when_present():

@@ -6,7 +6,7 @@ import pytest
 from pathlib import Path
 from unittest.mock import MagicMock, patch
 
-from drag_events import extract
+from drag_events.extraction import image as extract
 from tests.conftest import make_1x1_png
 
 
@@ -39,7 +39,7 @@ def test_extract_event_forces_tool_use(tmp_path, mock_vision_client):
 
 def test_extract_event_includes_current_year_default_instruction(tmp_path, mock_vision_client):
     img = make_1x1_png(tmp_path / "flyer.png")
-    with patch("drag_events.extract._date_inference_instruction", return_value="Today's date is 2026-04-06. If a flyer omits the year, default to 2026 unless the flyer clearly indicates a different year."):
+    with patch("drag_events.extraction.image._date_inference_instruction", return_value="Today's date is 2026-04-06. If a flyer omits the year, default to 2026 unless the flyer clearly indicates a different year."):
         extract.extract_event(str(img))
     messages = mock_vision_client.call_args[1]["messages"]
     text_block = messages[0]["content"][1]
@@ -87,7 +87,7 @@ def test_extract_event_raises_if_no_tool_call(tmp_path):
     mock_response.content = [text_block]
     client = MagicMock()
     client.messages.create.return_value = mock_response
-    with patch("drag_events.extract.get_anthropic_client", return_value=client):
+    with patch("drag_events.extraction.image.get_anthropic_client", return_value=client):
         with pytest.raises(ValueError, match="store_event"):
             extract.extract_event(str(img))
 
@@ -105,7 +105,7 @@ def test_extract_event_rejects_missing_confidence(tmp_path, sample_extracted):
 
     client = MagicMock()
     client.messages.create.return_value = response
-    with patch("drag_events.extract.get_anthropic_client", return_value=client):
+    with patch("drag_events.extraction.image.get_anthropic_client", return_value=client):
         with pytest.raises(ValueError, match="confidence"):
             extract.extract_event(str(img))
 
@@ -120,9 +120,9 @@ def test_extract_event_retries_transient_claude_failure(tmp_path, sample_extract
     response.content = [block]
 
     client = MagicMock()
-    with patch("drag_events.extract.get_anthropic_client", return_value=client), \
+    with patch("drag_events.extraction.image.get_anthropic_client", return_value=client), \
          patch.object(client.messages, "create", side_effect=[RuntimeError("timeout"), response]) as mock_create, \
-         patch("drag_events.extract.time.sleep") as mock_sleep:
+         patch("drag_events.extraction.image.time.sleep") as mock_sleep:
         result = extract.extract_event(str(img))
 
     assert result["title"] == sample_extracted["title"]

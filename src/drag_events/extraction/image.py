@@ -4,12 +4,12 @@ import base64
 import time
 from pathlib import Path
 
-from .extraction_common import (
+from ..core.secrets import get_anthropic_client
+from .common import (
     build_date_inference_instruction,
     build_store_event_tool,
     request_structured_event,
 )
-from .secrets import get_anthropic_client
 
 SYSTEM_PROMPT = """You are an expert at reading drag racing event flyers. Extract all event information accurately.
 

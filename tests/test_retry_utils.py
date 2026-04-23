@@ -2,7 +2,7 @@
 
 import pytest
 
-from drag_events import retry_utils
+from drag_events.core import retry_utils
 
 
 def test_reset_retry_telemetry_restores_empty_state():

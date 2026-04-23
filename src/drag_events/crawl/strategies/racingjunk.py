@@ -1,6 +1,6 @@
 """RacingJunk crawler strategy."""
 
-from ...logging_utils import get_logger
+from ...core.logging_utils import get_logger
 from .common import (
     extract_link_url,
     extract_listing_title,

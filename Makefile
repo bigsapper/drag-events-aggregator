@@ -7,7 +7,7 @@ help:
 	@printf "Available targets:\n"
 	@printf "  make                         Show this help\n"
 	@printf "  make test                    Run the pytest suite\n"
-	@printf "  make run                     Single additive full workflow: sync-flyers + crawl + process\n"
+	@printf "  make run                     Single additive full workflow: sync-flyers + crawl + flyer-processing\n"
 	@printf "  make validate                Validate dist/events.json against dist/events.schema.json\n"
 	@printf "  make metrics                 Show historical crawl timing summary\n"
 	@printf "  make reset                   Archive events, clear flyers, reset runtime state, empty dist/events.json\n"

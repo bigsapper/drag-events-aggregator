@@ -1,5 +1,5 @@
 from drag_events.crawl.strategies.tmccc import parse_tmccc_page_events_impl
-from drag_events.tmccc_enrichment import enrich_tmccc_extracted_event, parse_tmccc_city_state, parse_tmccc_description
+from drag_events.events.tmccc import enrich_tmccc_extracted_event, parse_tmccc_city_state, parse_tmccc_description
 
 
 def test_parse_tmccc_page_events_skips_banquet_titles():

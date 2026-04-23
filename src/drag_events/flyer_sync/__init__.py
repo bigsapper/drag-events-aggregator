@@ -13,8 +13,8 @@ from urllib.parse import parse_qs, urlparse
 import requests
 from bs4 import BeautifulSoup
 
-from ..logging_utils import get_logger
-from ..paths import FLYERS_DIR, FLYER_SOURCES_FILE, FLYER_SYNC_STATE_FILE
+from ..core.logging_utils import get_logger
+from ..core.paths import FLYERS_DIR, FLYER_SOURCES_FILE, FLYER_SYNC_STATE_FILE
 
 LOGGER = get_logger(__name__)
 CONFIG_FILE = FLYER_SOURCES_FILE

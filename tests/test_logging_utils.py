@@ -2,7 +2,7 @@
 
 import logging
 
-from drag_events import logging_utils
+from drag_events.core import logging_utils
 
 
 def _reset_logger(name: str) -> logging.Logger:

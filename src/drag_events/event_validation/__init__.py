@@ -11,8 +11,8 @@ from datetime import datetime
 from pathlib import Path
 from urllib.parse import urlparse
 
-from ..paths import EVENTS_FILE as DEFAULT_EVENTS_FILE
-from ..paths import EVENTS_SCHEMA_FILE as DEFAULT_SCHEMA_FILE
+from ..core.paths import EVENTS_FILE as DEFAULT_EVENTS_FILE
+from ..core.paths import EVENTS_SCHEMA_FILE as DEFAULT_SCHEMA_FILE
 
 
 @dataclass(frozen=True)

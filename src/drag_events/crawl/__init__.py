@@ -26,11 +26,8 @@ import requests
 from bs4 import BeautifulSoup
 
 from .. import flyer_processing
-from ..dedup import find_same_event, merge_events, track_slug
-from ..event_filters import is_in_scope_event, is_in_scope_listing, is_past_event
-from ..extract_text import extract_from_text
-from ..logging_utils import get_logger
-from ..paths import (
+from ..core.logging_utils import get_logger
+from ..core.paths import (
     BASE_DIR,
     CRAWL_ERROR_LOG_FILE,
     CRAWL_METRICS_LOG_FILE,
@@ -44,8 +41,11 @@ from ..paths import (
     TRACKS_FILE,
     TRACING_DIR,
 )
-from ..retry_utils import execute_with_retries, get_retry_telemetry, reset_retry_telemetry
-from ..tmccc_enrichment import enrich_tmccc_extracted_event
+from ..core.retry_utils import execute_with_retries, get_retry_telemetry, reset_retry_telemetry
+from ..events.dedup import find_same_event, merge_events, track_slug
+from ..events.filters import is_in_scope_event, is_in_scope_listing, is_past_event
+from ..events.tmccc import enrich_tmccc_extracted_event
+from ..extraction.text import extract_from_text
 from .collection import crawl_source_impl, crawl_track_impl
 from .extraction import OUTCOME_LABELS, run_extraction_impl
 from .http import (
