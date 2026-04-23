@@ -1083,7 +1083,7 @@ def test_crawl_source_text_strategy_returns_in_second_slot():
 # ── run_extraction ────────────────────────────────────────────────────────────
 
 def test_run_extraction_noop_on_empty_input(tmp_events_file):
-    with patch("drag_events.crawl.process.load_events") as mock_load:
+    with patch("drag_events.crawl.flyer_processing.load_events") as mock_load:
         result = crawl.run_extraction([], [])
     mock_load.assert_not_called()
     assert result["skipped"] == 0
@@ -1091,9 +1091,9 @@ def test_run_extraction_noop_on_empty_input(tmp_events_file):
 
 def test_run_extraction_image_new_event(tmp_path, tmp_events_file, sample_extracted):
     img = make_1x1_png(tmp_path / "flyer.jpg")
-    with patch("drag_events.crawl.process.load_events", return_value=[]), \
-         patch("drag_events.crawl.process.process_flyer", return_value=("new", sample_extracted)), \
-         patch("drag_events.crawl.process.save_events") as mock_save:
+    with patch("drag_events.crawl.flyer_processing.load_events", return_value=[]), \
+         patch("drag_events.crawl.flyer_processing.process_flyer", return_value=("new", sample_extracted)), \
+         patch("drag_events.crawl.flyer_processing.save_events") as mock_save:
         crawl.run_extraction([img], [])
     mock_save.assert_called_once()
     assert not img.exists()  # file deleted after successful processing
@@ -1101,9 +1101,9 @@ def test_run_extraction_image_new_event(tmp_path, tmp_events_file, sample_extrac
 
 def test_run_extraction_image_error_keeps_file(tmp_path, tmp_events_file):
     img = make_1x1_png(tmp_path / "flyer.jpg")
-    with patch("drag_events.crawl.process.load_events", return_value=[]), \
-         patch("drag_events.crawl.process.process_flyer", side_effect=RuntimeError("boom")), \
-         patch("drag_events.crawl.process.save_events"):
+    with patch("drag_events.crawl.flyer_processing.load_events", return_value=[]), \
+         patch("drag_events.crawl.flyer_processing.process_flyer", side_effect=RuntimeError("boom")), \
+         patch("drag_events.crawl.flyer_processing.save_events"):
         crawl.run_extraction([img], [])
     assert img.exists()  # kept on error
 
@@ -1115,10 +1115,10 @@ def test_run_extraction_text_new_event(tmp_events_file):
         "track": {"name": "Tulsa Raceway Park", "state": "OK"},
         "dates": {"start": "2026-06-01"}, "confidence": 0.8,
     }
-    with patch("drag_events.crawl.process.load_events", return_value=[]), \
+    with patch("drag_events.crawl.flyer_processing.load_events", return_value=[]), \
          patch("drag_events.crawl.extract_from_text", return_value=extracted), \
          patch("drag_events.crawl.find_same_event", return_value=None), \
-         patch("drag_events.crawl.process.save_events") as mock_save:
+         patch("drag_events.crawl.flyer_processing.save_events") as mock_save:
         crawl.run_extraction([], [listing])
     mock_save.assert_called_once()
     saved_events = mock_save.call_args[0][0]
@@ -1141,10 +1141,10 @@ def test_run_extraction_text_new_tmccc_event_applies_enrichment(tmp_events_file)
         "dates": {"start": "2026-05-12"},
         "confidence": 0.65,
     }
-    with patch("drag_events.crawl.process.load_events", return_value=[]), \
+    with patch("drag_events.crawl.flyer_processing.load_events", return_value=[]), \
          patch("drag_events.crawl.extract_from_text", return_value=extracted), \
          patch("drag_events.crawl.find_same_event", return_value=None), \
-         patch("drag_events.crawl.process.save_events") as mock_save:
+         patch("drag_events.crawl.flyer_processing.save_events") as mock_save:
         crawl.run_extraction([], [listing])
     saved_events = mock_save.call_args[0][0]
     assert saved_events[0]["track"]["city"] == "Lexington"
@@ -1155,10 +1155,10 @@ def test_run_extraction_text_new_tmccc_event_applies_enrichment(tmp_events_file)
 
 def test_run_extraction_text_merged_event(tmp_events_file, sample_events, sample_extracted):
     listing = {"title": "Spring Bracket Classic", "source_url": "http://rj.com/2", "source": "RacingJunk"}
-    with patch("drag_events.crawl.process.load_events", return_value=sample_events), \
+    with patch("drag_events.crawl.flyer_processing.load_events", return_value=sample_events), \
          patch("drag_events.crawl.extract_from_text", return_value=sample_extracted), \
          patch("drag_events.crawl.find_same_event", return_value=sample_events[0]), \
-         patch("drag_events.crawl.process.save_events") as mock_save:
+         patch("drag_events.crawl.flyer_processing.save_events") as mock_save:
         crawl.run_extraction([], [listing])
     saved = mock_save.call_args[0][0]
     assert len(saved[0]["flyers"]) == 2  # original + new
@@ -1166,18 +1166,18 @@ def test_run_extraction_text_merged_event(tmp_events_file, sample_events, sample
 
 def test_run_extraction_text_error_continues(tmp_events_file, capsys):
     listing = {"title": "Bad Event", "source_url": "", "source": "RJ"}
-    with patch("drag_events.crawl.process.load_events", return_value=[]), \
+    with patch("drag_events.crawl.flyer_processing.load_events", return_value=[]), \
          patch("drag_events.crawl.extract_from_text", side_effect=RuntimeError("Claude error")), \
-         patch("drag_events.crawl.process.save_events"):
+         patch("drag_events.crawl.flyer_processing.save_events"):
         crawl.run_extraction([], [listing])
     assert "ERROR" in capsys.readouterr().out
 
 
 def test_run_extraction_text_skips_out_of_scope_listing(tmp_events_file):
     listing = {"title": "2026 TMCCC Banquet", "source_url": "http://tmccc.org/events", "source": "TMCCC"}
-    with patch("drag_events.crawl.process.load_events", return_value=[]), \
+    with patch("drag_events.crawl.flyer_processing.load_events", return_value=[]), \
          patch("drag_events.crawl.extract_from_text") as mock_extract, \
-         patch("drag_events.crawl.process.save_events") as mock_save:
+         patch("drag_events.crawl.flyer_processing.save_events") as mock_save:
         result = crawl.run_extraction([], [listing])
     mock_extract.assert_not_called()
     mock_save.assert_called_once_with([])
@@ -1193,9 +1193,9 @@ def test_run_extraction_text_skips_past_event(tmp_events_file):
         "dates": {"start": "2025-06-01"},
         "confidence": 0.8,
     }
-    with patch("drag_events.crawl.process.load_events", return_value=[]), \
+    with patch("drag_events.crawl.flyer_processing.load_events", return_value=[]), \
          patch("drag_events.crawl.extract_from_text", return_value=extracted), \
-         patch("drag_events.crawl.process.save_events") as mock_save:
+         patch("drag_events.crawl.flyer_processing.save_events") as mock_save:
         result = crawl.run_extraction([], [listing])
     mock_save.assert_called_once_with([])
     assert result["skipped"] == 1
@@ -1210,9 +1210,9 @@ def test_run_extraction_text_skips_out_of_scope_extracted_event(tmp_events_file)
         "dates": {"start": "2026-12-05"},
         "confidence": 0.3,
     }
-    with patch("drag_events.crawl.process.load_events", return_value=[]), \
+    with patch("drag_events.crawl.flyer_processing.load_events", return_value=[]), \
          patch("drag_events.crawl.extract_from_text", return_value=extracted), \
-         patch("drag_events.crawl.process.save_events") as mock_save:
+         patch("drag_events.crawl.flyer_processing.save_events") as mock_save:
         result = crawl.run_extraction([], [listing])
     mock_save.assert_called_once_with([])
     assert result["skipped"] == 1

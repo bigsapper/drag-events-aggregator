@@ -25,7 +25,7 @@ import feedparser
 import requests
 from bs4 import BeautifulSoup
 
-from .. import process
+from .. import flyer_processing
 from ..dedup import find_same_event, merge_events, track_slug
 from ..event_filters import is_in_scope_event, is_in_scope_listing, is_past_event
 from ..extract_text import extract_from_text
@@ -149,9 +149,9 @@ def _source_request_options(source: dict) -> dict:
 def _extraction_dependencies() -> dict:
     return {
         "perf_counter": time.perf_counter,
-        "load_events": process.load_events,
-        "save_events": process.save_events,
-        "process_flyer": process.process_flyer,
+        "load_events": flyer_processing.load_events,
+        "save_events": flyer_processing.save_events,
+        "process_flyer": flyer_processing.process_flyer,
         "now": datetime.now,
         "timezone": timezone,
         "extract_from_text": extract_from_text,

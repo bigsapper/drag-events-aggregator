@@ -1,14 +1,14 @@
-"""Process drag racing event flyers and store results in events.json.
+"""Process drag racing flyer images and store results in events.json.
 
 Usage:
     # Process a single flyer
-    python -m drag_events.process path/to/flyer.jpg
+    python -m drag_events.flyer_processing path/to/flyer.jpg
 
     # Process all images in a directory
-    python -m drag_events.process path/to/flyers/
+    python -m drag_events.flyer_processing path/to/flyers/
 
     # Process multiple specific files
-    python -m drag_events.process flyer1.jpg flyer2.png flyer3.jpg
+    python -m drag_events.flyer_processing flyer1.jpg flyer2.png flyer3.jpg
 """
 
 import json
@@ -18,15 +18,20 @@ from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import urlparse
 
-from .dedup import (
-    compute_phash, is_duplicate_image, find_same_event, merge_events, track_slug,
-    backfill_track_from_catalog, backfill_contact_from_catalog,
+from ..dedup import (
+    backfill_contact_from_catalog,
+    backfill_track_from_catalog,
+    compute_phash,
+    find_same_event,
+    is_duplicate_image,
+    merge_events,
+    track_slug,
 )
-from .event_filters import is_in_scope_event, is_past_event
-from .extract import extract_event
-from .logging_utils import get_logger
-from .paths import EVENTS_FILE
-from .validate_events import validate_events_payload
+from ..event_filters import is_in_scope_event, is_past_event
+from ..event_validation import validate_events_payload
+from ..extract import extract_event
+from ..logging_utils import get_logger
+from ..paths import EVENTS_FILE
 
 LOGGER = get_logger(__name__)
 IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp", ".gif"}
@@ -130,17 +135,11 @@ def _build_new_event(extracted: dict, flyer_entry: dict, processed_at: str) -> d
 
 
 def process_flyer(image_path: str, events: list[dict]) -> tuple[str, dict]:
-    """Process one flyer. Returns (outcome, event) where outcome is one of:
-      'new'       — new event added
-      'merged'    — updated existing event with new flyer details
-      'duplicate' — exact image already processed, skipped
-      'skipped'   — extracted but filtered out as out-of-scope or past-dated
-    """
+    """Process one flyer. Returns (outcome, event)."""
     path = Path(image_path)
     LOGGER.info("  Computing image hash...")
     phash = compute_phash(image_path)
 
-    # Layer 1: exact/near-duplicate image check
     existing = is_duplicate_image(phash, events)
     if existing:
         LOGGER.info(f"  Duplicate image detected (matches event: {existing.get('title', existing['id'])}), skipping API call.")
@@ -153,7 +152,6 @@ def process_flyer(image_path: str, events: list[dict]) -> tuple[str, dict]:
     processed_at = datetime.now(timezone.utc).isoformat()
     flyer_entry = _build_flyer_entry(path, phash, processed_at)
 
-    # Layer 3: same event, different flyer (reminder/update flyer)
     same_event = find_same_event(extracted, events)
     if same_event:
         merged = _merge_existing_event(events, same_event, extracted, flyer_entry, processed_at)
@@ -166,8 +164,8 @@ def process_flyer(image_path: str, events: list[dict]) -> tuple[str, dict]:
 
 def collect_images(paths: list[str]) -> list[Path]:
     images = []
-    for p in paths:
-        path = Path(p)
+    for candidate in paths:
+        path = Path(candidate)
         if path.is_dir():
             for ext in IMAGE_EXTENSIONS:
                 images.extend(path.glob(f"*{ext}"))
@@ -175,11 +173,11 @@ def collect_images(paths: list[str]) -> list[Path]:
         elif path.suffix.lower() in IMAGE_EXTENSIONS:
             images.append(path)
         else:
-            LOGGER.warning(f"  Skipping {p} (not a supported image type)")
+            LOGGER.warning(f"  Skipping {candidate} (not a supported image type)")
     return sorted(set(images))
 
 
-def main():
+def main() -> None:
     if len(sys.argv) < 2:
         LOGGER.info(__doc__.rstrip())
         sys.exit(1)
@@ -203,23 +201,19 @@ def main():
             title = event.get("title", event.get("id", "?"))
             date_start = event.get("dates", {}).get("start", "?")
             track = event.get("track", {}).get("name", "?")
-            LOGGER.info(f"  [{label}] {title} — {track} — {date_start}")
+            LOGGER.info(f"  [{label}] {title} - {track} - {date_start}")
             if "test-flyers" not in image_path.parts:
                 image_path.unlink()
-        except Exception as e:
-            LOGGER.error(f"  [ERROR] {e}")
+        except Exception as exc:
+            LOGGER.error(f"  [ERROR] {exc}")
             counts["error"] += 1
         LOGGER.info("")
 
     save_events(events)
 
-    LOGGER.info("─" * 50)
+    LOGGER.info("-" * 50)
     LOGGER.info(f"Done. {len(events)} total events in database.")
     LOGGER.info(
         f"  {counts['new']} new  |  {counts['merged']} updated  |  {counts['duplicate']} duplicate  |  "
         f"{counts['skipped']} skipped  |  {counts['error']} errors"
     )
-
-
-if __name__ == "__main__":
-    main()

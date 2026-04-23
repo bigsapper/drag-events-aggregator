@@ -63,16 +63,16 @@ Recoverable and fatal crawl errors from live runs are appended to `runtime/traci
 PYTHONPATH=src python -m drag_events.flyer_sync
 
 # Process the flyers/ staging directory
-PYTHONPATH=src python -m drag_events.process flyers
+PYTHONPATH=src python -m drag_events.flyer_processing flyers
 
 # Process one or more flyer paths manually
-PYTHONPATH=src python -m drag_events.process path/to/flyer.jpg
+PYTHONPATH=src python -m drag_events.flyer_processing path/to/flyer.jpg
 
 # Process all images in a directory
-PYTHONPATH=src python -m drag_events.process path/to/flyers/
+PYTHONPATH=src python -m drag_events.flyer_processing path/to/flyers/
 
 # Process multiple specific files
-PYTHONPATH=src python -m drag_events.process flyer1.jpg flyer2.png
+PYTHONPATH=src python -m drag_events.flyer_processing flyer1.jpg flyer2.png
 ```
 
 ## Reset Workflow

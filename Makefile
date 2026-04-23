@@ -19,14 +19,14 @@ run:
 	$(PYTHONPATH_RUN) $(PYTHON) -m drag_events.flyer_sync
 	$(PYTHONPATH_RUN) $(PYTHON) -m drag_events.crawl
 	@if find flyers -maxdepth 1 -type f | grep -q .; then \
-		$(PYTHONPATH_RUN) $(PYTHON) -m drag_events.process flyers; \
+		$(PYTHONPATH_RUN) $(PYTHON) -m drag_events.flyer_processing flyers; \
 	else \
 		echo "No staged flyer images to process."; \
 	fi
-	$(PYTHONPATH_RUN) $(PYTHON) -m drag_events.validate_events
+	$(PYTHONPATH_RUN) $(PYTHON) -m drag_events.event_validation
 
 validate:
-	$(PYTHONPATH_RUN) $(PYTHON) -m drag_events.validate_events
+	$(PYTHONPATH_RUN) $(PYTHON) -m drag_events.event_validation
 
 metrics:
 	$(PYTHONPATH_RUN) $(PYTHON) -m drag_events.crawl --metrics

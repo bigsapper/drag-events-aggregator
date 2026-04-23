@@ -6,7 +6,7 @@ from datetime import date
 from .retry_utils import execute_with_retries
 from .secrets import get_anthropic_client
 from .schema import EVENT_INPUT_SCHEMA
-from .validate_events import validate_payload_against_schema
+from .event_validation import validate_payload_against_schema
 
 TOOL_NAME = "store_event"
 CLAUDE_MAX_ATTEMPTS = 3

@@ -11,8 +11,8 @@ from datetime import datetime
 from pathlib import Path
 from urllib.parse import urlparse
 
-from .paths import EVENTS_FILE as DEFAULT_EVENTS_FILE
-from .paths import EVENTS_SCHEMA_FILE as DEFAULT_SCHEMA_FILE
+from ..paths import EVENTS_FILE as DEFAULT_EVENTS_FILE
+from ..paths import EVENTS_SCHEMA_FILE as DEFAULT_SCHEMA_FILE
 
 
 @dataclass(frozen=True)
@@ -218,7 +218,3 @@ def main() -> None:
             print(f"  - {error}")
         raise SystemExit(1) from exc
     print(f"Schema validation passed for {events_path}")
-
-
-if __name__ == "__main__":
-    main()
