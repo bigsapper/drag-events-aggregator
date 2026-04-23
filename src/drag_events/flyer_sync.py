@@ -14,13 +14,12 @@ import requests
 from bs4 import BeautifulSoup
 
 from .logging_utils import get_logger
+from .paths import FLYERS_DIR, FLYER_SOURCES_FILE, FLYER_SYNC_STATE_FILE
 
 LOGGER = get_logger(__name__)
-
-BASE_DIR = Path(__file__).resolve().parents[2]
-CONFIG_FILE = BASE_DIR / "src" / "drag_events" / "config" / "flyer_sources.json"
-STATE_FILE = BASE_DIR / "runtime" / "state" / "flyer_sync_state.json"
-STAGING_DIR = BASE_DIR / "flyers"
+CONFIG_FILE = FLYER_SOURCES_FILE
+STATE_FILE = FLYER_SYNC_STATE_FILE
+STAGING_DIR = FLYERS_DIR
 
 IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp", ".gif"}
 EMBEDDED_FOLDER_VIEW_URL = "https://drive.google.com/embeddedfolderview?id={folder_id}#list"

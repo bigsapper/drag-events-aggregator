@@ -21,7 +21,7 @@ import traceback
 import uuid
 from datetime import datetime, timezone
 from pathlib import Path
-from urllib.parse import urljoin, urlparse
+from urllib.parse import urlparse
 
 import feedparser
 import requests
@@ -61,6 +61,20 @@ from .dedup import find_same_event, merge_events, track_slug
 from .event_filters import is_in_scope_event, is_in_scope_listing, is_past_event
 from .extract_text import extract_from_text
 from .logging_utils import get_logger
+from .paths import (
+    BASE_DIR,
+    CRAWL_ERROR_LOG_FILE,
+    CRAWL_METRICS_LOG_FILE,
+    CRAWL_METRICS_SUMMARY_FILE,
+    CRAWL_STATE_FILE,
+    DIST_DIR,
+    FLYERS_DIR,
+    RUNTIME_DIR,
+    SOURCES_FILE,
+    STATE_DIR,
+    TRACKS_FILE,
+    TRACING_DIR,
+)
 from .retry_utils import execute_with_retries, get_retry_telemetry, reset_retry_telemetry
 from .strategies.bracketraces import crawl_bracketraces_impl
 from .strategies.myracepass import crawl_myracepass_impl
@@ -74,19 +88,10 @@ from .strategies.tmccc import (
 )
 from .tmccc_enrichment import enrich_tmccc_extracted_event
 
-BASE_DIR     = Path(__file__).resolve().parents[2]
-CONFIG_DIR   = BASE_DIR / "src" / "drag_events" / "config"
-TRACKS_FILE  = CONFIG_DIR / "tracks.json"
-SOURCES_FILE = CONFIG_DIR / "sources.json"
-FLYERS_DIR   = BASE_DIR / "flyers"
-DIST_DIR     = BASE_DIR / "dist"
-RUNTIME_DIR  = BASE_DIR / "runtime"
-STATE_DIR    = RUNTIME_DIR / "state"
-TRACING_DIR  = RUNTIME_DIR / "tracing"
-CRAWL_STATE  = STATE_DIR / "crawl_state.json"
-METRICS_LOG  = TRACING_DIR / "crawl_metrics.jsonl"
-METRICS_SUMMARY = TRACING_DIR / "crawl_metrics_summary.json"
-ERROR_LOG    = TRACING_DIR / "crawl_errors.log"
+CRAWL_STATE = CRAWL_STATE_FILE
+METRICS_LOG = CRAWL_METRICS_LOG_FILE
+METRICS_SUMMARY = CRAWL_METRICS_SUMMARY_FILE
+ERROR_LOG = CRAWL_ERROR_LOG_FILE
 
 LEGACY_CRAWL_STATE = BASE_DIR / ".crawl_state.json"
 LEGACY_METRICS_LOG = DIST_DIR / "crawl_metrics.jsonl"
@@ -373,100 +378,155 @@ def _request_image(url: str, headers: dict[str, str]):
     return response
 
 
-# ── Main ──────────────────────────────────────────────────────────────────────
+OUTCOME_LABELS = {
+    "new": "NEW",
+    "merged": "UPDATED",
+    "duplicate": "SKIPPED",
+    "skipped": "SKIPPED",
+}
 
-def run_extraction(downloaded: list[Path], text_listings: list[dict]) -> dict:
-    start = time.perf_counter()
-    if not downloaded and not text_listings:
-        return {
-            "elapsed_seconds": 0.0,
-            "image_flyers": 0,
-            "text_listings": 0,
-            "new": 0,
-            "merged": 0,
-            "duplicate": 0,
-            "skipped": 0,
-            "error": 0,
-            "total_events": 0,
-            "retries": get_retry_telemetry().get("claude", {}),
-        }
 
-    events = process.load_events()
-    counts = {"new": 0, "merged": 0, "duplicate": 0, "skipped": 0, "error": 0}
+def _empty_outcome_counts() -> dict[str, int]:
+    return {"new": 0, "merged": 0, "duplicate": 0, "skipped": 0, "error": 0}
 
-    # Image flyers → Claude vision
+
+def _build_extraction_metrics(
+    *,
+    start: float,
+    downloaded: list[Path],
+    text_listings: list[dict],
+    counts: dict[str, int],
+    total_events: int,
+) -> dict:
+    return {
+        "elapsed_seconds": round(time.perf_counter() - start, 2),
+        "image_flyers": len(downloaded),
+        "text_listings": len(text_listings),
+        "new": counts["new"],
+        "merged": counts["merged"],
+        "duplicate": counts["duplicate"],
+        "skipped": counts["skipped"],
+        "error": counts["error"],
+        "total_events": total_events,
+        "retries": get_retry_telemetry().get("claude", {}),
+    }
+
+
+def _log_flyer_processing_outcome(outcome: str, event: dict) -> None:
+    label = OUTCOME_LABELS[outcome]
+    LOGGER.info(f"  [{label}] {event.get('title', '?')} - {event.get('track', {}).get('name', '?')}")
+
+
+def _delete_processed_flyer(path: Path) -> None:
+    if "test-flyers" not in path.parts:
+        path.unlink()
+
+
+def _build_listing_flyer_entry(listing: dict, processed_at: str) -> dict:
+    return {
+        "file": listing.get("source_url", ""),
+        "phash": None,
+        "processed_at": processed_at,
+    }
+
+
+def _replace_event(events: list[dict], event_id: str, updated_event: dict) -> None:
+    idx = next(i for i, event in enumerate(events) if event["id"] == event_id)
+    events[idx] = updated_event
+
+
+def _build_new_text_event(extracted: dict, listing: dict, processed_at: str) -> dict:
+    track = extracted.get("track") or {}
+    extracted["track"] = {
+        "id": track_slug(track.get("name"), track.get("state")),
+        "name": track.get("name"),
+        "city": track.get("city"),
+        "state": track.get("state"),
+    }
+    return {
+        "id": str(uuid.uuid4()),
+        **extracted,
+        "flyers": [_build_listing_flyer_entry(listing, processed_at)],
+        "created_at": processed_at,
+        "updated_at": processed_at,
+    }
+
+
+def _merge_text_listing_event(events: list[dict], same_event: dict, extracted: dict, listing: dict, processed_at: str) -> dict:
+    merged = merge_events(same_event, extracted, _build_listing_flyer_entry(listing, processed_at))
+    merged["updated_at"] = processed_at
+    _replace_event(events, same_event["id"], merged)
+    return merged
+
+
+def _upsert_text_listing_event(listing: dict, extracted: dict, events: list[dict]) -> tuple[str, dict]:
+    processed_at = datetime.now(timezone.utc).isoformat()
+    same_event = find_same_event(extracted, events)
+    if same_event:
+        return "merged", _merge_text_listing_event(events, same_event, extracted, listing, processed_at)
+
+    new_event = _build_new_text_event(extracted, listing, processed_at)
+    events.append(new_event)
+    return "new", new_event
+
+
+def _extract_listing_event(listing: dict) -> dict | None:
+    title = listing.get("title", "?")
+    if not is_in_scope_listing(listing):
+        LOGGER.info(f"  [SKIPPED] {title} - out of scope")
+        return None
+
+    extracted = extract_from_text(listing)
+    if listing.get("source") == "TMCCC":
+        extracted = enrich_tmccc_extracted_event(extracted, listing)
+
+    if not is_in_scope_event(extracted):
+        LOGGER.info(f"  [SKIPPED] {title} - out of scope")
+        return None
+
+    if is_past_event(extracted):
+        LOGGER.info(f"  [SKIPPED] {title} - past event")
+        return None
+
+    return extracted
+
+
+def _process_downloaded_flyers(downloaded: list[Path], events: list[dict], counts: dict[str, int]) -> None:
     if downloaded:
         LOGGER.info("\nRunning vision extraction on new flyers...")
+
     for path in downloaded:
         LOGGER.info(f"\nProcessing: {path.name}")
         try:
             outcome, event = process.process_flyer(str(path), events)
             counts[outcome] += 1
-            label = {"new": "NEW", "merged": "UPDATED", "duplicate": "SKIPPED", "skipped": "SKIPPED"}[outcome]
-            LOGGER.info(f"  [{label}] {event.get('title', '?')} — {event.get('track', {}).get('name', '?')}")
-            if "test-flyers" not in path.parts:
-                path.unlink()
+            _log_flyer_processing_outcome(outcome, event)
+            _delete_processed_flyer(path)
         except Exception as e:
             LOGGER.error(f"  [ERROR] {e}")
             counts["error"] += 1
             log_error("run_extraction.process_flyer", e, details={"flyer_path": path}, include_traceback=True)
 
-    # Text listings → Claude text (haiku)
+
+def _process_text_listings(text_listings: list[dict], events: list[dict], counts: dict[str, int]) -> None:
     if text_listings:
         LOGGER.info(f"\nParsing {len(text_listings)} text listings...")
+
     for listing in text_listings:
         title = listing.get("title", "?")
         LOGGER.info(f"\nParsing: {title}")
         try:
-            if not is_in_scope_listing(listing):
+            extracted = _extract_listing_event(listing)
+            if extracted is None:
                 counts["skipped"] += 1
-                LOGGER.info(f"  [SKIPPED] {title} — out of scope")
                 continue
 
-            extracted = extract_from_text(listing)
-            if listing.get("source") == "TMCCC":
-                extracted = enrich_tmccc_extracted_event(extracted, listing)
-
-            if not is_in_scope_event(extracted):
-                counts["skipped"] += 1
-                LOGGER.info(f"  [SKIPPED] {title} — out of scope")
-                continue
-
-            if is_past_event(extracted):
-                counts["skipped"] += 1
-                LOGGER.info(f"  [SKIPPED] {title} — past event")
-                continue
-
-            # Check for same event already in DB
-            same = find_same_event(extracted, events)
-            if same:
-                flyer_entry = {"file": listing.get("source_url", ""), "phash": None,
-                               "processed_at": datetime.now(timezone.utc).isoformat()}
-                merged = merge_events(same, extracted, flyer_entry)
-                merged["updated_at"] = datetime.now(timezone.utc).isoformat()
-                idx = next(i for i, e in enumerate(events) if e["id"] == same["id"])
-                events[idx] = merged
-                counts["merged"] += 1
-                LOGGER.info(f"  [UPDATED] {merged.get('title', '?')}")
+            outcome, event = _upsert_text_listing_event(listing, extracted, events)
+            counts[outcome] += 1
+            if outcome == "merged":
+                LOGGER.info(f"  [UPDATED] {event.get('title', '?')}")
             else:
-                track = extracted.get("track") or {}
-                extracted["track"] = {
-                    "id":    track_slug(track.get("name"), track.get("state")),
-                    "name":  track.get("name"),
-                    "city":  track.get("city"),
-                    "state": track.get("state"),
-                }
-                new_event = {
-                    "id": str(uuid.uuid4()),
-                    **extracted,
-                    "flyers": [{"file": listing.get("source_url", ""), "phash": None,
-                                "processed_at": datetime.now(timezone.utc).isoformat()}],
-                    "created_at": datetime.now(timezone.utc).isoformat(),
-                    "updated_at": datetime.now(timezone.utc).isoformat()
-                }
-                events.append(new_event)
-                counts["new"] += 1
-                LOGGER.info(f"  [NEW] {new_event.get('title', '?')} — {new_event.get('track', {}).get('name', '?')}")
+                LOGGER.info(f"  [NEW] {event.get('title', '?')} - {event.get('track', {}).get('name', '?')}")
         except Exception as e:
             LOGGER.error(f"  [ERROR] {e}")
             counts["error"] += 1
@@ -477,24 +537,39 @@ def run_extraction(downloaded: list[Path], text_listings: list[dict]) -> dict:
                 include_traceback=True,
             )
 
+
+# ── Main ──────────────────────────────────────────────────────────────────────
+
+def run_extraction(downloaded: list[Path], text_listings: list[dict]) -> dict:
+    start = time.perf_counter()
+    if not downloaded and not text_listings:
+        return _build_extraction_metrics(
+            start=start,
+            downloaded=[],
+            text_listings=[],
+            counts=_empty_outcome_counts(),
+            total_events=0,
+        )
+
+    events = process.load_events()
+    counts = _empty_outcome_counts()
+
+    _process_downloaded_flyers(downloaded, events, counts)
+    _process_text_listings(text_listings, events, counts)
+
     process.save_events(events)
     LOGGER.info(f"\n{len(events)} total events in database.")
     LOGGER.info(
         f"  {counts['new']} new  |  {counts['merged']} updated  |  {counts['duplicate']} duplicate  |  "
         f"{counts['skipped']} skipped  |  {counts['error']} errors"
     )
-    return {
-        "elapsed_seconds": round(time.perf_counter() - start, 2),
-        "image_flyers": len(downloaded),
-        "text_listings": len(text_listings),
-        "new": counts["new"],
-        "merged": counts["merged"],
-        "duplicate": counts["duplicate"],
-        "skipped": counts["skipped"],
-        "error": counts["error"],
-        "total_events": len(events),
-        "retries": get_retry_telemetry().get("claude", {}),
-    }
+    return _build_extraction_metrics(
+        start=start,
+        downloaded=downloaded,
+        text_listings=text_listings,
+        counts=counts,
+        total_events=len(events),
+    )
 
 
 def main():

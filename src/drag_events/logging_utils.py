@@ -5,6 +5,7 @@ import os
 import sys
 from pathlib import Path
 
+from .paths import APP_LOG_FILE
 
 class _StdoutProxy:
     def write(self, message: str) -> int:
@@ -18,8 +19,7 @@ _HANDLER = logging.StreamHandler(_StdoutProxy())
 _HANDLER.setFormatter(logging.Formatter("%(message)s"))
 _HANDLER._drag_events_handler = True
 
-BASE_DIR = Path(__file__).resolve().parents[2]
-DEFAULT_LOG_FILE = BASE_DIR / "runtime" / "tracing" / "drag_events.log"
+DEFAULT_LOG_FILE = APP_LOG_FILE
 
 
 def get_log_level() -> int:

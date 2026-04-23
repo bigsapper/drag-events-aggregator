@@ -11,9 +11,8 @@ from datetime import datetime
 from pathlib import Path
 from urllib.parse import urlparse
 
-BASE_DIR = Path(__file__).resolve().parents[2]
-DEFAULT_EVENTS_FILE = BASE_DIR / "dist" / "events.json"
-DEFAULT_SCHEMA_FILE = BASE_DIR / "dist" / "events.schema.json"
+from .paths import EVENTS_FILE as DEFAULT_EVENTS_FILE
+from .paths import EVENTS_SCHEMA_FILE as DEFAULT_SCHEMA_FILE
 
 
 @dataclass(frozen=True)

@@ -6,8 +6,9 @@ import os
 
 import anthropic
 
-BASE_DIR = Path(__file__).resolve().parents[2]
-PROJECT_SECRET_FILE = BASE_DIR / ".env"
+from .paths import PROJECT_ENV_FILE
+
+PROJECT_SECRET_FILE = PROJECT_ENV_FILE
 
 
 class SecretConfigurationError(RuntimeError):

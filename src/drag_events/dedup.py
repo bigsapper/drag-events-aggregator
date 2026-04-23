@@ -11,15 +11,14 @@ import re
 import imagehash
 from PIL import Image
 from datetime import date
-from pathlib import Path
+
+from .paths import TRACK_ALIASES_FILE, TRACK_CATALOG_FILE
 
 # Hamming distance threshold — hashes within this distance are the same image
 PHASH_THRESHOLD = 10
 
-BASE_DIR = Path(__file__).resolve().parents[2]
-CONFIG_DIR = BASE_DIR / "src" / "drag_events" / "config"
-_ALIASES_FILE = CONFIG_DIR / "track_aliases.json"
-_CATALOG_FILE = CONFIG_DIR / "track_catalog.json"
+_ALIASES_FILE = TRACK_ALIASES_FILE
+_CATALOG_FILE = TRACK_CATALOG_FILE
 
 
 def _load_alias_map() -> dict[str, str]:

@@ -25,13 +25,17 @@ from .dedup import (
 from .event_filters import is_in_scope_event, is_past_event
 from .extract import extract_event
 from .logging_utils import get_logger
+from .paths import EVENTS_FILE
 from .validate_events import validate_events_payload
 
 LOGGER = get_logger(__name__)
-
-BASE_DIR = Path(__file__).resolve().parents[2]
-EVENTS_FILE = BASE_DIR / "dist" / "events.json"
 IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".webp", ".gif"}
+OUTCOME_LABELS = {
+    "new": "NEW",
+    "merged": "UPDATED",
+    "duplicate": "SKIPPED",
+    "skipped": "SKIPPED",
+}
 
 
 def _normalize_contact_website(event: dict) -> dict:
@@ -63,6 +67,68 @@ def save_events(events: list[dict]) -> None:
     EVENTS_FILE.write_text(json.dumps(events, indent=2))
 
 
+def _replace_event(events: list[dict], event_id: str, updated_event: dict) -> None:
+    idx = next(i for i, event in enumerate(events) if event["id"] == event_id)
+    events[idx] = updated_event
+
+
+def _build_track_with_id(extracted: dict) -> dict:
+    track = extracted.get("track") or {}
+    return {
+        "id": track_slug(track.get("name"), track.get("state")),
+        "name": track.get("name"),
+        "city": track.get("city"),
+        "state": track.get("state"),
+    }
+
+
+def _build_flyer_entry(path: Path, phash: str, processed_at: str) -> dict:
+    return {
+        "file": path.name,
+        "phash": phash,
+        "processed_at": processed_at,
+    }
+
+
+def _extract_and_filter_event(image_path: str) -> tuple[dict | None, tuple[str, dict] | None]:
+    LOGGER.info("  Calling Claude vision API...")
+    extracted = extract_event(image_path)
+    extracted = _normalize_contact_website(extracted)
+
+    if not is_in_scope_event(extracted):
+        LOGGER.info("  Out-of-scope event detected, skipping.")
+        return None, ("skipped", extracted)
+
+    if is_past_event(extracted):
+        LOGGER.info("  Past event detected, skipping.")
+        return None, ("skipped", extracted)
+
+    return extracted, None
+
+
+def _merge_existing_event(events: list[dict], same_event: dict, extracted: dict, flyer_entry: dict, processed_at: str) -> dict:
+    LOGGER.info(f"  Same event detected ('{same_event.get('title', same_event['id'])}'), merging...")
+    merged = merge_events(same_event, extracted, flyer_entry)
+    merged["updated_at"] = processed_at
+    _replace_event(events, same_event["id"], merged)
+    return merged
+
+
+def _build_new_event(extracted: dict, flyer_entry: dict, processed_at: str) -> dict:
+    extracted["track"] = backfill_track_from_catalog(_build_track_with_id(extracted))
+    if extracted.get("contact") is not None:
+        extracted["contact"] = backfill_contact_from_catalog(
+            extracted["track"]["id"], extracted["contact"]
+        )
+    return {
+        "id": str(uuid.uuid4()),
+        **extracted,
+        "flyers": [flyer_entry],
+        "created_at": processed_at,
+        "updated_at": processed_at,
+    }
+
+
 def process_flyer(image_path: str, events: list[dict]) -> tuple[str, dict]:
     """Process one flyer. Returns (outcome, event) where outcome is one of:
       'new'       — new event added
@@ -80,56 +146,20 @@ def process_flyer(image_path: str, events: list[dict]) -> tuple[str, dict]:
         LOGGER.info(f"  Duplicate image detected (matches event: {existing.get('title', existing['id'])}), skipping API call.")
         return "duplicate", existing
 
-    # Layer 2: call Claude to extract event data
-    LOGGER.info("  Calling Claude vision API...")
-    extracted = extract_event(image_path)
-    extracted = _normalize_contact_website(extracted)
+    extracted, filtered = _extract_and_filter_event(image_path)
+    if filtered is not None:
+        return filtered
 
-    if not is_in_scope_event(extracted):
-        LOGGER.info("  Out-of-scope event detected, skipping.")
-        return "skipped", extracted
-
-    if is_past_event(extracted):
-        LOGGER.info("  Past event detected, skipping.")
-        return "skipped", extracted
-
-    flyer_entry = {
-        "file": path.name,
-        "phash": phash,
-        "processed_at": datetime.now(timezone.utc).isoformat()
-    }
+    processed_at = datetime.now(timezone.utc).isoformat()
+    flyer_entry = _build_flyer_entry(path, phash, processed_at)
 
     # Layer 3: same event, different flyer (reminder/update flyer)
     same_event = find_same_event(extracted, events)
     if same_event:
-        LOGGER.info(f"  Same event detected ('{same_event.get('title', same_event['id'])}'), merging...")
-        merged = merge_events(same_event, extracted, flyer_entry)
-        merged["updated_at"] = datetime.now(timezone.utc).isoformat()
-        # Replace in list
-        idx = next(i for i, e in enumerate(events) if e["id"] == same_event["id"])
-        events[idx] = merged
+        merged = _merge_existing_event(events, same_event, extracted, flyer_entry, processed_at)
         return "merged", merged
 
-    # New event
-    track = extracted.get("track") or {}
-    track_with_id = {
-        "id":    track_slug(track.get("name"), track.get("state")),
-        "name":  track.get("name"),
-        "city":  track.get("city"),
-        "state": track.get("state"),
-    }
-    extracted["track"] = backfill_track_from_catalog(track_with_id)
-    if extracted.get("contact") is not None:
-        extracted["contact"] = backfill_contact_from_catalog(
-            extracted["track"]["id"], extracted["contact"]
-        )
-    new_event = {
-        "id": str(uuid.uuid4()),
-        **extracted,
-        "flyers": [flyer_entry],
-        "created_at": datetime.now(timezone.utc).isoformat(),
-        "updated_at": datetime.now(timezone.utc).isoformat()
-    }
+    new_event = _build_new_event(extracted, flyer_entry, processed_at)
     events.append(new_event)
     return "new", new_event
 
@@ -169,7 +199,7 @@ def main():
         try:
             outcome, event = process_flyer(str(image_path), events)
             counts[outcome] += 1
-            label = {"new": "NEW", "merged": "UPDATED", "duplicate": "SKIPPED", "skipped": "SKIPPED"}[outcome]
+            label = OUTCOME_LABELS[outcome]
             title = event.get("title", event.get("id", "?"))
             date_start = event.get("dates", {}).get("start", "?")
             track = event.get("track", {}).get("name", "?")
