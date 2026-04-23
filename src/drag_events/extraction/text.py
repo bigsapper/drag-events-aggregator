@@ -4,6 +4,7 @@ import time
 
 from ..core.secrets import get_anthropic_client
 from .common import (
+    TEXT_MODEL,
     build_date_inference_instruction,
     build_store_event_tool,
     request_structured_event,
@@ -22,7 +23,7 @@ def extract_from_text(listing: dict) -> dict:
 
     try:
         return request_structured_event(
-            model="claude-haiku-4-5-20251001",  # text-only; haiku is sufficient and cheaper
+            model=TEXT_MODEL,
             max_tokens=512,
             tool=TOOL,
             get_client=get_anthropic_client,

@@ -3,6 +3,14 @@
 This project currently assumes a manual, on-demand operating model.
 Items related to CI, scheduled execution, and automated notifications are parked unless that changes later.
 
+## Architecture — Code Quality
+
+- [ ] Add concurrency to the crawl source loop — all operations are I/O-bound (HTTP, Claude API), so `asyncio` or `concurrent.futures.ThreadPoolExecutor` across sources could significantly reduce wall time for large source lists
+- [ ] Make Playwright an optional dependency — the full Chromium install is required even when the TMCCC strategy is never used; lazy-import Playwright and raise a clear error only when that strategy is actually invoked
+- [ ] Replace the custom JSON Schema validator in `event_validation/` with the `jsonschema` PyPI package — the current implementation is a Draft 7 subset that may miss edge cases and carries ongoing maintenance cost
+- [ ] Replace the Google Drive embedded-folder-view HTML parser in `flyer_sync/` with the Drive API v3 (service account or OAuth) — the current approach scrapes `.flip-entry` HTML that Google can change without notice
+- [ ] Thread source identity through retry telemetry in `core/retry_utils.py` — retry counters are currently global per-run, making it impossible to identify which source is consistently causing retries in `runtime/tracing/crawl_metrics.jsonl`
+
 ## Architecture — Crawl Strategy Scalability
 
 Aggregator crawl strategies have already been extracted into dedicated modules under

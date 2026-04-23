@@ -62,14 +62,8 @@ def replace_event(events: list[dict], event_id: str, updated_event: dict) -> Non
     events[idx] = updated_event
 
 
-def build_new_text_event(extracted: dict, listing: dict, processed_at: str, *, track_slug, uuid4) -> dict:
-    track = extracted.get("track") or {}
-    extracted["track"] = {
-        "id": track_slug(track.get("name"), track.get("state")),
-        "name": track.get("name"),
-        "city": track.get("city"),
-        "state": track.get("state"),
-    }
+def build_new_text_event(extracted: dict, listing: dict, processed_at: str, *, build_track_with_id, uuid4) -> dict:
+    extracted["track"] = build_track_with_id(extracted.get("track") or {})
     return {
         "id": str(uuid4()),
         **extracted,
@@ -103,7 +97,7 @@ def upsert_text_listing_event(
     timezone,
     find_same_event,
     merge_events,
-    track_slug,
+    build_track_with_id,
     uuid4,
 ) -> tuple[str, dict]:
     processed_at = now(timezone.utc).isoformat()
@@ -118,7 +112,7 @@ def upsert_text_listing_event(
             merge_events=merge_events,
         )
 
-    new_event = build_new_text_event(extracted, listing, processed_at, track_slug=track_slug, uuid4=uuid4)
+    new_event = build_new_text_event(extracted, listing, processed_at, build_track_with_id=build_track_with_id, uuid4=uuid4)
     events.append(new_event)
     return "new", new_event
 
@@ -192,7 +186,7 @@ def process_text_listings(
     is_past_event,
     find_same_event,
     merge_events,
-    track_slug,
+    build_track_with_id,
     uuid4,
     logger,
     log_error,
@@ -225,7 +219,7 @@ def process_text_listings(
                 timezone=timezone,
                 find_same_event=find_same_event,
                 merge_events=merge_events,
-                track_slug=track_slug,
+                build_track_with_id=build_track_with_id,
                 uuid4=uuid4,
             )
             counts[outcome] += 1
@@ -261,7 +255,7 @@ def run_extraction_impl(
     is_past_event,
     find_same_event,
     merge_events,
-    track_slug,
+    build_track_with_id,
     uuid4,
     get_retry_telemetry,
     logger,
@@ -303,7 +297,7 @@ def run_extraction_impl(
         is_past_event=is_past_event,
         find_same_event=find_same_event,
         merge_events=merge_events,
-        track_slug=track_slug,
+        build_track_with_id=build_track_with_id,
         uuid4=uuid4,
         logger=logger,
         log_error=log_error,

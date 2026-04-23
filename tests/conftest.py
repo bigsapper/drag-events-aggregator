@@ -78,9 +78,9 @@ def mock_text_client(sample_extracted):
 
 @pytest.fixture
 def tmp_events_file(tmp_path, monkeypatch):
-    from drag_events.flyer_processing import cli as flyer_processing
+    from drag_events.flyer_processing import pipeline as fp_pipeline
     path = tmp_path / "events.json"
-    monkeypatch.setattr(flyer_processing, "EVENTS_FILE", path)
+    monkeypatch.setattr(fp_pipeline, "EVENTS_FILE", path)
     return path
 
 

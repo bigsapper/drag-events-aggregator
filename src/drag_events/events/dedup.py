@@ -155,6 +155,18 @@ def track_slug(name: str | None, state: str | None) -> str | None:
     return slug or None
 
 
+def build_track_with_id(track: dict) -> dict:
+    """Build a canonical track dict from a raw track sub-dict, generating the id via track_slug."""
+    name = track.get("name")
+    state = track.get("state")
+    return {
+        "id": track_slug(name, state),
+        "name": name,
+        "city": track.get("city"),
+        "state": state,
+    }
+
+
 def _normalize_track_name(name: str) -> str:
     """Lowercase, strip common suffixes for fuzzy matching."""
     stopwords = ["raceway", "race", "way", "park", "dragstrip", "drag", "strip", "motorsports", "the"]

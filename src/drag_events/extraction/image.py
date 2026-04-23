@@ -6,6 +6,7 @@ from pathlib import Path
 
 from ..core.secrets import get_anthropic_client
 from .common import (
+    VISION_MODEL,
     build_date_inference_instruction,
     build_store_event_tool,
     request_structured_event,
@@ -45,7 +46,7 @@ def extract_event(image_path: str) -> dict:
     media_type = _media_type_for_path(path)
 
     return request_structured_event(
-        model="claude-sonnet-4-6",
+        model=VISION_MODEL,
         max_tokens=1024,
         system=SYSTEM_PROMPT,
         tool=TOOL,

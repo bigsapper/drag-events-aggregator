@@ -25,7 +25,7 @@ import feedparser
 import requests
 from bs4 import BeautifulSoup
 
-from ..flyer_processing import cli as flyer_processing
+from ..flyer_processing import pipeline as flyer_processing
 from ..core.logging_utils import get_logger
 from ..core.paths import (
     BASE_DIR,
@@ -42,7 +42,7 @@ from ..core.paths import (
     TRACING_DIR,
 )
 from ..core.retry_utils import execute_with_retries, get_retry_telemetry, reset_retry_telemetry
-from ..events.dedup import find_same_event, merge_events, track_slug
+from ..events.dedup import build_track_with_id, find_same_event, merge_events
 from ..events.filters import is_in_scope_event, is_in_scope_listing, is_past_event
 from ..events.tmccc import enrich_tmccc_extracted_event
 from ..extraction.text import extract_from_text
@@ -161,7 +161,7 @@ def _extraction_dependencies() -> dict:
         "is_past_event": is_past_event,
         "find_same_event": find_same_event,
         "merge_events": merge_events,
-        "track_slug": track_slug,
+        "build_track_with_id": build_track_with_id,
         "uuid4": uuid.uuid4,
         "get_retry_telemetry": get_retry_telemetry,
         "logger": LOGGER,

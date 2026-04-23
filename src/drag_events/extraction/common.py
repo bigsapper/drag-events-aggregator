@@ -12,6 +12,9 @@ TOOL_NAME = "store_event"
 CLAUDE_MAX_ATTEMPTS = 3
 CLAUDE_RETRY_BASE_DELAY_SECONDS = 1.0
 
+VISION_MODEL = "claude-sonnet-4-6"
+TEXT_MODEL = "claude-haiku-4-5-20251001"
+
 
 def build_store_event_tool(description: str) -> dict:
     return {
