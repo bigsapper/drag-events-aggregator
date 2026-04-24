@@ -2,7 +2,8 @@
 .env
 .venv/
 
-# Runtime tracing
+# Runtime state and tracing
+runtime/state/
 runtime/tracing/
 
 # Downloaded data

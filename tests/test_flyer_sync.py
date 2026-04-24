@@ -51,8 +51,24 @@ def test_validate_sync_config_rejects_non_object():
 
 
 def test_validate_sync_config_rejects_missing_url():
-    with pytest.raises(flyer_sync.FlyerSyncConfigError, match="google_drive_folder_url"):
+    with pytest.raises(flyer_sync.FlyerSyncConfigError, match="DRAG_EVENTS_DRIVE_FOLDER_URL"):
         flyer_sync.validate_sync_config({})
+
+
+def test_load_sync_config_env_var_overrides_file(tmp_path, monkeypatch):
+    path = tmp_path / "flyer_sources.json"
+    path.write_text(json.dumps({"google_drive_folder_url": ""}))
+    monkeypatch.setenv("DRAG_EVENTS_DRIVE_FOLDER_URL", "https://drive.google.com/drive/folders/abc123")
+    config = flyer_sync.load_sync_config(path)
+    assert config["google_drive_folder_url"] == "https://drive.google.com/drive/folders/abc123"
+
+
+def test_load_sync_config_env_var_takes_precedence_over_file(tmp_path, monkeypatch):
+    path = tmp_path / "flyer_sources.json"
+    path.write_text(json.dumps({"google_drive_folder_url": "https://drive.google.com/drive/folders/from-file"}))
+    monkeypatch.setenv("DRAG_EVENTS_DRIVE_FOLDER_URL", "https://drive.google.com/drive/folders/from-env")
+    config = flyer_sync.load_sync_config(path)
+    assert config["google_drive_folder_url"] == "https://drive.google.com/drive/folders/from-env"
 
 
 def test_load_sync_config_rejects_invalid_json(tmp_path):

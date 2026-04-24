@@ -5,6 +5,7 @@ Usage:
 """
 
 import json
+import os
 import re
 import sys
 from pathlib import Path
@@ -57,7 +58,11 @@ def validate_sync_config(config: dict) -> dict:
 
     folder_url = config.get("google_drive_folder_url")
     if not isinstance(folder_url, str) or not folder_url.strip():
-        raise FlyerSyncConfigError("flyer_sources.google_drive_folder_url must be a non-empty string")
+        raise FlyerSyncConfigError(
+            "Google Drive folder URL is not configured. "
+            "Set the DRAG_EVENTS_DRIVE_FOLDER_URL environment variable "
+            "(recommended) or set google_drive_folder_url in src/drag_events/config/flyer_sources.json."
+        )
 
     extract_drive_folder_id(folder_url)
     return config
@@ -70,6 +75,9 @@ def load_sync_config(path: Path = CONFIG_FILE) -> dict:
         raise FlyerSyncConfigError(f"Missing flyer sync config: {path}") from exc
     except json.JSONDecodeError as exc:
         raise FlyerSyncConfigError(f"Invalid JSON in {path}: {exc}") from exc
+    env_url = os.environ.get("DRAG_EVENTS_DRIVE_FOLDER_URL")
+    if env_url:
+        data["google_drive_folder_url"] = env_url
     return validate_sync_config(data)
 
 
