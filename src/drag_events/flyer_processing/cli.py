@@ -13,53 +13,14 @@ Usage:
 
 import sys
 
-from .pipeline import (
-    LOGGER,
-    OUTCOME_LABELS,
-    collect_images,
-    load_events,
-    process_flyer,
-    save_events,
-)
+from .pipeline import LOGGER, run_pipeline
 
 
 def main() -> None:
     if len(sys.argv) < 2:
         LOGGER.info(__doc__.rstrip())
         sys.exit(1)
-
-    images = collect_images(sys.argv[1:])
-    if not images:
+    counts = run_pipeline(sys.argv[1:])
+    if not any(counts.values()):
         LOGGER.info("No images found.")
         sys.exit(1)
-
-    events = load_events()
-    LOGGER.info(f"Loaded {len(events)} existing events.\n")
-
-    counts = {"new": 0, "merged": 0, "duplicate": 0, "skipped": 0, "error": 0}
-
-    for image_path in images:
-        LOGGER.info(f"Processing: {image_path.name}")
-        try:
-            outcome, event = process_flyer(str(image_path), events)
-            counts[outcome] += 1
-            label = OUTCOME_LABELS[outcome]
-            title = event.get("title", event.get("id", "?"))
-            date_start = event.get("dates", {}).get("start", "?")
-            track = event.get("track", {}).get("name", "?")
-            LOGGER.info(f"  [{label}] {title} - {track} - {date_start}")
-            if "test-flyers" not in image_path.parts:
-                image_path.unlink()
-        except Exception as exc:
-            LOGGER.error(f"  [ERROR] {exc}")
-            counts["error"] += 1
-        LOGGER.info("")
-
-    save_events(events)
-
-    LOGGER.info("-" * 50)
-    LOGGER.info(f"Done. {len(events)} total events in database.")
-    LOGGER.info(
-        f"  {counts['new']} new  |  {counts['merged']} updated  |  {counts['duplicate']} duplicate  |  "
-        f"{counts['skipped']} skipped  |  {counts['error']} errors"
-    )

@@ -4,7 +4,7 @@ import copy
 
 import pytest
 
-from drag_events.flyer_processing import cli as flyer_processing
+from drag_events.flyer_processing import pipeline as flyer_processing
 from drag_events.event_validation.cli import SchemaValidationError, validate_events_payload
 
 

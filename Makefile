@@ -7,7 +7,7 @@ help:
 	@printf "Available targets:\n"
 	@printf "  make                         Show this help\n"
 	@printf "  make test                    Run the pytest suite\n"
-	@printf "  make run                     Single additive full workflow: sync-flyers + crawl + flyer-processing\n"
+	@printf "  make run                     Single additive full workflow: sync-flyers + crawl + flyer-processing + validate\n"
 	@printf "  make validate                Validate dist/events.json against dist/events.schema.json\n"
 	@printf "  make metrics                 Show historical crawl timing summary\n"
 	@printf "  make reset                   Archive events, clear flyers, reset runtime state, empty dist/events.json\n"
@@ -16,14 +16,7 @@ test:
 	$(PYTHON) -m pytest
 
 run:
-	$(PYTHONPATH_RUN) $(PYTHON) -m drag_events.flyer_sync
-	$(PYTHONPATH_RUN) $(PYTHON) -m drag_events.crawl
-	@if find flyers -maxdepth 1 -type f | grep -q .; then \
-		$(PYTHONPATH_RUN) $(PYTHON) -m drag_events.flyer_processing flyers; \
-	else \
-		echo "No staged flyer images to process."; \
-	fi
-	$(PYTHONPATH_RUN) $(PYTHON) -m drag_events.event_validation
+	$(PYTHONPATH_RUN) $(PYTHON) -m drag_events.run
 
 validate:
 	$(PYTHONPATH_RUN) $(PYTHON) -m drag_events.event_validation

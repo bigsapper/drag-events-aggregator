@@ -140,6 +140,44 @@ def process_flyer(image_path: str, events: list[dict]) -> tuple[str, dict]:
     return "new", new_event
 
 
+def run_pipeline(paths: list[str]) -> dict[str, int]:
+    """Collect and process flyer images at the given paths. Returns outcome counts."""
+    images = collect_images(paths)
+    counts = {"new": 0, "merged": 0, "duplicate": 0, "skipped": 0, "error": 0}
+    if not images:
+        return counts
+
+    events = load_events()
+    LOGGER.info(f"Loaded {len(events)} existing events.\n")
+
+    for image_path in images:
+        LOGGER.info(f"Processing: {image_path.name}")
+        try:
+            outcome, event = process_flyer(str(image_path), events)
+            counts[outcome] += 1
+            label = OUTCOME_LABELS[outcome]
+            title = event.get("title", event.get("id", "?"))
+            date_start = event.get("dates", {}).get("start", "?")
+            track = event.get("track", {}).get("name", "?")
+            LOGGER.info(f"  [{label}] {title} - {track} - {date_start}")
+            if "test-flyers" not in image_path.parts:
+                image_path.unlink()
+        except Exception as exc:
+            LOGGER.error(f"  [ERROR] {exc}")
+            counts["error"] += 1
+        LOGGER.info("")
+
+    save_events(events)
+
+    LOGGER.info("-" * 50)
+    LOGGER.info(f"Done. {len(events)} total events in database.")
+    LOGGER.info(
+        f"  {counts['new']} new  |  {counts['merged']} updated  |  {counts['duplicate']} duplicate  |  "
+        f"{counts['skipped']} skipped  |  {counts['error']} errors"
+    )
+    return counts
+
+
 def collect_images(paths: list[str]) -> list[Path]:
     images = []
     for candidate in paths:
