@@ -1,9 +1,156 @@
 [
   {
-    "id": "11111111-1111-4111-8111-111111111111",
-    "title": "Spring Bracket Classic",
-    "event_type": "bracket",
-    "series": null,
+    "id": "57bc97b9-f865-436d-9d4f-190b56c92a25",
+    "title": "TMCCC Race #2 Thunder Valley Raceway Park **CANCELLED**",
+    "event_type": "points_race",
+    "track": {
+      "id": "thunder-valley-ok",
+      "name": "Thunder Valley Raceway Park",
+      "city": "Lexington",
+      "state": "OK"
+    },
+    "dates": {
+      "start": "2026-04-12"
+    },
+    "times": {
+      "gates_open": "08:00",
+      "registration_opens": null,
+      "race_start": "08:00"
+    },
+    "classes": [
+      "CA$H Bracket",
+      "Competition Muscle",
+      "EV Muscle",
+      "Electronics",
+      "King Muscle",
+      "Modified Muscle",
+      "Pro Muscle",
+      "Stock Muscle",
+      "Street Muscle",
+      "Super Pro Muscle"
+    ],
+    "series": "TMCCC",
+    "contact": {
+      "phone": "405-413-1522",
+      "email": null,
+      "website": "https://www.thundervalleyracewaypark.com"
+    },
+    "notes": "**EVENT CANCELLED** - 1/4 Mile track - 4 Points 1st Round\n1/4 Mile\n4 Points 1st Round\nhttps://www.thundervalleyracewaypark.com",
+    "confidence": 0.95,
+    "flyers": [
+      {
+        "file": "https://tmccc.org/events",
+        "phash": null,
+        "processed_at": "2026-04-02T05:07:35.068595+00:00"
+      },
+      {
+        "file": "https://tmccc.org/events",
+        "phash": null,
+        "processed_at": "2026-04-10T21:24:20.440842+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T05:07:35.068604+00:00",
+    "updated_at": "2026-04-10T21:24:20.440876+00:00",
+    "fees": {
+      "entry": null,
+      "spectator": null
+    }
+  },
+  {
+    "id": "1cd43162-290b-4a9a-bc1d-3f907b689a8b",
+    "title": "TMCCC Race #3 Little River Dragway",
+    "event_type": "points_race",
+    "track": {
+      "id": "little-river-dragway-tx",
+      "name": "Little River Dragway",
+      "city": "Holland",
+      "state": "TX"
+    },
+    "dates": {
+      "start": "2026-04-25"
+    },
+    "times": {
+      "race_start": "15:00"
+    },
+    "series": "TMCCC",
+    "classes": [
+      "Stock Muscle",
+      "Street Muscle",
+      "King Muscle",
+      "EV Muscle",
+      "Competition Muscle",
+      "Modified Muscle",
+      "Electronics",
+      "Pro Muscle",
+      "Super Pro Muscle",
+      "CA$H Bracket"
+    ],
+    "contact": {
+      "phone": "940-613-5359",
+      "website": "https://www.wichitaracewaypark.com"
+    },
+    "notes": "4 points 1st round. Event address: 13550 State Hwy 95, Holland, TX 76534\n4 points 1st round\nhttps://www.wichitaracewaypark.com",
+    "confidence": 0.95,
+    "flyers": [
+      {
+        "file": "https://tmccc.org/events",
+        "phash": null,
+        "processed_at": "2026-04-02T05:07:37.634586+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T05:07:37.634601+00:00",
+    "updated_at": "2026-04-02T05:07:37.634605+00:00"
+  },
+  {
+    "id": "911fa952-2360-4ee1-8cf8-bb91612d5dee",
+    "title": "TMCCC Race #4 Wichita Falls Raceway Park",
+    "event_type": "points_race",
+    "track": {
+      "id": "wichita-falls-tx",
+      "name": "Wichita Falls Raceway Park",
+      "city": "Iowa Park",
+      "state": "TX"
+    },
+    "dates": {
+      "start": "2026-05-10"
+    },
+    "times": {
+      "gates_open": "08:00",
+      "race_start": "08:00"
+    },
+    "classes": [
+      "Stock Muscle",
+      "Street Muscle",
+      "King Muscle",
+      "EV Muscle",
+      "Competition Muscle",
+      "Modified Muscle",
+      "Electronics",
+      "Pro Muscle",
+      "Super Pro Muscle",
+      "CA$H Bracket"
+    ],
+    "series": "TMCCC",
+    "contact": {
+      "phone": "940-613-5359",
+      "website": "https://www.wichitaracewaypark.com"
+    },
+    "notes": "4 points awarded for 1st round finish. Address: 633 FM 369, Iowa Park TX 76367\n4 points 1st round\nhttps://www.wichitaracewaypark.com",
+    "confidence": 0.95,
+    "flyers": [
+      {
+        "file": "https://tmccc.org/events",
+        "phash": null,
+        "processed_at": "2026-04-02T05:07:39.882453+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T05:07:39.882467+00:00",
+    "updated_at": "2026-04-02T05:07:39.882471+00:00"
+  },
+  {
+    "id": "bc7f9d53-34c7-4afd-a306-45cbcfc83c32",
+    "title": "TMCCC Race #5 Texas Motorplex",
+    "event_type": "points_race",
     "track": {
       "id": "texas-motorplex-tx",
       "name": "Texas Motorplex",
@@ -11,48 +158,851 @@
       "state": "TX"
     },
     "dates": {
-      "start": "2026-05-10",
-      "end": null
+      "start": "2026-05-31"
     },
     "times": {
       "gates_open": "08:00",
-      "registration_opens": "09:00",
-      "race_start": "11:00"
+      "race_start": "08:00"
     },
     "classes": [
-      "Pro",
-      "Super Pro"
+      "Stock Muscle",
+      "Street Muscle",
+      "King Muscle",
+      "EV Muscle",
+      "Competition Muscle",
+      "Modified Muscle",
+      "Electronics",
+      "Pro Muscle",
+      "Super Pro Muscle",
+      "CA$H Bracket"
     ],
-    "fees": {
-      "entry": "$60/class",
-      "spectator": "$15"
-    },
+    "series": "TMCCC",
     "contact": {
       "phone": "972-878-2641",
+      "website": "http://www.texasmotorplex.com"
+    },
+    "notes": "1/4 Mile track\n1/4 Mile\nhttp://www.texasmotorplex.com",
+    "confidence": 0.95,
+    "flyers": [
+      {
+        "file": "https://tmccc.org/events",
+        "phash": null,
+        "processed_at": "2026-04-02T05:07:42.032611+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T05:07:42.032625+00:00",
+    "updated_at": "2026-04-02T05:07:42.032630+00:00"
+  },
+  {
+    "id": "8a629b90-ccd9-4401-81dd-94a7d89634fd",
+    "title": "TMCCC Race #6 Thunder Valley Raceway Park",
+    "event_type": "points_race",
+    "track": {
+      "id": "thunder-valley-ok",
+      "name": "Thunder Valley Raceway Park",
+      "city": "Lexington",
+      "state": "OK"
+    },
+    "dates": {
+      "start": "2026-06-07"
+    },
+    "times": {
+      "gates_open": "09:00",
+      "race_start": null,
+      "registration_opens": null
+    },
+    "series": "TMCCC",
+    "classes": [
+      "Stock Muscle",
+      "Street Muscle",
+      "King Muscle",
+      "EV Muscle",
+      "Competition Muscle",
+      "Modified Muscle",
+      "Electronics",
+      "Pro Muscle",
+      "Super Pro Muscle",
+      "CA$H Bracket"
+    ],
+    "contact": {
+      "phone": "405-413-1522",
+      "website": "https://www.thundervalleyracewaypark.com",
+      "email": null
+    },
+    "notes": "1/4 Mile track. 4 points awarded for 1st round.\n1/4 Mile\n4 points 1st round\nhttps://www.thundervalleyracewaypark.com",
+    "confidence": 0.92,
+    "flyers": [
+      {
+        "file": "https://tmccc.org/events",
+        "phash": null,
+        "processed_at": "2026-04-02T05:07:44.222796+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T05:07:44.222810+00:00",
+    "updated_at": "2026-04-02T05:07:44.222815+00:00"
+  },
+  {
+    "id": "6b0146c3-f703-4b82-977e-a248735aa375",
+    "title": "TMCCC Race #10 Concho Valley Dragway",
+    "event_type": "points_race",
+    "track": {
+      "id": "concho-valley-dragway-tx",
+      "name": "Concho Valley Dragway",
+      "city": "San Angelo",
+      "state": "TX"
+    },
+    "dates": {
+      "start": "2026-09-19"
+    },
+    "times": {
+      "race_start": "15:00"
+    },
+    "series": "TMCCC",
+    "classes": [
+      "Stock Muscle",
+      "Street Muscle",
+      "King Muscle",
+      "EV Muscle",
+      "Competition Muscle",
+      "Modified Muscle",
+      "Electronics",
+      "Pro Muscle",
+      "Super Pro Muscle",
+      "CA$H Bracket"
+    ],
+    "contact": {
+      "phone": "325-610-6346",
+      "website": "https://tmccc.org/events"
+    },
+    "notes": "4 Points 1st round",
+    "confidence": 0.95,
+    "flyers": [
+      {
+        "file": "https://tmccc.org/events",
+        "phash": null,
+        "processed_at": "2026-04-02T05:07:55.854217+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T05:07:55.854224+00:00",
+    "updated_at": "2026-04-02T05:07:55.854227+00:00"
+  },
+  {
+    "id": "185be79b-6b3a-4620-8c48-a59e8c7c91f8",
+    "title": "TMCCC Race #11 Little River Dragway",
+    "event_type": "points_race",
+    "track": {
+      "id": "little-river-dragway-tx",
+      "name": "Little River Dragway",
+      "city": "Holland",
+      "state": "TX"
+    },
+    "dates": {
+      "start": "2026-10-11"
+    },
+    "times": {
+      "gates_open": "08:00",
+      "race_start": null,
+      "registration_opens": null
+    },
+    "series": "TMCCC",
+    "classes": [
+      "Stock Muscle",
+      "Street Muscle",
+      "King Muscle",
+      "EV Muscle",
+      "Competition Muscle",
+      "Modified Muscle",
+      "Electronics",
+      "Pro Muscle",
+      "Super Pro Muscle",
+      "CA$H Bracket"
+    ],
+    "contact": {
+      "phone": "254-982-0119",
+      "website": "https://www.littleriverdragway.com",
+      "email": null
+    },
+    "notes": "4 Points 1st Round. Date change indicated on flyer.\n4 Points 1st Round\nhttps://www.littleriverdragway.com",
+    "confidence": 0.95,
+    "flyers": [
+      {
+        "file": "https://tmccc.org/events",
+        "phash": null,
+        "processed_at": "2026-04-02T05:07:58.006448+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T05:07:58.006461+00:00",
+    "updated_at": "2026-04-02T05:07:58.006465+00:00"
+  },
+  {
+    "id": "f1891348-c1fa-45a8-9610-4effff77df71",
+    "title": "TMCCC Race #12  Thunder Valley Raceway Park",
+    "event_type": "points_race",
+    "track": {
+      "id": "thunder-valley-ok",
+      "name": "Thunder Valley Raceway Park",
+      "city": "Lexington",
+      "state": "OK"
+    },
+    "dates": {
+      "start": "2026-10-24"
+    },
+    "times": {
+      "gates_open": "15:00",
+      "race_start": "15:00"
+    },
+    "series": "TMCCC",
+    "classes": [
+      "Stock Muscle",
+      "Street Muscle",
+      "King Muscle",
+      "EV Muscle",
+      "Competition Muscle",
+      "Modified Muscle",
+      "Electronics",
+      "Pro Muscle",
+      "Super Pro Muscle",
+      "CA$H Bracket"
+    ],
+    "contact": {
+      "phone": "405-413-1522",
+      "website": "https://www.thundervalleyracewaypark.com"
+    },
+    "notes": "1/4 Mile track. 4 Points 1st Round event.\n1/4 Mile\n4 Points 1st Round\nhttps://www.thundervalleyracewaypark.com",
+    "confidence": 0.92,
+    "flyers": [
+      {
+        "file": "https://tmccc.org/events",
+        "phash": null,
+        "processed_at": "2026-04-02T05:08:00.258527+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T05:08:00.258537+00:00",
+    "updated_at": "2026-04-02T05:08:00.258539+00:00"
+  },
+  {
+    "id": "37646d26-a656-4c20-a4c8-4fd1982098ad",
+    "title": "NHRA Div4 Quarter-Max Battle for the Buckle, Race #8: XRP",
+    "event_type": "points_race",
+    "series": "Quarter-Max Battle for the Buckle: Grassroots Bracket Series",
+    "track": {
+      "id": "xtreme-tx",
+      "name": "Xtreme Raceway Park",
+      "city": "Ferris",
+      "state": "TX"
+    },
+    "dates": {
+      "start": "2026-10-24"
+    },
+    "classes": [
+      "Super Pro",
+      "Pro ET",
+      "Sportsman",
+      "Junior Categories"
+    ],
+    "notes": "Traveling points series where NHRA racers can earn points by claiming their best four events in Super Pro, Pro ET, Sportsman, and Junior Categories.\n\nSuper Pro & Pro ET: $5,000 in cash[...]",
+    "confidence": 0.9,
+    "unclear_fields": [
+      "times",
+      "fees"
+    ],
+    "flyers": [
+      {
+        "file": "https://www.facebook.com/events/1438701364143576/",
+        "phash": null,
+        "processed_at": "2026-04-22T15:49:44+00:00"
+      }
+    ],
+    "created_at": "2026-04-22T15:49:44+00:00",
+    "updated_at": "2026-04-22T15:49:44+00:00"
+  },
+  {
+    "id": "ba7d6741-2e39-448a-8b7a-104ab8c5e5e0",
+    "title": "TMCCC Race #13 Xtreme Raceway Park",
+    "event_type": "points_race",
+    "track": {
+      "id": "xtreme-tx",
+      "name": "Xtreme Raceway Park",
+      "city": "Ferris",
+      "state": "TX"
+    },
+    "dates": {
+      "start": "2026-11-08"
+    },
+    "times": {
+      "gates_open": "09:00"
+    },
+    "classes": [
+      "Stock Muscle",
+      "Street Muscle",
+      "King Muscle",
+      "EV Muscle",
+      "Competition Muscle",
+      "Modified Muscle",
+      "Electronics",
+      "Pro Muscle",
+      "Super Pro Muscle",
+      "CA$H Bracket"
+    ],
+    "series": "TMCCC",
+    "contact": {
+      "phone": "972-544-3724",
+      "website": "https://xtremeracewaypark.com"
+    },
+    "notes": "Big dog race to follow. Track address: 1800 S I45 service rd., Ferris TX 75125\nBIG DOG RACE TO FOLLOW\nhttps://xtremeracewaypark.com",
+    "confidence": 0.85,
+    "flyers": [
+      {
+        "file": "https://tmccc.org/events",
+        "phash": null,
+        "processed_at": "2026-04-02T05:08:02.308738+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T05:08:02.308748+00:00",
+    "updated_at": "2026-04-02T05:08:02.308751+00:00"
+  },
+  {
+    "id": "ec35cb61-f06f-4d29-a250-21016109850b",
+    "title": "Get M 125 Twin 10's - Cotton Co. Promotions",
+    "event_type": "bracket",
+    "track": {
+      "id": "thunder-valley-ok",
+      "name": "Thunder Valley Raceway Park",
+      "city": "Lexington",
+      "state": "OK"
+    },
+    "dates": {
+      "start": "2026-06-12",
+      "end": "2026-06-14"
+    },
+    "series": "Cotton Co. Promotions",
+    "fees": {
+      "entry": "$349 BOGO (Buy One Get One) for Saturday & Sunday mains; $75 entry / $45 buyback for Friday Gamblers; $250 entry for 32 Car Shootout (Sat Night); $15/day or $40 weekend crew fee",
+      "spectator": "Children Under 10 FREE"
+    },
+    "times": {
+      "gates_open": "08:00",
+      "registration_opens": "10:00",
+      "race_start": "16:00"
+    },
+    "contact": {
+      "website": "https://www.raceccrp.com"
+    },
+    "classes": [
+      "Super Pro (SP)",
+      "Bottom Bulb Elite 25"
+    ],
+    "confidence": 0.95,
+    "unclear_fields": [
+      "classes"
+    ],
+    "notes": "FULL SCHEDULE — THURSDAY: Parking 4:00PM–10:00PM. FRIDAY: Gates Open 8:00AM, Registration 10:00AM, Test & Tune ($40) 1:00PM, R1 Gamblers 4:00PM. SATURDAY: Gates Open 8:00AM, Ti[...]",
+    "flyers": [
+      {
+        "file": "641290726_1790374705737094_7921227523330546735_n.jpg",
+        "phash": "a4632b73939d98e8",
+        "processed_at": "2026-04-02T05:10:27.315239+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T05:10:27.315431+00:00",
+    "updated_at": "2026-04-02T05:10:27.315439+00:00"
+  },
+  {
+    "id": "73163551-ecd6-401f-b4cf-d758f64969e8",
+    "title": "3rd Annual Pennington Bros. SuperBucks Showdown - Summer SuperBucks",
+    "event_type": "bracket",
+    "track": {
+      "id": "xtreme-tx",
+      "name": "Xtreme Raceway Park",
+      "city": "Ferris",
+      "state": "TX"
+    },
+    "dates": {
+      "start": "2026-06-04",
+      "end": "2026-06-06"
+    },
+    "series": "Pennington Bros. SuperBucks Showdown",
+    "confidence": 0.97,
+    "notes": "Two Great Events in 2026. This is Event 1 of 2: Summer SuperBucks. 3rd Annual edition of the series.",
+    "unclear_fields": [
+      "event_type",
+      "classes",
+      "fees",
+      "times"
+    ],
+    "flyers": [
+      {
+        "file": "penn.jpg",
+        "phash": "85a8e842af9dbae1",
+        "processed_at": "2026-04-02T05:13:43.204647+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T05:13:43.204784+00:00",
+    "updated_at": "2026-04-02T05:13:43.204788+00:00"
+  },
+  {
+    "id": "6213c0ba-b75d-49cc-b12b-359d96057b6b",
+    "title": "2026 Pro 1 Racing & Safety Products Xtreme Bracket Series - April 3-4 (Friday Night Under the Lights)",
+    "event_type": "bracket",
+    "track": {
+      "id": "xtreme-tx",
+      "name": "Xtreme Raceway Park",
+      "city": "Ferris",
+      "state": "TX"
+    },
+    "dates": {
+      "start": "2026-04-03",
+      "end": "2026-04-03"
+    },
+    "series": "Pro 1 Racing & Safety Products Xtreme Bracket Series / NHRA South Central Division D4 / Summit NHRA E.T. Series",
+    "times": {
+      "gates_open": "17:00",
+      "registration_opens": null,
+      "race_start": "19:30"
+    },
+    "classes": [
+      "Xtreme Bracket Gamblers",
+      "Xtreme Jr Gamblers"
+    ],
+    "fees": {
+      "entry": "Xtreme Bracket Gamblers: $75 entry / $30 buy back ($300 on top at 40 cars). Xtreme Jr Gamblers: $40 entry / $25 buy back.",
+      "spectator": null
+    },
+    "contact": {
+      "website": "https://xtremeracewaypark.com",
+      "phone": null,
+      "email": null
+    },
+    "notes": "Friday Night Under the Lights. Open TNT: 6PM. Time Run (1): 7:30PM. Xtreme Bracket Gamblers pays $1,000 to win / $400 RU / $150 Semi. Xtreme Jr Gamblers pays $300 to win / $150 RU / $75 [...]",
+    "confidence": 0.97,
+    "unclear_fields": [],
+    "flyers": [
+      {
+        "file": "xrp-bracket-43.jpg",
+        "phash": "81636ba6d423bcb9",
+        "processed_at": "2026-04-02T05:15:03.601868+00:00"
+      }
+    ],
+    "created_at": "2026-04-02T05:15:03.602001+00:00",
+    "updated_at": "2026-04-02T05:15:03.602004+00:00"
+  },
+  {
+    "id": "2a03593b-5c95-447a-99fc-656cf834c5df",
+    "title": "Alley Cat Racing Presents Texas Shootout's Grudge Racing",
+    "event_type": "specialty",
+    "track": {
+      "id": "houston-tx",
+      "name": "Houston Motorsports Park",
+      "city": "Houston",
+      "state": "TX"
+    },
+    "dates": {
+      "start": "2026-04-25"
+    },
+    "series": "Alleycat Racing and HMP",
+    "classes": [
+      "5.30 Lil Dawg",
+      "6.50 Fullsize",
+      "6.50 Index",
+      "7.50 Fullsize",
+      "Daily Driver N/A"
+    ],
+    "fees": {
+      "entry": "$1,000 Guaranteed on Top",
+      "spectator": null
+    },
+    "times": {
+      "gates_open": "16:00",
+      "registration_opens": null,
+      "race_start": "17:00"
+    },
+    "contact": {
+      "phone": null,
       "email": null,
       "website": null
     },
-    "confidence": 0.92,
+    "notes": "Presented by Alleycat Racing and HMP. $1,000 guaranteed on top. Track rules for all shootouts. Live music and concessions available. Address: 11620 N. Lake Houston Pkwy, 77044.",
+    "confidence": 0.97,
     "unclear_fields": [],
-    "notes": null,
     "flyers": [
       {
-        "file": "flyer1.jpg",
-        "phash": "aabbccdd00112233",
-        "processed_at": "2026-01-01T00:00:00+00:00"
+        "file": "20260404-4.jpg",
+        "phash": "9cc157514a8eb755",
+        "processed_at": "2026-04-06T18:46:27.753756+00:00"
       },
       {
-        "file": "flyer.jpg",
-        "phash": "8000000000000000",
-        "processed_at": "2026-04-23T21:23:44.966764+00:00"
-      },
-      {
-        "file": "bad-boys-mayhem.jpg",
-        "phash": "875f607e90f48e1c",
-        "processed_at": "2026-04-23T21:23:45.005769+00:00"
+        "file": "20260408-1.jpg",
+        "phash": "adc55e5c30a3036f",
+        "processed_at": "2026-04-10T21:24:35.389588+00:00"
       }
     ],
-    "created_at": "2026-01-01T00:00:00+00:00",
-    "updated_at": "2026-04-23T21:23:45.005769+00:00"
+    "created_at": "2026-04-06T18:46:27.754115+00:00",
+    "updated_at": "2026-04-10T21:24:35.390099+00:00"
+  },
+  {
+    "id": "bb173afd-1753-4cb3-ad33-a6c45e1338f3",
+    "title": "Texas Truck Throwdown 2026",
+    "event_type": "specialty",
+    "track": {
+      "id": "concho-valley-dragway-tx",
+      "name": "Concho Valley Dragway",
+      "city": "San Angelo",
+      "state": "TX"
+    },
+    "dates": {
+      "start": "2026-05-08",
+      "end": "2026-05-09"
+    },
+    "classes": [
+      "Big Baller Class",
+      "6.3X Index"
+    ],
+    "series": "Wamsley Performance / Summese (sponsors/sanctioning)",
+    "notes": "Rules visible on flyer: No Minimum Weight | Tires 28\", 275, 29\", 31\" | .400 Pro Tree | N/T No Slips | Must Have Proper Safety Equipment | Any Engine Combo | No Delay Boxes | No Thrott[...]",
+    "confidence": 0.82,
+    "unclear_fields": [
+      "fees",
+      "times",
+      "contact",
+      "series"
+    ],
+    "flyers": [
+      {
+        "file": "20260406-2.jpg",
+        "phash": "f68309741f5e615a",
+        "processed_at": "2026-04-06T18:47:15.888368+00:00"
+      }
+    ],
+    "created_at": "2026-04-06T18:47:15.888761+00:00",
+    "updated_at": "2026-04-06T18:47:15.888770+00:00"
+  },
+  {
+    "id": "51f801d7-e53f-48f6-97c3-f980c0b0498d",
+    "title": "Xtreme NHRA Bracket Series",
+    "event_type": "bracket",
+    "series": null,
+    "track": {
+      "id": "xtreme-tx",
+      "name": "Xtreme Raceway Park",
+      "city": "Ferris",
+      "state": "TX"
+    },
+    "dates": {
+      "start": "2026-02-20",
+      "end": "2026-02-21"
+    },
+    "times": {
+      "gates_open": null,
+      "registration_opens": null,
+      "race_start": "09:00"
+    },
+    "classes": [
+      "Xtreme Bracket Gamblers (Friday)",
+      "Jr. Gamblers (Friday)",
+      "Super Pro (w/Green)",
+      "Pro (w/Blue)",
+      "Sportsman",
+      "Jr. Modified",
+      "Jr. Sportsman",
+      "Dent Eraser (Motorcycle)",
+      "Daily Drivers"
+    ],
+    "fees": {
+      "entry": "$20",
+      "spectator": "$20"
+    },
+    "contact": {
+      "phone": null,
+      "email": null,
+      "website": "https://www.facebook.com/xtremeracewaypark"
+    },
+    "confidence": 1.0,
+    "unclear_fields": [],
+    "notes": "Xtreme NHRA Bracket Series",
+    "flyers": [],
+    "created_at": "2026-04-01T01:10:29.958824+00:00",
+    "updated_at": "2026-04-01T01:10:29.958824+00:00"
+  },
+  {
+    "id": "c094a84a-5360-4843-9e7c-e0ea584ee08d",
+    "title": "Xtreme NHRA Bracket Series",
+    "event_type": "bracket",
+    "series": null,
+    "track": {
+      "id": "xtreme-tx",
+      "name": "Xtreme Raceway Park",
+      "city": "Ferris",
+      "state": "TX"
+    },
+    "dates": {
+      "start": "2026-03-13",
+      "end": "2026-03-14"
+    },
+    "times": {
+      "gates_open": null,
+      "registration_opens": null,
+      "race_start": "09:00"
+    },
+    "classes": [
+      "Xtreme Bracket Gamblers (Friday)",
+      "Jr. Gamblers (Friday)",
+      "Super Pro (w/Green)",
+      "Pro (w/Blue)",
+      "Sportsman",
+      "Jr. Modified",
+      "Jr. Sportsman",
+      "Dent Eraser (Motorcycle)",
+      "Daily Drivers"
+    ],
+    "fees": {
+      "entry": "$20",
+      "spectator": "$20"
+    },
+    "contact": {
+      "phone": null,
+      "email": null,
+      "website": "https://www.facebook.com/xtremeracewaypark"
+    },
+    "confidence": 1.0,
+    "unclear_fields": [],
+    "notes": "Xtreme NHRA Bracket Series",
+    "flyers": [],
+    "created_at": "2026-04-01T01:10:29.958824+00:00",
+    "updated_at": "2026-04-01T01:10:29.958824+00:00"
+  },
+  {
+    "id": "6f38fc8b-f5ca-496a-94da-058a5f0a8397",
+    "title": "Xtreme NHRA Bracket Series",
+    "event_type": "bracket",
+    "series": null,
+    "track": {
+      "id": "xtreme-tx",
+      "name": "Xtreme Raceway Park",
+      "city": "Ferris",
+      "state": "TX"
+    },
+    "dates": {
+      "start": "2026-04-03",
+      "end": "2026-04-04"
+    },
+    "times": {
+      "gates_open": null,
+      "registration_opens": null,
+      "race_start": "09:00"
+    },
+    "classes": [
+      "Xtreme Bracket Gamblers (Friday)",
+      "Jr. Gamblers (Friday)",
+      "Super Pro (w/Green)",
+      "Pro (w/Blue)",
+      "Sportsman",
+      "Jr. Modified",
+      "Jr. Sportsman",
+      "Dent Eraser (Motorcycle)",
+      "Daily Drivers"
+    ],
+    "fees": {
+      "entry": "$20",
+      "spectator": "$20"
+    },
+    "contact": {
+      "phone": null,
+      "email": null,
+      "website": "https://www.facebook.com/xtremeracewaypark"
+    },
+    "confidence": 1.0,
+    "unclear_fields": [],
+    "notes": "Xtreme NHRA Bracket Series",
+    "flyers": [],
+    "created_at": "2026-04-01T01:10:29.958824+00:00",
+    "updated_at": "2026-04-01T01:10:29.958824+00:00"
+  },
+  {
+    "id": "72873708-ba46-4e60-8130-38b29f78b39a",
+    "title": "Xtreme NHRA Bracket Series",
+    "event_type": "bracket",
+    "series": null,
+    "track": {
+      "id": "xtreme-tx",
+      "name": "Xtreme Raceway Park",
+      "city": "Ferris",
+      "state": "TX"
+    },
+    "dates": {
+      "start": "2026-05-15",
+      "end": "2026-05-16"
+    },
+    "times": {
+      "gates_open": null,
+      "registration_opens": null,
+      "race_start": "09:00"
+    },
+    "classes": [
+      "Xtreme Bracket Gamblers (Friday)",
+      "Jr. Gamblers (Friday)",
+      "Super Pro (w/Green)",
+      "Pro (w/Blue)",
+      "Sportsman",
+      "Jr. Modified",
+      "Jr. Sportsman",
+      "Dent Eraser (Motorcycle)",
+      "Daily Drivers"
+    ],
+    "fees": {
+      "entry": "$20",
+      "spectator": "$20"
+    },
+    "contact": {
+      "phone": null,
+      "email": null,
+      "website": "https://www.facebook.com/xtremeracewaypark"
+    },
+    "confidence": 1.0,
+    "unclear_fields": [],
+    "notes": "Xtreme NHRA Bracket Series",
+    "flyers": [],
+    "created_at": "2026-04-01T01:10:29.958824+00:00",
+    "updated_at": "2026-04-01T01:10:29.958824+00:00"
+  },
+  {
+    "id": "3c65127c-91c0-4621-b449-f85065713f6a",
+    "title": "Xtreme NHRA Bracket Series",
+    "event_type": "bracket",
+    "series": null,
+    "track": {
+      "id": "xtreme-tx",
+      "name": "Xtreme Raceway Park",
+      "city": "Ferris",
+      "state": "TX"
+    },
+    "dates": {
+      "start": "2026-07-10",
+      "end": "2026-07-11"
+    },
+    "times": {
+      "gates_open": null,
+      "registration_opens": null,
+      "race_start": "09:00"
+    },
+    "classes": [
+      "Xtreme Bracket Gamblers (Friday)",
+      "Jr. Gamblers (Friday)",
+      "Super Pro (w/Green)",
+      "Pro (w/Blue)",
+      "Sportsman",
+      "Jr. Modified",
+      "Jr. Sportsman",
+      "Dent Eraser (Motorcycle)",
+      "Daily Drivers"
+    ],
+    "fees": {
+      "entry": "$20",
+      "spectator": "$20"
+    },
+    "contact": {
+      "phone": null,
+      "email": null,
+      "website": "https://www.facebook.com/xtremeracewaypark"
+    },
+    "confidence": 1.0,
+    "unclear_fields": [],
+    "notes": "Xtreme NHRA Bracket Series",
+    "flyers": [],
+    "created_at": "2026-04-01T01:10:29.958824+00:00",
+    "updated_at": "2026-04-01T01:10:29.958824+00:00"
+  },
+  {
+    "id": "3544bf67-c584-43d6-87a2-37bb189a8a32",
+    "title": "Xtreme NHRA Bracket Series",
+    "event_type": "bracket",
+    "series": null,
+    "track": {
+      "id": "xtreme-tx",
+      "name": "Xtreme Raceway Park",
+      "city": "Ferris",
+      "state": "TX"
+    },
+    "dates": {
+      "start": "2026-08-07",
+      "end": "2026-08-08"
+    },
+    "times": {
+      "gates_open": null,
+      "registration_opens": null,
+      "race_start": "09:00"
+    },
+    "classes": [
+      "Xtreme Bracket Gamblers (Friday)",
+      "Jr. Gamblers (Friday)",
+      "Super Pro (w/Green)",
+      "Pro (w/Blue)",
+      "Sportsman",
+      "Jr. Modified",
+      "Jr. Sportsman",
+      "Dent Eraser (Motorcycle)",
+      "Daily Drivers"
+    ],
+    "fees": {
+      "entry": "$20",
+      "spectator": "$20"
+    },
+    "contact": {
+      "phone": null,
+      "email": null,
+      "website": "https://www.facebook.com/xtremeracewaypark"
+    },
+    "confidence": 1.0,
+    "unclear_fields": [],
+    "notes": "Xtreme NHRA Bracket Series",
+    "flyers": [],
+    "created_at": "2026-04-01T01:10:29.958824+00:00",
+    "updated_at": "2026-04-01T01:10:29.958824+00:00"
+  },
+  {
+    "id": "cf8d4304-b8a7-44e9-bf9b-db2b12d41be6",
+    "title": "Xtreme NHRA Bracket Series",
+    "event_type": "bracket",
+    "series": null,
+    "track": {
+      "id": "xtreme-tx",
+      "name": "Xtreme Raceway Park",
+      "city": "Ferris",
+      "state": "TX"
+    },
+    "dates": {
+      "start": "2026-09-18",
+      "end": "2026-09-19"
+    },
+    "times": {
+      "gates_open": null,
+      "registration_opens": null,
+      "race_start": "09:00"
+    },
+    "classes": [
+      "Xtreme Bracket Gamblers (Friday)",
+      "Jr. Gamblers (Friday)",
+      "Super Pro (w/Green)",
+      "Pro (w/Blue)",
+      "Sportsman",
+      "Jr. Modified",
+      "Jr. Sportsman",
+      "Dent Eraser (Motorcycle)",
+      "Daily Drivers"
+    ],
+    "fees": {
+      "entry": "$20",
+      "spectator": "$20"
+    },
+    "contact": {
+      "phone": null,
+      "email": null,
+      "website": "https://www.facebook.com/xtremeracewaypark"
+    },
+    "confidence": 1.0,
+    "unclear_fields": [],
+    "notes": "Xtreme NHRA Bracket Series",
+    "flyers": [],
+    "created_at": "2026-04-01T01:10:29.958824+00:00",
+    "updated_at": "2026-04-01T01:10:29.958824+00:00"
   }
 ]
