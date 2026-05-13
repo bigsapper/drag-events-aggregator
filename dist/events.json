@@ -1250,7 +1250,7 @@
   {
     "id": "50bf9b0f-1291-4dfc-9526-e4d138011def",
     "title": "Street Car Takeover",
-    "event_type": "unknown",
+    "event_type": "specialty",
     "series": null,
     "track": {
       "id": "texas-motorplex-tx",
@@ -1259,8 +1259,8 @@
       "state": "TX"
     },
     "dates": {
-      "start": "2026-05-29",
-      "end": "2026-05-30"
+      "start": "2026-05-01",
+      "end": "2026-05-02"
     },
     "times": {
       "gates_open": null,
@@ -1282,7 +1282,7 @@
     "notes": "Where Street Car Go To Party!",
     "flyers": [],
     "created_at": "2026-04-01T01:10:29.958824+00:00",
-    "updated_at": "2026-04-01T01:10:29.958824+00:00"
+    "updated_at": "2026-05-11T01:10:29.958824+00:00"
   },
   {
     "id": "ce32dea7-9a3a-4cf9-b7c1-21a70a6d100a",
