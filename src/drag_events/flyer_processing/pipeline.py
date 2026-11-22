@@ -184,8 +184,8 @@ def collect_images(paths: list[str]) -> list[Path]:
         path = Path(candidate)
         if path.is_dir():
             for ext in IMAGE_EXTENSIONS:
-                images.extend(path.glob(f"*{ext}"))
-                images.extend(path.glob(f"*{ext.upper()}"))
+                images.extend(path.rglob(f"*{ext}"))
+                images.extend(path.rglob(f"*{ext.upper()}"))
         elif path.suffix.lower() in IMAGE_EXTENSIONS:
             images.append(path)
         else:

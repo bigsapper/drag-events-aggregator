@@ -55,6 +55,14 @@ def test_collect_images_directory(tmp_path):
     assert len(result) == 3
 
 
+def test_collect_images_directory_recursive(tmp_path):
+    nested = tmp_path / "2027" / "xtreme-tx"
+    nested.mkdir(parents=True)
+    make_1x1_png(nested / "flyer.jpg")
+    result = flyer_processing.collect_images([str(tmp_path)])
+    assert len(result) == 1
+
+
 def test_collect_images_skips_non_image(tmp_path, capsys):
     txt = tmp_path / "notes.txt"
     txt.write_text("not an image")
