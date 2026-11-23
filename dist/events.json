@@ -2256,5 +2256,48 @@
       "registration_opens": null,
       "race_start": null
     }
+  },
+  {
+    "id": "72c1eb45-3fb0-4928-81d8-5097568f154c",
+    "title": "Fall Fest",
+    "event_type": "specialty",
+    "track": {
+      "id": "xtreme-tx",
+      "name": "Xtreme Raceway Park",
+      "city": "Ferris",
+      "state": "TX"
+    },
+    "dates": {
+      "start": "2026-11-27",
+      "end": "2026-11-28"
+    },
+    "series": "Big Jake Promotions",
+    "classes": [
+      "Lil Gangstas",
+      "7.50 Index",
+      "28/275",
+      "Outlaw Street"
+    ],
+    "fees": {
+      "entry": "General Admission: $30 (Military $5 off); Tech Cards: $30; Pit Side Parking: $30; RVs & Travel Trailers (not attached to a car trailer): $50/day. Class entries \u2014 Lil Gangstas: $250; 7.50 Index: $150; 28/275: Free; Outlaw Street: Free",
+      "spectator": "$30 General Admission (Military $5 off)"
+    },
+    "contact": {
+      "phone": "214-498-7393",
+      "email": null,
+      "website": "https://www.xtremeracewaypark.com"
+    },
+    "notes": "Multi-day event: FRIDAY \u2014 Lil Gangstas ($250 entry, $10,000 to win; 5.30 index, 28x10.5 no WS, 275/60/15 radial or smaller unless factory 17in+ rim, door cars/trucks, no wheelie bars, no throttle stops, no delay boxes, no time slips) and 7.50 Index ($150 entry, $5,000 to win; cars & trucks allowed, slicks or radials only, trans-brake OK, no throttle stops, no delay boxes). SATURDAY \u2014 28/275 (free entry, $10,000 to win; 275 or 28W or smaller, any power adder, class cars welcome, any chassis); Outlaw Street (free entry, $5,000 to win; boosted big blocks 9.8 deck height max no billet heads/blocks 3200lbs, no 1pc CF/FG front ends, no all billet boosted small block, no CF/FG door/decklid/fenders, 88nos sin bore space or smaller, working head & tail lights, 2 front seats required, factory floors required, no wheelie bars, factory firewall required, ladder bars & 4 links OK, factory appearing dashboard required fiberglass/carbon OK, no full chassis cars, real side glass windows 1/4 glass too required, no forward facing scoops, 275s or 28in slicks); Lil Gangstas ($250 entry, $10,000 to win); 7.50 Index ($150 entry, $5,000 to win). Debit & credit cards accepted. No refunds or rain checks. Address: 1800 S Interstate 45 Service Rd, Ferris, TX 75125.",
+    "confidence": 0.97,
+    "unclear_fields": [],
+    "flyers": [
+      {
+        "file": "fall-fest.jpg",
+        "phash": "dfc487130e6a686b",
+        "processed_at": "2026-11-23T23:29:02.272914+00:00"
+      }
+    ],
+    "created_at": "2026-11-23T23:29:02.272914+00:00",
+    "updated_at": "2026-11-23T23:29:02.272914+00:00"
   }
 ]
